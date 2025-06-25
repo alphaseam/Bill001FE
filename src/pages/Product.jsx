@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ProductList from "../Components/ProductList";
 import ProductForm from "../Components/ProductForm";
-
+import DashboardLayout from "../Components/DashboardLayout";
 
 const Product = () => {
     const [products, setProducts] = useState([]);
@@ -39,21 +39,23 @@ const Product = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 p-4">
-            <ProductForm
-                initialData={editingProduct}
-                submitLabel={editingProduct ? "Update Product" : "Add Product"}
-                onSubmit={handleSave}
-            />
-
-            <div className="mt-3">
-                <ProductList
-                    products={products}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
+        <DashboardLayout>
+            <div className="min-h-screen">
+                <ProductForm
+                    initialData={editingProduct}
+                    submitLabel={editingProduct ? "Update Product" : "Add Product"}
+                    onSubmit={handleSave}
                 />
+
+                <div className="mt-3">
+                    <ProductList
+                        products={products}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                    />
+                </div>
             </div>
-        </div>
+        </DashboardLayout>
     );
 };
 

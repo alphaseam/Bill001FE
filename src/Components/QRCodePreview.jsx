@@ -1,5 +1,7 @@
 import React from "react";
+import { FaDownload } from "react-icons/fa";
 import QRCode from "react-qr-code";
+
 
 const QRCodePreview = ({ itemNumber, price, size }) => {
     if (!itemNumber || !price || !size) return null;
@@ -24,16 +26,15 @@ const QRCodePreview = ({ itemNumber, price, size }) => {
     };
 
     return (
-        <div className="mt-4 text-center">
-            {/* <h3 className="font-semibold mb-2">QR Code Preview</h3> */}
-            <div id="qr-code" className="inline-block border rounded p-2 bg-white">
-                <QRCode value={qrValue} />
+        <div className="broder text-center flex">
+            <div id="qr-code" className=" rounded p-2 bg-white ">
+                <QRCode value={qrValue} className="w-20 h-20" />
             </div>
             <button
                 onClick={handleDownload}
-                className="mt-2 bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600"
+                className=""
             >
-                Download QR Code
+                <FaDownload />
             </button>
         </div>
     );
