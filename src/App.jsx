@@ -1,10 +1,13 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Billing from "./pages/Billing";
-import Login from "./pages/Login";
-import PrivateRoute from "./Components/PrivateRoute";
 import Product from "./pages/Product";
+import Admin from "./pages/Admin";
 import BillEditPage from "./pages/admin/BillEditPage";
+
+import PrivateRoute from "./Components/PrivateRoute";
+import DashboardLayout from "./Components/DashboardLayout";
 
 function App() {
   return (
@@ -12,44 +15,22 @@ function App() {
       {/* Public Route */}
       <Route path="/login" element={<Login />} />
 
-      {/* Protected Routes */}
+      {/* Protected Routes with shared layout */}
       <Route
-        path="/dashboard"
         element={
           <PrivateRoute>
-            <Dashboard />
+            <DashboardLayout />
           </PrivateRoute>
         }
-      />
+      >
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/billing" element={<Billing />} />
+        <Route path="/product" element={<Product />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/billing/edit/:billId" element={<BillEditPage />} />
+      </Route>
 
-      <Route
-        path="/billing"
-        element={
-          <PrivateRoute>
-            <Billing />
-          </PrivateRoute>
-        }
-      />
-
-      <Route
-        path="/product"
-        element={
-          <PrivateRoute>
-            <Product />
-          </PrivateRoute>
-        }
-      />
-
-      <Route
-        path="/admin/billing/edit/:billId"
-        element={
-          <PrivateRoute>
-            <BillEditPage />
-          </PrivateRoute>
-        }
-      />
-
-      {/* Catch-All Redirect */}
+      {/* Fallback Route */}
       <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>
   );
