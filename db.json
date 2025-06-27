@@ -1,0 +1,160 @@
+{
+  "api": [
+    {
+      "name": "getProducts",
+      "method": "GET",
+      "url": "/api/products",
+      "description": "Fetches all products",
+      "id": "8d03"
+    },
+    {
+      "name": "addProduct",
+      "method": "POST",
+      "url": "/api/products",
+      "description": "Adds a new product",
+      "id": "9b6c"
+    },
+    {
+      "name": "updateProduct",
+      "method": "PUT",
+      "url": "/api/products/:id",
+      "description": "Updates an existing product",
+      "id": "ff55"
+    },
+    {
+      "name": "deleteProduct",
+      "method": "DELETE",
+      "url": "/api/products/:id",
+      "description": "Deletes a product by ID",
+      "id": "8c7e"
+    }
+  ],
+  "products": [
+    {
+      "name": "pizza",
+      "category": "fastfood",
+      "price": "25",
+      "quantity": "20",
+      "size": "60",
+      "image": null,
+      "id": "6a98"
+    },
+    {
+      "id": "6d12",
+      "name": "burger",
+      "category": "fastfood",
+      "price": "15",
+      "quantity": "100",
+      "size": "40"
+    },
+    {
+      "id": "0f95",
+      "name": "samosa",
+      "category": "fastfood",
+      "price": "12",
+      "quantity": "43",
+      "size": "44"
+    },
+    {
+      "id": "6a98",
+      "name": "pizza",
+      "category": "fastfood",
+      "price": "20",
+      "quantity": "20",
+      "size": "60"
+    },
+    {
+      "id": "6a98",
+      "name": "pizza",
+      "category": "fastfood",
+      "price": "15",
+      "quantity": "20",
+      "size": "60"
+    },
+    {
+      "id": "6a98",
+      "name": "pizza",
+      "category": "fastfood",
+      "price": "25",
+      "quantity": "20",
+      "size": "60"
+    }
+  ],
+  "login": [
+    {
+      "email": "user1@gmail.com",
+      "password": "pass1"
+    },
+    {
+      "token": "dafdafdsaff",
+      "id": "bbb0",
+      "email": "user2@gmail.com",
+      "password": "pass23456"
+    },
+    {
+      "id": "bf4f",
+      "email": "user2@gmail.com",
+      "password": "user2@gmail.com"
+    }
+  ],
+  "sales": [
+    {
+      "totalSales": "20000",
+      "totalInvoices": "20",
+      "trends": [
+        {
+          "date": "2025-06-01",
+          "sales": 3000
+        },
+        {
+          "date": "2025-06-02",
+          "sales": 4000
+        },
+        {
+          "date": "2025-06-03",
+          "sales": 2500
+        },
+        {
+          "date": "2025-06-04",
+          "sales": 3500
+        },
+        {
+          "date": "2025-06-05",
+          "sales": 5000
+        },
+        {
+          "date": "2025-06-06",
+          "sales": 4000
+        }
+      ],
+      "byCategory": [
+        {
+          "name": "Fast Food",
+          "sales": 12000
+        },
+        {
+          "name": "Beverages",
+          "sales": 8000
+        },
+        {
+          "name": "Desserts",
+          "sales": 5000
+        }
+      ],
+      "byDealer": [
+        {
+          "name": "Dealer 1",
+          "sales": 5000
+        },
+        {
+          "name": "Dealer 2",
+          "sales": 7000
+        },
+        {
+          "name": "Dealer 3",
+          "sales": 3000
+        }
+      ]
+    }
+  ]
+}

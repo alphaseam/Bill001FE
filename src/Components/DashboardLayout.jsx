@@ -18,12 +18,12 @@ const DashboardLayout = ({ children }) => {
     };
 
     return (
-        <div className="min-h-screen flex">
+        <div className="flex">
             {/* Sidebar */}
-            <aside className={`md:w-50 w-10 md:block bg-gray-800 text-white p-2  ${show ? "w-50" : "w-10"}`}>
+            <aside className={`md:w-50 w-10 md:block bg-gray-800 min-h-screen text-white p-2  ${show ? "w-50" : "w-10"}`}>
                 <h2 className={`text-2xl hidden md:block font-bold mb-6 ${show ? "block" : "hidden"}`}>My App</h2>
                 <button className='md:hidden mt-3' onClick={() => setShow(!show)}>{show ? <ImCross size={24} /> : <FiAlignJustify size={24} />}</button>
-                <nav className="space-y-4 mt-10">
+                <nav className="space-y-5 mt-10">
                     <Link to="/dashboard" className={`flex items-center space-x-1 hover:text-blue-300 `}>
                         <MdDashboard size={24} />
                         <span className={`md:block ${show ? "block" : "hidden"}`} >Dashboard</span>
@@ -56,7 +56,7 @@ const DashboardLayout = ({ children }) => {
                 </header>
 
                 {/* Page Content */}
-                <main className="md:p-6 bg-gray-50 md:flex-1 overflow-y-auto">
+                <main className=" bg-gray-50 md:flex-1">
                     {children}
                 </main>
             </div>

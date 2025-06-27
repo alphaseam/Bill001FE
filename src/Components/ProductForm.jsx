@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import api from "../services/api";
 
 const ProductForm = ({ initialData = {}, onSubmit }) => {
     const [formData, setFormData] = useState({
@@ -24,13 +25,24 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.name || !formData.price || !formData.quantity || !formData.size) {
             alert("Name, Price, and Quantity are required.");
             return;
         }
-        onSubmit(formData);
+        try {
+            let data = new FormData();
+            Object.entries(formData).forEach(([key, val]) => {
+                if (val) data.append(key, val);
+            });
+            await api.post("/products", data);
+            alert("Product saved!");
+            if (onSubmit) onSubmit(formData);
+            setFormData(initialForm);
+        } catch (err) {
+            alert("Error saving product");
+        }
     };
 
     const Clearform = () => {

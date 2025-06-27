@@ -3,8 +3,7 @@ import axios from 'axios';
 // Create an instance of Axios
 const api = axios.create({
     // baseURL: `${VITE_API_BASE_URLs}/api`,
-    baseURL: import.meta.env.VITE_API_BASE_URL || 'https://api.escuelajs.co/api/v1',// fetch the data from backend 
-
+    baseURL: `${import.meta.env.VITE_API_BASE_URL}` || 'http://localhost:3000',// || 'https://api.escuelajs.co/api/v1',// fetch the data from backend 
     headers: {
         'Content-Type': 'application/json',
     },

@@ -14,6 +14,7 @@ function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
 
+
       {/* Protected Routes to protect access */}
       <Route path="/dashboard" element={
         <PrivateRoute>
@@ -26,9 +27,13 @@ function App() {
         </PrivateRoute>
       } />
 
-      <Route path="/Product" element={
+      <Route path="/Product/*" element={
         <PrivateRoute>
           <Product />
+          <Routes>
+            <Route path="edit/:id" element={<Product />} />
+            <Route path="delete/:id" element={<Product />} />
+          </Routes>
         </PrivateRoute>
       } />
 
