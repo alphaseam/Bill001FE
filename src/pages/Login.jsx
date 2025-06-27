@@ -36,7 +36,7 @@ const Login = () => {
 
         try {
             if (isLogin) {
-                const res = await api.post('/login', {
+                const res = await api.post('/auth/login', {
                     email: formData.email,
                     password: formData.password,
                 });
@@ -52,7 +52,6 @@ const Login = () => {
             toast.success(isLogin ? 'Logged in successfully!' : 'Registered successfully!');
             navigate('/dashboard');
         } catch (err) {
-            toast.error('Login/Register failed');
             setSubmitError('Invalid email or password');
         }
     };

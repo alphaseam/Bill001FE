@@ -80,21 +80,70 @@
       "size": "60"
     }
   ],
+  "register": [
+    {
+      "name": "Nitin",
+      "email": "nitinsonawane@gmail.com",
+      "password": "nitin12345",
+      "id": "76d3"
+    },
+    {
+      "id": "c352",
+      "name": "nitin sonawane",
+      "email": "nitinsonawane@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": "0391",
+      "name": "samosa",
+      "email": "test@example.com",
+      "password": "123456"
+    }
+  ],
+  "token": {
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY3Mjc2NjAyOCwiZXhwIjoxNjc0NDk0MDI4fQ.kCak9sLJr74frSRVQp0_27BY4iBCgQSmoT3vQVWKzJg",
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY3Mjc2NjAyOCwiZXhwIjoxNjcyODAyMDI4fQ.P1_rB3hJ5afwiG4TWXLq6jOAcVJkvQZ2Z-ZZOnQ1dZw"
+  },
   "login": [
     {
-      "email": "user1@gmail.com",
-      "password": "pass1"
+      "access_token": "your.jwt.token.here",
+      "user": {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@example.com",
+        "password": "12345678"
+      },
+      "id": "48ac"
     },
     {
-      "token": "dafdafdsaff",
-      "id": "bbb0",
-      "email": "user2@gmail.com",
-      "password": "pass23456"
+      "id": "36f6",
+      "email": "john@example.com",
+      "password": "12345678"
     },
     {
-      "id": "bf4f",
-      "email": "user2@gmail.com",
-      "password": "user2@gmail.com"
+      "id": "be4c",
+      "email": "nitinsonawane@gmail.com",
+      "password": "12345678"
+    },
+    {
+      "id": "053b",
+      "email": "test@example.com",
+      "password": "123456"
+    },
+    {
+      "id": "7773",
+      "email": "test@example.com",
+      "password": "123456"
+    },
+    {
+      "id": "d859",
+      "email": "test@example.com",
+      "password": "123456"
+    },
+    {
+      "id": "83f1",
+      "email": "test@example.com",
+      "password": "123456"
     }
   ],
   "sales": [
@@ -154,7 +203,8 @@
           "name": "Dealer 3",
           "sales": 3000
         }
-      ]
+      ],
+      "id": "0623"
     }
   ]
 }
