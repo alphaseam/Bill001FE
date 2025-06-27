@@ -16,26 +16,8 @@ function App() {
       <Route path="/login" element={<Login />} />
 
       {/* Protected Routes with shared layout */}
-      <Route path="/dashboard" element={
-        <PrivateRoute>
-          <Dashboard />
-        </PrivateRoute>
-      } />
-      <Route path="/billing" element={
-        <PrivateRoute>
-          <Billing />
-        </PrivateRoute>
-      } />
 
-      <Route path="/Product/*" element={
-        <PrivateRoute>
-          <Product />
-          <Routes>
-            <Route path="edit/:id" element={<Product />} />
-            <Route path="delete/:id" element={<Product />} />
-          </Routes>
-        </PrivateRoute>
-      } />
+
       <Route
         element={
           <PrivateRoute>
