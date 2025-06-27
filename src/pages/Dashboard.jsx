@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 
 import SummaryBlock from '../Components/SummaryBlock';
@@ -100,17 +99,3 @@ export default function Dashboard() {
         </DashboardLayout>
     );
 }
-=======
-import React from "react";
-
-const Dashboard = () => {
-  return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Dashboard Overview</h2>
-      <p>Welcome to your dashboard. Here’s where key metrics go.</p>
-    </div>
-  );
-};
-
-export default Dashboard;
->>>>>>> cf826ad5eed9e7d04d899041fed4a6520df48443
