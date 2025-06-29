@@ -44,7 +44,7 @@ function App() {
         }
       />
 
-      {/* ✅ Admin Panel Main */}
+      {/* ✅ Admin Layout Route */}
       <Route
         path="/admin"
         element={
@@ -52,18 +52,10 @@ function App() {
             <Admin />
           </PrivateRoute>
         }
-      />
-
-      {/* ✅ Edit Bill Page (separate route, not nested) */}
-      <Route
-        path="/admin/billing/edit/:billId"
-        element={
-          <PrivateRoute>
-            <BillEditPage />
-          </PrivateRoute>
-        }
-      />
-
+      >
+        {/* ✅ Nested Admin Routes (inside Admin layout) */}
+        <Route path="billing/edit/:billId" element={<BillEditPage />} />
+      </Route>
       {/* Fallback Route */}
       <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>

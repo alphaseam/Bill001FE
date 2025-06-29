@@ -32,8 +32,14 @@ const DashboardLayout = ({ children }) => {
           {show ? <ImCross size={24} /> : <FiAlignJustify size={24} />}
         </button>
         <nav className="space-y-5 mt-10">
-          <Link to="/admin" className="block hover:text-blue-300">
-            Admin
+          <Link
+            to="/admin"
+            className={`flex items-center space-x-1 hover:text-blue-300 `}
+          >
+            <CgProfile size={24} />
+            <span className={`md:block ${show ? "block" : "hidden"}`}>
+              Admin
+            </span>
           </Link>
 
           <Link
@@ -45,6 +51,7 @@ const DashboardLayout = ({ children }) => {
               Dashboard
             </span>
           </Link>
+
           <Link
             to="/billing"
             className={`flex items-center space-x-1 hover:text-blue-300 `}
