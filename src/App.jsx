@@ -17,7 +17,6 @@ function App() {
         {/* Public Route */}
         <Route path="/login" element={<Login />} />
 
-<<<<<<< HEAD
         {/* Protected Routes with shared layout */}
         <Route path="/dashboard" element={
           <PrivateRoute>
@@ -48,61 +47,36 @@ function App() {
             </Routes>
           </PrivateRoute>
         } />
-=======
-      {/* Protected Routes with shared layout */}
-      <Route
-        path="/dashboard"
-        element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/billing"
-        element={
-          <PrivateRoute>
-            <Billing />
-          </PrivateRoute>
-        }
-      />
->>>>>>> 7ab4cc71d5dd9388b3e09ca26832a2d9d7cdfce2
 
-      <Route
-        path="/Product/*"
-        element={
-          <PrivateRoute>
-            <Product />
-            <Routes>
-              <Route path="edit/:id" element={<Product />} />
-              <Route path="delete/:id" element={<Product />} />
-            </Routes>
-          </PrivateRoute>
-        }
-      />
+        <Route
+          path="/Product/*"
+          element={
+            <PrivateRoute>
+              <Product />
+              <Routes>
+                <Route path="edit/:id" element={<Product />} />
+                <Route path="delete/:id" element={<Product />} />
+              </Routes>
+            </PrivateRoute>
+          }
+        />
 
-<<<<<<< HEAD
+        {/* ✅ Admin Layout Route */}
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoute>
+              <Admin />
+            </PrivateRoute>
+          }
+        >
+          {/* ✅ Nested Admin Routes (inside Admin layout) */}
+          <Route path="billing/edit/:billId" element={<BillEditPage />} />
+        </Route>
         {/* Fallback Route */}
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
     </>
-=======
-      {/* ✅ Admin Layout Route */}
-      <Route
-        path="/admin"
-        element={
-          <PrivateRoute>
-            <Admin />
-          </PrivateRoute>
-        }
-      >
-        {/* ✅ Nested Admin Routes (inside Admin layout) */}
-        <Route path="billing/edit/:billId" element={<BillEditPage />} />
-      </Route>
-      {/* Fallback Route */}
-      <Route path="*" element={<Navigate to="/dashboard" />} />
-    </Routes>
->>>>>>> 7ab4cc71d5dd9388b3e09ca26832a2d9d7cdfce2
   );
 }
 
