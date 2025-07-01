@@ -3,6 +3,8 @@ import ProductList from "../Components/ProductList";
 import ProductForm from "../Components/ProductForm";
 import DashboardLayout from "../Components/DashboardLayout";
 import api from "../services/api";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const Product = () => {
     const [products, setProducts] = useState([]);
@@ -16,16 +18,31 @@ const Product = () => {
     }, []);
 
 
-    const handleSave = (product) => {
+    const handleSave = async (product) => {
         if (Edit) {
-            api.put(`/products/${Edit.id}`, product)
-                .then(res => {
-                    setProducts(products.map(p => p.id === Edit.id ? res.data : p));
-                    setEdit(null);
-                });
+            try {
+                await api.put(`/products/${Edit.id}`, product)
+                    .then(res => {
+                        setProducts(products.map(p => p.id === Edit.id ? res.data : p));
+                        toast.success("Product updated");
+                        setEdit(null);
+                    });
+            } catch (error) {
+                console.error("Error updating product:", error);
+                toast.error("Failed to update product");
+            }
         } else {
-            api.post("/products", product)
-                .then(res => setProducts([...products, res.data]));
+            try {
+                await api.post("/products", product)
+                    .then((res) => {
+                        setProducts([...products, res.data]);
+                        toast.success("Product added");
+                    });
+            } catch (error) {
+                console.error("Error adding product:", error);
+                toast.error("Failed to add product");
+            }
+
         }
     };
 
@@ -34,15 +51,26 @@ const Product = () => {
         setEdit(item);
     };
 
-    const handleDelete = (id) => {
-        if (window.confirm("Delete this product?")) {
-            api.delete(`/products/${id}`)
-                .then(() => setProducts(products.filter(p => p.id !== id)));
-            if (Edit?.id === id) setEdit(null);
-        }
-    };
+    const confirmDelete = () =>
+        Swal.fire({
+            title: "Delete this product?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes",
+        });
 
-    console.log("Products:", products);
+    const handleDelete = (id) => {
+        confirmDelete().then((result) => {
+            if (result.isConfirmed) {
+                api.delete(`/products/${id}`)
+                    .then(() => setProducts(products.filter(p => p.id !== id)));
+                if (Edit?.id === id) setEdit(null);
+            }
+        });
+    }
+
 
     return (
         <DashboardLayout>

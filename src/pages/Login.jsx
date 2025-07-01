@@ -36,13 +36,13 @@ const Login = () => {
 
         try {
             if (isLogin) {
-                const res = await api.post('/auth/login', {
+                const res = await api.post('/login', {
                     email: formData.email,
                     password: formData.password,
                 });
                 login(res.data.access_token, res.data.email);
             } else {
-                const res = await api.post('/auth/register', {
+                const res = await api.post('/register', {
                     name: formData.name,
                     email: formData.email,
                     password: formData.password,

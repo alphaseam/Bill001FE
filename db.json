@@ -1,83 +1,120 @@
 {
-  "api": [
-    {
-      "name": "getProducts",
-      "method": "GET",
-      "url": "/api/products",
-      "description": "Fetches all products",
-      "id": "8d03"
-    },
-    {
-      "name": "addProduct",
-      "method": "POST",
-      "url": "/api/products",
-      "description": "Adds a new product",
-      "id": "9b6c"
-    },
-    {
-      "name": "updateProduct",
-      "method": "PUT",
-      "url": "/api/products/:id",
-      "description": "Updates an existing product",
-      "id": "ff55"
-    },
-    {
-      "name": "deleteProduct",
-      "method": "DELETE",
-      "url": "/api/products/:id",
-      "description": "Deletes a product by ID",
-      "id": "8c7e"
-    }
-  ],
+  "api": [],
   "products": [
     {
-      "name": "pizza",
-      "category": "fastfood",
-      "price": "25",
-      "quantity": "20",
-      "size": "60",
-      "image": null,
-      "id": "6a98"
+      "name": "very very",
+      "category": "kha kha mast",
+      "price": "23",
+      "quantity": "43",
+      "size": "22",
+      "image": "[object Object]",
+      "id": "912c"
     },
     {
-      "id": "6d12",
-      "name": "burger",
-      "category": "fastfood",
-      "price": "15",
-      "quantity": "100",
-      "size": "40"
-    },
-    {
-      "id": "0f95",
       "name": "samosa",
       "category": "fastfood",
-      "price": "12",
-      "quantity": "43",
-      "size": "44"
+      "price": "22",
+      "quantity": "20",
+      "size": "14",
+      "image": {},
+      "id": "8701"
     },
     {
-      "id": "6a98",
-      "name": "pizza",
-      "category": "fastfood",
-      "price": "20",
-      "quantity": "20",
-      "size": "60"
-    },
+      "name": "paneer",
+      "category": "launch",
+      "price": "253",
+      "quantity": "2",
+      "size": "23",
+      "image": "[object Object]",
+      "id": "3e17"
+    }
+  ],
+  "sales": [
     {
-      "id": "6a98",
-      "name": "pizza",
-      "category": "fastfood",
-      "price": "15",
-      "quantity": "20",
-      "size": "60"
-    },
-    {
-      "id": "6a98",
-      "name": "pizza",
-      "category": "fastfood",
-      "price": "25",
-      "quantity": "20",
-      "size": "60"
+      "totalSales": 3435,
+      "totalInvoices": 32434,
+      "date": [
+        {
+          "id": 1,
+          "date": "2025-06-01",
+          "sales": 120
+        },
+        {
+          "id": 2,
+          "date": "2025-06-02",
+          "sales": 150
+        },
+        {
+          "id": 3,
+          "date": "2025-06-03",
+          "sales": 90
+        },
+        {
+          "id": 4,
+          "date": "2025-06-04",
+          "sales": 170
+        },
+        {
+          "id": 5,
+          "date": "2025-06-05",
+          "sales": 110
+        },
+        {
+          "id": 6,
+          "date": "2025-06-06",
+          "sales": 200
+        },
+        {
+          "id": 7,
+          "date": "2025-06-07",
+          "sales": 180
+        }
+      ],
+      "category": [
+        {
+          "id": 1,
+          "category": "Electronics",
+          "sales": 4200
+        },
+        {
+          "id": 2,
+          "category": "Fashion",
+          "sales": 3100
+        },
+        {
+          "id": 3,
+          "category": "Groceries",
+          "sales": 2600
+        },
+        {
+          "id": 4,
+          "category": "Furniture",
+          "sales": 1900
+        },
+        {
+          "id": 5,
+          "category": "Toys",
+          "sales": 1500
+        }
+      ],
+      "dealer": [
+        {
+          "id": 1,
+          "dealer": "Dealer A",
+          "sales": 2500
+        },
+        {
+          "id": 2,
+          "dealer": "Dealer B",
+          "sales": 1800
+        },
+        {
+          "id": 3,
+          "dealer": "Dealer C",
+          "sales": 3200
+        }
+      ],
+      "id": "5ef7"
     }
   ],
   "register": [
@@ -98,6 +135,14 @@
       "name": "samosa",
       "email": "test@example.com",
       "password": "123456"
+    },
+    {
+      "id": "2556",
+      "name": "nitin",
+      "email": "test1@example.com",
+      "password": "123456",
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY3Mjc2NjAyOCwiZXhwIjoxNjc0NDk0MDI4fQ.kCak9sLJr74frSRVQp0_27BY4iBCgQSmoT3vQVWKzJg",
+      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY3Mjc2NjAyOCwiZXhwIjoxNjcyODAyMDI4fQ.P1_rB3hJ5afwiG4TWXLq6jOAcVJkvQZ2Z-ZZOnQ1dZw"
     }
   ],
   "token": {
@@ -128,83 +173,14 @@
     {
       "id": "053b",
       "email": "test@example.com",
-      "password": "123456"
+      "password": "123456",
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY3Mjc2NjAyOCwiZXhwIjoxNjc0NDk0MDI4fQ.kCak9sLJr74frSRVQp0_27BY4iBCgQSmoT3vQVWKzJg",
+      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY3Mjc2NjAyOCwiZXhwIjoxNjcyODAyMDI4fQ.P1_rB3hJ5afwiG4TWXLq6jOAcVJkvQZ2Z-ZZOnQ1dZw"
     },
     {
-      "id": "7773",
+      "id": "77a5",
       "email": "test@example.com",
       "password": "123456"
-    },
-    {
-      "id": "d859",
-      "email": "test@example.com",
-      "password": "123456"
-    },
-    {
-      "id": "83f1",
-      "email": "test@example.com",
-      "password": "123456"
-    }
-  ],
-  "sales": [
-    {
-      "totalSales": "20000",
-      "totalInvoices": "20",
-      "trends": [
-        {
-          "date": "2025-06-01",
-          "sales": 3000
-        },
-        {
-          "date": "2025-06-02",
-          "sales": 4000
-        },
-        {
-          "date": "2025-06-03",
-          "sales": 2500
-        },
-        {
-          "date": "2025-06-04",
-          "sales": 3500
-        },
-        {
-          "date": "2025-06-05",
-          "sales": 5000
-        },
-        {
-          "date": "2025-06-06",
-          "sales": 4000
-        }
-      ],
-      "byCategory": [
-        {
-          "name": "Fast Food",
-          "sales": 12000
-        },
-        {
-          "name": "Beverages",
-          "sales": 8000
-        },
-        {
-          "name": "Desserts",
-          "sales": 5000
-        }
-      ],
-      "byDealer": [
-        {
-          "name": "Dealer 1",
-          "sales": 5000
-        },
-        {
-          "name": "Dealer 2",
-          "sales": 7000
-        },
-        {
-          "name": "Dealer 3",
-          "sales": 3000
-        }
-      ],
-      "id": "0623"
     }
   ],
   "hotels": [
