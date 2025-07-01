@@ -28,7 +28,7 @@ export default function Dashboard() {
             setSummary({ totalSales, totalInvoices });
 
             setLineData({
-                labels: data.trends.map(t => t.date),
+                labels: trends.map(t => t.date),
                 datasets: [{
                     label: 'Sales',
                     data: trends.map(t => t.sales),

@@ -6,7 +6,7 @@ import QRCode from "react-qr-code";
 const QRCodePreview = ({ itemNumber, price, size }) => {
     if (!itemNumber || !price || !size) return null;
 
-    const qrValue = `Item Number: ${itemNumber}, Price: ${price}, Size: ${size} `;
+    const qrValue = `Item Number: ${itemNumber}, Price: ${price}, Size: ${size} ,total: ${itemNumber * price}`;
 
     const handleDownload = () => {
         const svg = document.querySelector("#qr-code svg");
@@ -26,7 +26,7 @@ const QRCodePreview = ({ itemNumber, price, size }) => {
     };
 
     return (
-        <div className="broder text-center flex">
+        <div className="broder text-center flex justify-center gap-2">
             <div id="qr-code" className=" rounded p-2 bg-white ">
                 <QRCode value={qrValue} className="w-20 h-20" />
             </div>

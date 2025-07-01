@@ -5,49 +5,54 @@ import Billing from "./pages/Billing";
 import Product from "./pages/Product";
 import BillEditPage from "./pages/admin/BillEditPage";
 import PrivateRoute from "./Components/PrivateRoute";
+import { ToastContainer } from 'react-toastify'
+import "react-toastify/dist/ReactToastify.css";
 
 
 function App() {
   return (
-    <Routes>
-      {/* Public Route */}
-      <Route path="/login" element={<Login />} />
+    <>
+      <ToastContainer />
+      <Routes>
+        {/* Public Route */}
+        <Route path="/login" element={<Login />} />
 
-      {/* Protected Routes with shared layout */}
-      <Route path="/dashboard" element={
-        <PrivateRoute>
-          <Dashboard />
-        </PrivateRoute>
-      } />
-      <Route path="/billing" element={
-        <PrivateRoute>
-          <Billing />
-        </PrivateRoute>
-      } />
+        {/* Protected Routes with shared layout */}
+        <Route path="/dashboard" element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        } />
+        <Route path="/billing" element={
+          <PrivateRoute>
+            <Billing />
+          </PrivateRoute>
+        } />
 
-      <Route path="/Product/*" element={
-        <PrivateRoute>
-          <Product />
-          <Routes>
-            <Route path="edit/:id" element={<Product />} />
-            <Route path="delete/:id" element={<Product />} />
-          </Routes>
-        </PrivateRoute>
-      } />
+        <Route path="/Product/*" element={
+          <PrivateRoute>
+            <Product />
+            <Routes>
+              <Route path="edit/:id" element={<Product />} />
+              <Route path="delete/:id" element={<Product />} />
+            </Routes>
+          </PrivateRoute>
+        } />
 
-      <Route path="/admin/*" element={
-        <PrivateRoute>
-          <Product />
-          <Routes>
-            <Route path="/billing/edit/:billId" element={<BillEditPage />} />
-          </Routes>
-        </PrivateRoute>
-      } />
+        <Route path="/admin/*" element={
+          <PrivateRoute>
+            <Product />
+            <Routes>
+              <Route path="/billing/edit/:billId" element={<BillEditPage />} />
+            </Routes>
+          </PrivateRoute>
+        } />
 
 
-      {/* Fallback Route */}
-      <Route path="*" element={<Navigate to="/dashboard" />} />
-    </Routes>
+        {/* Fallback Route */}
+        <Route path="*" element={<Navigate to="/dashboard" />} />
+      </Routes>
+    </>
   );
 }
 
