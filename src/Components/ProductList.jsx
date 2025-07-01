@@ -39,7 +39,7 @@ const ProductList = ({ products, onEdit, onDelete }) => {
                             <td className="border p-2  ">{p.size}</td>
 
                             <td className="border p-2">
-                                <div className="flex gap-2">
+                                <div className="flex gap-2 justify-center">
                                     <button
                                         onClick={() => onEdit(p.id)}
                                         className="bg-blue-500 hover:bg-blue-600 text-white rounded px-2 py-1"

@@ -42,7 +42,7 @@ const Login = () => {
                 });
                 login(res.data.access_token, res.data.email);
             } else {
-                const res = await api.post('/auth/register', {
+                const res = await api.post('/register', {
                     name: formData.name,
                     email: formData.email,
                     password: formData.password,
@@ -52,7 +52,6 @@ const Login = () => {
             toast.success(isLogin ? 'Logged in successfully!' : 'Registered successfully!');
             navigate('/dashboard');
         } catch (err) {
-            toast.error('Login/Register failed');
             setSubmitError('Invalid email or password');
         }
     };
