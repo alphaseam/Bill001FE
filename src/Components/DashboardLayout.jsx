@@ -36,6 +36,10 @@ const DashboardLayout = ({ children }) => {
                         <AiFillProduct size={24} />
                         <span className={`md:block ${show ? "block" : "hidden"}`} >Product</span>
                     </Link>
+                    <Link to="/hotels"className={`flex items-center space-x-1 hover:text-blue-300 `}>
+                     <AiFillProduct size={24} />
+                    <span className={`md:block ${show ? "block" : "hidden"}`} >Hotel</span>
+                    </Link>
 
                 </nav>
             </aside>

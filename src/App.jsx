@@ -5,6 +5,9 @@ import Billing from "./pages/Billing";
 import Product from "./pages/Product";
 import BillEditPage from "./pages/admin/BillEditPage";
 import PrivateRoute from "./Components/PrivateRoute";
+import HotelList from "./components/HotelList";
+import HotelForm from "./components/HotelForm";
+
 
 
 function App() {
@@ -43,6 +46,34 @@ function App() {
           </Routes>
         </PrivateRoute>
       } />
+      {/* ****************************** */}
+  
+      {/* ✅ Hotel Management Routes */}
+      <Route
+        path="/hotels"
+        element={
+          <PrivateRoute>
+            <HotelList />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/hotels/add"
+        element={
+          <PrivateRoute>
+            <HotelForm />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/hotels/edit/:id"
+        element={
+          <PrivateRoute>
+            <HotelForm />
+          </PrivateRoute>
+        }
+      />
+      {/* ************************************* */}
 
 
       {/* Fallback Route */}
