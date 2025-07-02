@@ -2,15 +2,6 @@
   "api": [],
   "products": [
     {
-      "name": "very very",
-      "category": "kha kha mast",
-      "price": "23",
-      "quantity": "43",
-      "size": "22",
-      "image": "[object Object]",
-      "id": "912c"
-    },
-    {
       "name": "samosa",
       "category": "fastfood",
       "price": "22",
@@ -143,6 +134,12 @@
       "password": "123456",
       "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY3Mjc2NjAyOCwiZXhwIjoxNjc0NDk0MDI4fQ.kCak9sLJr74frSRVQp0_27BY4iBCgQSmoT3vQVWKzJg",
       "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTY3Mjc2NjAyOCwiZXhwIjoxNjcyODAyMDI4fQ.P1_rB3hJ5afwiG4TWXLq6jOAcVJkvQZ2Z-ZZOnQ1dZw"
+    },
+    {
+      "id": "5e3b",
+      "name": "Nitin sonawane",
+      "email": "nitinsonawane@gmail.com",
+      "password": "Nitin@8085"
     }
   ],
   "token": {
@@ -181,6 +178,11 @@
       "id": "77a5",
       "email": "test@example.com",
       "password": "123456"
+    },
+    {
+      "id": "92b4",
+      "email": "nitinsonawane@gmail.com",
+      "password": "Nitin@8085"
     }
   ],
   "hotels": [

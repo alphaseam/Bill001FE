@@ -9,7 +9,7 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
         price: "",
         quantity: "",
         size: "",
-        image: null,
+        productimage: null,
     });
 
 
@@ -42,8 +42,8 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
         else if (!Number.isInteger(+data.quantity) || +data.quantity <= 0)
             err.quantity = "Quantity must be a positive integer.";
 
-        // image (optional but if present enforce type/size)
-        if (data.image) {
+        // product image 
+        if (data.productimage) {
             const allowed = ["image/png", "image/jpeg", "image/webp"];
             if (!allowed.includes(data.image.type))
                 err.image = "Only PNG, JPEG or WEBP images are allowed.";
@@ -63,56 +63,61 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const validationErrors = validate(formData);
-        if (Object.keys(validationErrors).length) {
-            setErrors(validationErrors);
-            return; // abort submit
+        try {
+            const validationErrors = validate(formData);
+            if (Object.keys(validationErrors).length) {
+                setErrors(validationErrors);
+                return; // abort submit
+            }
+            const data = new FormData();
+            Object.entries(formData).forEach(([key, val]) => {
+                if (val) data.append(key, val);
+            });
+            onSubmit(data);
+            setFormData(resetData);
+            setErrors({});
+        } catch (error) {
+            console.error("Error submitting form:", error);
+            setErrors({ submit: "Failed to submit form. Please try again." });
         }
-        const data = new FormData();
-        Object.entries(formData).forEach(([key, val]) => {
-            if (val) data.append(key, val);
-        });
-        onSubmit(data);
-        setFormData(resetData);
-        setErrors({});
     };
     const resetData = () => {
         setFormData({
-            name: "",
+            productName: "",
             category: "",
             price: "",
             quantity: "",
             size: "",
-            image: null,
+            productimage: null,
         });
     }
     return (
         <>
-            <h1 className="flex justify-center mt-10 font-extrabold text-4xl">
+            <h1 className="flex justify-center mt-3 md:mt-10 font-extrabold text-xl md:text-4xl ">
                 {submitLabel}
             </h1>
-            <div className="sm:flex mt-10 justify-center">
+            <div className="sm:flex mt-3 md:mt-10 justify-center">
                 <form onSubmit={handleSubmit} onReset={resetData}>
                     {/* field grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
 
                         {/* Product Name */}
                         <div className="flex flex-col">
-                            <label htmlFor="name" className="mb-1 font-medium text-sm">
+                            <label htmlFor="productName" className="mb-1 font-medium text-sm">
                                 Product Name <span className="text-red-500">*</span>
                             </label>
                             <input
-                                id="name"
-                                name="name"
-                                value={formData.name}
+                                id="productName"
+                                name="productName"
+                                value={formData.productName}
                                 onChange={handleChange}
                                 required
-                                error={errors.name}
+                                error={errors.productName}
                                 className="border p-2 rounded"
                                 placeholder="Product Name"
                             />
-                            {errors.name && (
-                                <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+                            {errors.productName && (
+                                <p className="text-red-500 text-xs mt-1">{errors.productName}</p>
                             )}
                         </div>
 
@@ -181,7 +186,7 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
                         {/* Size / Item Number */}
                         <div className="flex flex-col">
                             <label htmlFor="size" className="mb-1 font-medium text-sm">
-                                Size (Item Number)
+                                Size
                             </label>
                             <input
                                 id="size"
@@ -206,8 +211,8 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
                                 name="image"
                                 type="file"
                                 accept="image/*"
-                                error={errors.image}
-                                value={formData.image ? formData.image.name : ""}
+                                error={errors.productimage}
+                                value={formData.productimage ? formData.productimage.name : ""}
                                 onChange={handleChange}
                                 className="border p-2 rounded file:mr-3 file:py-1 file:px-2 file:border-0 file:rounded file:bg-gray-100 file:text-sm"
                             />
