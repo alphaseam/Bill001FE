@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getBillById, updateBill } from "../../services/billingService";
 
 const BillEditPage = () => {
   const { billId } = useParams();
@@ -16,20 +17,28 @@ const BillEditPage = () => {
   const [totals, setTotals] = useState({ subtotal: 0, tax: 0, finalAmount: 0 });
 
   useEffect(() => {
-    const mockBill = {
-      billDate: "2025-06-25",
-      customerName: "Shrinath Patil",
-      mobileNumber: "9876543210",
-      items: [
-        { itemName: "Tea", quantity: 2, unitPrice: 20, discount: 5 },
-        { itemName: "Samosa", quantity: 3, unitPrice: 15, discount: 0 },
-      ],
+    const fetchBill = async () => {
+      try {
+        const response = await getBillById(billId);
+
+        // ✅ Format date as YYYY-MM-DD
+        const formattedDate = new Date(response.data.billDate)
+          .toISOString()
+          .split("T")[0];
+
+        setFormData({
+          ...response.data,
+          billDate: formattedDate,
+        });
+
+        calculateTotals(response.data.items);
+      } catch (error) {
+        console.error("Error fetching bill:", error);
+        alert("Bill not found!");
+      }
     };
 
-    setTimeout(() => {
-      setFormData(mockBill);
-      calculateTotals(mockBill.items);
-    }, 300);
+    fetchBill();
   }, [billId]);
 
   const handleChange = (e) => {
@@ -73,7 +82,7 @@ const BillEditPage = () => {
     setTotals({ subtotal, tax, finalAmount });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (
       !formData.customerName ||
       !formData.mobileNumber ||
@@ -83,11 +92,14 @@ const BillEditPage = () => {
       return;
     }
 
-    setTimeout(() => {
-      console.log("✅ Simulated PUT success:", formData);
+    try {
+      await updateBill(billId, formData);
       alert("Bill updated successfully!");
       navigate("/billing");
-    }, 500);
+    } catch (error) {
+      console.error("Failed to update bill:", error);
+      alert("Failed to update bill.");
+    }
   };
 
   return (

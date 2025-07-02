@@ -182,5 +182,71 @@
       "email": "test@example.com",
       "password": "123456"
     }
+  ],
+  "hotels": [
+    {
+      "id": "1",
+      "hotelName": "Taj Palace",
+      "ownerName": "Rahul Sharma",
+      "mobile": "9876543210",
+      "email": "rahul@taj.com",
+      "address": "Mumbai, India",
+      "gst": "27ABCDE1234F1Z5",
+      "hotelType": "5-star",
+      "isActive": true,
+      "dateAdded": "2024-06-28T10:00:00Z"
+    },
+    {
+      "id": "2",
+      "hotelName": "Sea View Resort",
+      "ownerName": "Amit Patel",
+      "mobile": "9123456789",
+      "email": "amit@seaview.com",
+      "address": "Goa, India",
+      "gst": "",
+      "hotelType": "3-star",
+      "isActive": false,
+      "dateAdded": "2024-07-01T15:30:00Z"
+    },
+    {
+      "id": "3",
+      "hotelName": "Raj Palace (Updated)",
+      "ownerName": "Shree Sharma",
+      "mobile": "9876543210",
+      "email": "rahul@taj.com",
+      "address": "Mumbai, India",
+      "gst": "27ABCDE1234F1Z5",
+      "hotelType": "4-star",
+      "isActive": true,
+      "dateAdded": "2024-06-28T10:00:00Z"
+    }
+  ],
+
+  "bills": [
+    {
+      "id": 1,
+      "billDate": "2025-06-25",
+      "customerName": "Shrinath Patil",
+      "mobileNumber": "9876543210",
+      "items": [
+        { "itemName": "Tea", "quantity": 2, "unitPrice": 20, "discount": 5 },
+        { "itemName": "Samosa", "quantity": 3, "unitPrice": 15, "discount": 0 }
+      ]
+    },
+    {
+      "id": 2,
+      "billDate": "2025-06-28",
+      "customerName": "Aarti Rane",
+      "mobileNumber": "9123456780",
+      "items": [
+        { "itemName": "Coffee", "quantity": 1, "unitPrice": 30, "discount": 0 },
+        {
+          "itemName": "Vada Pav",
+          "quantity": 2,
+          "unitPrice": 10,
+          "discount": 0
+        }
+      ]
+    }
   ]
 }
