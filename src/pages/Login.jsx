@@ -8,7 +8,7 @@ const Login = () => {
     const { login } = useContext(AuthContext);
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(true);
-    const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+    const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '' });
     const [errors, setErrors] = useState({});
     const [submitError, setSubmitError] = useState('');
 
@@ -21,7 +21,6 @@ const Login = () => {
         else if (formData.password.length < 6) newErrors.password = 'Min 6 characters';
 
         if (!isLogin) {
-            if (!formData.name) newErrors.name = 'Name is required';
             if (!formData.confirmPassword) newErrors.confirmPassword = 'Confirm your password';
             else if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords don't match";
         }
@@ -36,18 +35,17 @@ const Login = () => {
 
         try {
             if (isLogin) {
-                const res = await api.post('/login', {
+                const res = await api.post('/auth/login', {
                     email: formData.email,
                     password: formData.password,
                 });
-                login(res.data.access_token, res.data.email);
+                login(res.data.accessToken, res.data.refreshToken);
             } else {
-                const res = await api.post('/register', {
-                    name: formData.name,
+                const res = await api.post('/auth/register', {
                     email: formData.email,
                     password: formData.password,
                 });
-                login(res.data.access_token, res.data.email);
+                login(res.data.accessToken, res.data.refreshToken);
             }
             toast.success(isLogin ? 'Logged in successfully!' : 'Registered successfully!');
             navigate('/dashboard');
@@ -63,19 +61,6 @@ const Login = () => {
 
                 {submitError && <p className="text-red-500 text-center mb-2">{submitError}</p>}
 
-                {!isLogin && (
-                    <div className="mb-4">
-                        <label>Name</label>
-                        <input
-                            name="name"
-                            type="text"
-                            value={formData.name}
-                            onChange={e => setFormData({ ...formData, name: e.target.value })}
-                            className="w-full border px-3 py-2 rounded"
-                        />
-                        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
-                    </div>
-                )}
 
                 <div className="mb-4">
                     <label>Email</label>
