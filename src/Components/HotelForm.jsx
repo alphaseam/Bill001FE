@@ -1,12 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import {
-  getHotelById,
-  createHotel,
-  updateHotel,
-} from '../api/hotelApi';
-
-const hotelTypes = ['1-Star', '2-Star', '3-Star', '4-Star', '5-Star'];
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { getHotelById, createHotel, updateHotel } from "../services/hotelApi";
+const hotelTypes = ["1-Star", "2-Star", "3-Star", "4-Star", "5-Star"];
 
 const HotelForm = () => {
   const { id } = useParams();
@@ -14,13 +9,13 @@ const HotelForm = () => {
   const isEditMode = Boolean(id);
 
   const [formData, setFormData] = useState({
-    name: '',
-    owner: '',
-    mobile: '',
-    email: '',
-    address: '',
-    gst: '',
-    type: '',
+    name: "",
+    owner: "",
+    mobile: "",
+    email: "",
+    address: "",
+    gst: "",
+    type: "",
     status: true,
   });
 
@@ -33,31 +28,31 @@ const HotelForm = () => {
         .then((data) => {
           if (data) {
             setFormData({
-              name: data.name || '',
-              owner: data.owner || '',
-              mobile: data.mobile || '',
-              email: data.email || '',
-              address: data.address || '',
-              gst: data.gst || '',
-              type: data.type || '',
+              name: data.name || "",
+              owner: data.owner || "",
+              mobile: data.mobile || "",
+              email: data.email || "",
+              address: data.address || "",
+              gst: data.gst || "",
+              type: data.type || "",
               status: data.status ?? true,
             });
           }
         })
-        .catch((err) => console.error('Failed to fetch hotel:', err));
+        .catch((err) => console.error("Failed to fetch hotel:", err));
     }
   }, [id]);
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.name) newErrors.name = 'Hotel name is required';
-    if (!formData.owner) newErrors.owner = 'Owner name is required';
+    if (!formData.name) newErrors.name = "Hotel name is required";
+    if (!formData.owner) newErrors.owner = "Owner name is required";
     if (!formData.mobile || !/^\d{10}$/.test(formData.mobile))
-      newErrors.mobile = 'Valid 10-digit mobile required';
+      newErrors.mobile = "Valid 10-digit mobile required";
     if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email))
-      newErrors.email = 'Valid email required';
-    if (!formData.address) newErrors.address = 'Address is required';
-    if (!formData.type) newErrors.type = 'Hotel type is required';
+      newErrors.email = "Valid email required";
+    if (!formData.address) newErrors.address = "Address is required";
+    if (!formData.type) newErrors.type = "Hotel type is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -73,7 +68,7 @@ const HotelForm = () => {
       } else {
         await createHotel(formData);
       }
-      navigate('/hotels');
+      navigate("/hotels");
     } catch (err) {
       console.error(err);
     } finally {
@@ -85,22 +80,22 @@ const HotelForm = () => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow">
       <h2 className="text-2xl font-bold mb-4">
-        {isEditMode ? 'Edit Hotel' : 'Add Hotel'}
+        {isEditMode ? "Edit Hotel" : "Add Hotel"}
       </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {[
-          { label: 'Hotel Name', name: 'name' },
-          { label: 'Owner Name', name: 'owner' },
-          { label: 'Mobile Number', name: 'mobile', type: 'number' },
-          { label: 'Email', name: 'email', type: 'email' },
-        ].map(({ label, name, type = 'text' }) => (
+          { label: "Hotel Name", name: "name" },
+          { label: "Owner Name", name: "owner" },
+          { label: "Mobile Number", name: "mobile", type: "number" },
+          { label: "Email", name: "email", type: "email" },
+        ].map(({ label, name, type = "text" }) => (
           <div key={name}>
             <label className="block font-medium mb-1">{label}</label>
             <input
@@ -130,7 +125,9 @@ const HotelForm = () => {
         </div>
 
         <div>
-          <label className="block font-medium mb-1">GST Number (optional)</label>
+          <label className="block font-medium mb-1">
+            GST Number (optional)
+          </label>
           <input
             type="text"
             name="gst"
@@ -155,9 +152,7 @@ const HotelForm = () => {
               </option>
             ))}
           </select>
-          {errors.type && (
-            <p className="text-red-500 text-sm">{errors.type}</p>
-          )}
+          {errors.type && <p className="text-red-500 text-sm">{errors.type}</p>}
         </div>
 
         <div className="flex items-center gap-2">
@@ -177,16 +172,12 @@ const HotelForm = () => {
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             disabled={loading}
           >
-            {loading
-              ? 'Saving...'
-              : isEditMode
-              ? 'Update Hotel'
-              : 'Add Hotel'}
+            {loading ? "Saving..." : isEditMode ? "Update Hotel" : "Add Hotel"}
           </button>
           <button
             type="button"
             className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
-            onClick={() => navigate('/hotels')}
+            onClick={() => navigate("/hotels")}
           >
             Cancel
           </button>

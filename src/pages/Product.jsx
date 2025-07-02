@@ -3,7 +3,7 @@ import ProductList from "../Components/ProductList";
 import ProductForm from "../Components/ProductForm";
 import DashboardLayout from "../Components/DashboardLayout";
 import api from "../services/api";
-import Swal from "sweetalert2";
+//import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
 const Product = () => {
