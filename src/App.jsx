@@ -1,12 +1,13 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import BillingPage from "./Components/BillingPage"; // ✅ Ensure this path is correct
+//import BillingPage from "./Components/BillingPage"; // ✅ Ensure this path is correct
 import Product from "./pages/Product";
 import Admin from "./pages/admin/Admin";
+import BillingPage from "./pages/admin/BillingPage";
 import BillEditPage from "./pages/admin/BillEditPage";
 import PrivateRoute from "./Components/PrivateRoute";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import HotelList from "./Components/HotelList";
 import HotelForm from "./Components/HotelForm";
@@ -30,15 +31,6 @@ function App() {
         />
 
         <Route
-          path="/billing"
-          element={
-            <PrivateRoute>
-              <BillingPage />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
           path="/product/*"
           element={
             <PrivateRoute>
@@ -48,14 +40,25 @@ function App() {
         />
 
         <Route
-          path="/admin/*"
+          path="/admin"
           element={
             <PrivateRoute>
               <Admin />
             </PrivateRoute>
           }
         >
-          <Route path="billing/edit/:billId" element={<BillEditPage />} />
+          <Route
+            path="billing"
+            element={
+              <PrivateRoute>
+                <BillingPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="billing/edit/:billId"
+            element={<BillEditPage />}
+          />
         </Route>
 
         <Route

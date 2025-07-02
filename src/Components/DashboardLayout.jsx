@@ -53,15 +53,6 @@ const DashboardLayout = ({ children }) => {
           </Link>
 
           <Link
-            to="/billing"
-            className={`flex items-center space-x-1 hover:text-blue-300 `}
-          >
-            <CgProfile size={24} />
-            <span className={`md:block ${show ? "block" : "hidden"}`}>
-              Billing
-            </span>
-          </Link>
-          <Link
             to="/product"
             className={`flex items-center space-x-1 hover:text-blue-300 `}
           >
@@ -71,7 +62,7 @@ const DashboardLayout = ({ children }) => {
             </span>
           </Link>
 
-           <Link
+          <Link
             to="/hotels"
             className={`flex items-center space-x-1 hover:text-blue-300 `}
           >
