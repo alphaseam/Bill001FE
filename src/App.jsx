@@ -1,16 +1,15 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import Billing from "./pages/Billing";
+import BillingPage from "./Components/BillingPage"; // ✅ Ensure this path is correct
 import Product from "./pages/Product";
 import Admin from "./pages/admin/Admin";
 import BillEditPage from "./pages/admin/BillEditPage";
 import PrivateRoute from "./Components/PrivateRoute";
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import HotelList from "./Components/HotelList";
 import HotelForm from "./Components/HotelForm";
-
 
 function App() {
   return (
@@ -20,85 +19,72 @@ function App() {
         {/* Public Route */}
         <Route path="/login" element={<Login />} />
 
-        {/* Protected Routes with shared layout */}
-        <Route path="/dashboard" element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        } />
-        <Route path="/billing" element={
-          <PrivateRoute>
-            <Billing />
-          </PrivateRoute>
-        } />
-
-        <Route path="/Product/*" element={
-          <PrivateRoute>
-            <Product />
-            <Routes>
-              <Route path="edit/:id" element={<Product />} />
-              <Route path="delete/:id" element={<Product />} />
-            </Routes>
-          </PrivateRoute>
-        } />
-
-        <Route path="/admin/*" element={
-          <PrivateRoute>
-            <Product />
-            <Routes>
-              <Route path="/billing/edit/:billId" element={<BillEditPage />} />
-            </Routes>
-          </PrivateRoute>
-        } />
-
+        {/* Protected Routes */}
         <Route
-          path="/Product/*"
+          path="/dashboard"
           element={
             <PrivateRoute>
-              <Product />
-              <Routes>
-                <Route path="edit/:id" element={<Product />} />
-                <Route path="delete/:id" element={<Product />} />
-              </Routes>
+              <Dashboard />
             </PrivateRoute>
           }
         />
 
-        {/* ✅ Admin Layout Route */}
         <Route
-          path="/admin"
+          path="/billing"
+          element={
+            <PrivateRoute>
+              <BillingPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/product/*"
+          element={
+            <PrivateRoute>
+              <Product />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/admin/*"
           element={
             <PrivateRoute>
               <Admin />
             </PrivateRoute>
           }
         >
-
-          {/* ✅ Nested Admin Routes (inside Admin layout) */}
           <Route path="billing/edit/:billId" element={<BillEditPage />} />
         </Route>
+
         <Route
-          path="/admin"
+          path="/hotels"
           element={
             <PrivateRoute>
-              <Admin />
+              <HotelList />
             </PrivateRoute>
           }
-        ></Route>
+        />
 
-        <Route path="/hotels" element={
-          <PrivateRoute>
-            <HotelList>
+        <Route
+          path="/hotels/add"
+          element={
+            <PrivateRoute>
+              <HotelForm />
+            </PrivateRoute>
+          }
+        />
 
-            </HotelList>
-          </PrivateRoute>
-        } />
+        <Route
+          path="/hotels/edit/:id"
+          element={
+            <PrivateRoute>
+              <HotelForm />
+            </PrivateRoute>
+          }
+        />
 
-<Route path="/hotels/add" element={
-          <PrivateRoute>
-            <HotelForm/>
-          </PrivateRoute>
-        } />
         {/* Fallback Route */}
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>

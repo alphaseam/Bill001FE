@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {
-  getHotelById,
-  createHotel,
-  updateHotel,
-} from '../api/hotelApi';
+import { getHotelById, createHotel, updateHotel } from '../api/hotelApi';
 
 const hotelTypes = ['1-Star', '2-Star', '3-Star', '4-Star', '5-Star'];
 
@@ -90,10 +86,11 @@ const HotelForm = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow">
-      <h2 className="text-2xl font-bold mb-4">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">
         {isEditMode ? 'Edit Hotel' : 'Add Hotel'}
       </h2>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         {[
           { label: 'Hotel Name', name: 'name' },
@@ -108,10 +105,10 @@ const HotelForm = () => {
               name={name}
               value={formData[name]}
               onChange={handleChange}
-              className="w-full border rounded px-3 py-2"
+              className="w-full border px-3 py-2 rounded"
             />
             {errors[name] && (
-              <p className="text-red-500 text-sm">{errors[name]}</p>
+              <p className="text-sm text-red-500 mt-1">{errors[name]}</p>
             )}
           </div>
         ))}
@@ -122,10 +119,11 @@ const HotelForm = () => {
             name="address"
             value={formData.address}
             onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
+            rows="3"
+            className="w-full border px-3 py-2 rounded resize-none"
           />
           {errors.address && (
-            <p className="text-red-500 text-sm">{errors.address}</p>
+            <p className="text-sm text-red-500 mt-1">{errors.address}</p>
           )}
         </div>
 
@@ -136,7 +134,7 @@ const HotelForm = () => {
             name="gst"
             value={formData.gst}
             onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
+            className="w-full border px-3 py-2 rounded"
           />
         </div>
 
@@ -146,7 +144,7 @@ const HotelForm = () => {
             name="type"
             value={formData.type}
             onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
+            className="w-full border px-3 py-2 rounded"
           >
             <option value="">Select Type</option>
             {hotelTypes.map((type) => (
@@ -156,7 +154,7 @@ const HotelForm = () => {
             ))}
           </select>
           {errors.type && (
-            <p className="text-red-500 text-sm">{errors.type}</p>
+            <p className="text-sm text-red-500 mt-1">{errors.type}</p>
           )}
         </div>
 
@@ -167,14 +165,14 @@ const HotelForm = () => {
             name="status"
             checked={formData.status}
             onChange={handleChange}
-            className="toggle"
+            className="w-4 h-4"
           />
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 mt-4">
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto"
             disabled={loading}
           >
             {loading
@@ -185,7 +183,7 @@ const HotelForm = () => {
           </button>
           <button
             type="button"
-            className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+            className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 w-full sm:w-auto"
             onClick={() => navigate('/hotels')}
           >
             Cancel
