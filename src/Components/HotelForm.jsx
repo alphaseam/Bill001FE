@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getHotelById, createHotel, updateHotel } from "../services/hotelApi";
+import DashboardLayout from "./DashboardLayout";
 
 const hotelTypes = ["1-Star", "2-Star", "3-Star", "4-Star", "5-Star"];
 
@@ -86,6 +87,7 @@ const HotelForm = () => {
   };
 
   return (
+    <DashboardLayout>
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 bg-white rounded-lg shadow-md">
       <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">
         {isEditMode ? "Edit Hotel" : "Add Hotel"}
@@ -94,7 +96,7 @@ const HotelForm = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         {[
           { label: "Hotel Name", name: "name" },
-          { label: "Owner Name", name: "owner" },
+          { label: "Owner Name", name: "owner", type: "text", },
           { label: "Mobile Number", name: "mobile", type: "number" },
           { label: "Email", name: "email", type: "email" },
         ].map(({ label, name, type = "text" }) => (
@@ -132,7 +134,7 @@ const HotelForm = () => {
             GST Number (optional)
           </label>
           <input
-            type="text"
+            type="number"
             name="gst"
             value={formData.gst}
             onChange={handleChange}
@@ -189,6 +191,8 @@ const HotelForm = () => {
         </div>
       </form>
     </div>
+        </DashboardLayout>
+
   );
 };
 

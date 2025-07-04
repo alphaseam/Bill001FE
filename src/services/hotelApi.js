@@ -1,22 +1,19 @@
-import axios from "axios";
-
-const BASE_URL = "http://localhost:3000/hotels"; // ✅ JSON Server base URL
-
+import api from "../services/api.js"
 // ✅ Fetch single hotel by ID
 export const getHotelById = async (id) => {
-  const res = await axios.get(`${BASE_URL}/${id}`);
+  const res = await api.get(`hotels/${id}`);
   return res.data;
 };
 
 // ✅ Create a new hotel (POST)
 export const createHotel = async (data) => {
-  const res = await axios.post(BASE_URL, data);
+  const res = await api.post("hotels", data);
   return res.data;
 };
 
 // ✅ Update existing hotel (PUT)
 export const updateHotel = async (id, data) => {
-  const res = await axios.put(`${BASE_URL}/${id}`, data);
+  const res = await api.put(`hotels/${id}`, data);
   return res.data;
 };
 
@@ -28,7 +25,7 @@ export const getHotels = async (
   sort = "name",
   order = "asc"
 ) => {
-  const res = await axios.get(BASE_URL, {
+  const res = await api.get("hotels", {
     params: {
       q: search,
       _page: page,
@@ -46,6 +43,6 @@ export const getHotels = async (
 
 // ✅ Delete hotel
 export const deleteHotel = async (id) => {
-  const res = await axios.delete(`${BASE_URL}/${id}`);
+  const res = await api.delete(`hoy/${id}`);
   return res.data;
 };

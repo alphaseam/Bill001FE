@@ -4,14 +4,13 @@ import Dashboard from "./pages/Dashboard";
 //import BillingPage from "./Components/BillingPage"; // ✅ Ensure this path is correct
 import Product from "./pages/Product";
 import Admin from "./pages/admin/Admin";
-import BillingPage from "./pages/admin/BillingPage";
 import BillEditPage from "./pages/admin/BillEditPage";
 import PrivateRoute from "./Components/PrivateRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import HotelList from "./Components/HotelList";
 import HotelForm from "./Components/HotelForm";
-
+import BillingPage from "./Components/BillingPage";
 function App() {
   return (
     <>
@@ -84,6 +83,14 @@ function App() {
           element={
             <PrivateRoute>
               <HotelForm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/billling"
+          element={
+            <PrivateRoute>
+              <BillingPage/>
             </PrivateRoute>
           }
         />
