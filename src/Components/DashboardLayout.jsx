@@ -2,10 +2,11 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/Authcontext";
 import { ImCross } from "react-icons/im";
-import { FiAlignJustify } from "react-icons/fi";
+import { FiAlignJustify, FiBook } from "react-icons/fi";
 import { MdDashboard } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { AiFillProduct } from "react-icons/ai";
+import { FaBox, FaHotel } from "react-icons/fa";
 
 const DashboardLayout = ({ children }) => {
   const { auth, logout } = useContext(AuthContext);
@@ -56,7 +57,7 @@ const DashboardLayout = ({ children }) => {
             to="/billing"
             className={`flex items-center space-x-1 hover:text-blue-300 `}
           >
-            <CgProfile size={24} />
+            <FiBook size={24} />
             <span className={`md:block ${show ? "block" : "hidden"}`}>
               Billing
             </span>
@@ -65,17 +66,17 @@ const DashboardLayout = ({ children }) => {
             to="/product"
             className={`flex items-center space-x-1 hover:text-blue-300 `}
           >
-            <AiFillProduct size={24} />
+            <FaBox size={24} />
             <span className={`md:block ${show ? "block" : "hidden"}`}>
               Product
             </span>
           </Link>
 
-           <Link
+          <Link
             to="/hotels"
             className={`flex items-center space-x-1 hover:text-blue-300 `}
           >
-            <AiFillProduct size={24} />
+            <FaHotel size={24} />
             <span className={`md:block ${show ? "block" : "hidden"}`}>
               hotel
             </span>

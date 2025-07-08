@@ -22,10 +22,11 @@ export default function Dashboard() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const res = await api.get('/sales', { params: filters });
-            const { totalSales, totalInvoices, trends, byCategory, byDealer } = res.data;
+            const res = await api.get('/reports/sales', { params: filters });
+            console.log(res);
+            const { totalRevenue, totalTransactions, trends, byCategory, byDealer } = res.data;
 
-            setSummary({ totalSales, totalInvoices });
+            setSummary({ totalRevenue, totalTransactions });
 
             setLineData({
                 labels: trends.map(t => t.date),
@@ -88,8 +89,8 @@ export default function Dashboard() {
                 {!loading && !error && (
                     <>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 ">
-                            <SummaryBlock title="Total Sales" value={`₹${summary.totalSales}`} />
-                            <SummaryBlock title="Total Invoices" value={summary.totalInvoices} />
+                            <SummaryBlock title="Total Revenue" value={`₹${summary.totalRevenue}`} />
+                            <SummaryBlock title="Total Transactions" value={summary.totalTransactions} />
                         </div>
 
                         <SaleCharts lineData={lineData} barData={barData} pieData={pieData} doughuntData={Doughnut} />

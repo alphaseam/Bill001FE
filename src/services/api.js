@@ -2,8 +2,8 @@ import axios from "axios";
 
 // Create an instance of Axios
 const api = axios.create({
-  // baseURL: `${VITE_API_BASE_URLs}/api`,
-  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,// || 'https://api.escuelajs.co/api/v1',// fetch the data from backend 
+
+  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,// fetch the data from backend url
   headers: {
     'Content-Type': 'application/json',
   },
@@ -12,10 +12,10 @@ const api = axios.create({
 // Request Interceptor
 api.interceptors.request.use(
   (config) => {
-    const token = JSON.stringify(localStorage.getItem("token"));
+    const token = (localStorage.getItem("token"));
     console.log("Token from localStorage:", token);
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
   },

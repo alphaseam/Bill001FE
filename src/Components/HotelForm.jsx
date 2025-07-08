@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getHotelById, createHotel, updateHotel } from '../api/hotelApi';
+import { getHotelById, createHotel, updateHotel } from '../services/hotelApi';
 
 const hotelTypes = ['1-Star', '2-Star', '3-Star', '4-Star', '5-Star'];
 

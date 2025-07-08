@@ -81,7 +81,7 @@ const HotelList = () => {
         <p>Loading hotels...</p>
       ) : (
         <>
-          
+
           <div className="sm:hidden space-y-4">
             {hotels.map(hotel => (
               <div key={hotel.id} className="border rounded-lg p-4 shadow-sm bg-white">
@@ -121,7 +121,7 @@ const HotelList = () => {
             ))}
           </div>
 
-          
+
           <div className="hidden sm:block overflow-x-auto">
             <table className="min-w-full border border-gray-300">
               <thead className="bg-gray-100">
@@ -174,7 +174,7 @@ const HotelList = () => {
         </>
       )}
 
-      
+
       <div className="mt-4 flex justify-center gap-2 flex-wrap">
         {[...Array(totalPages).keys()].map(i => (
           <button
@@ -187,7 +187,7 @@ const HotelList = () => {
         ))}
       </div>
 
-      
+
       {confirmId && (
         <ConfirmationModal
           title="Delete Hotel"

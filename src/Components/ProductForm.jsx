@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import api from "../services/api";
+
 
 const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
-        name: "",
+        productName: "",
         category: "",
         price: "",
         quantity: "",
@@ -21,10 +21,10 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
         const err = {};
 
         // name
-        if (data.name.trim() === "")
-            err.name = "Product name is required.";
-        else if (data.name.trim().length < 3)
-            err.name = "Name should be at least 3 characters.";
+        if (data.productName.trim() === "")
+            err.productName = "Product name is required.";
+        else if (data.productName.trim().length < 3)
+            err.productName = "Name should be at least 3 characters.";
 
         // category
         if (data.category.trim() === "")
@@ -88,7 +88,7 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
             price: "",
             quantity: "",
             size: "",
-            productimage: null,
+            image: null,
         });
     }
     return (
@@ -103,15 +103,16 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
 
                         {/* Product Name */}
                         <div className="flex flex-col">
-                            <label htmlFor="productName" className="mb-1 font-medium text-sm">
+                            <label htmlFor="productname" className="mb-1 font-medium text-sm">
                                 Product Name <span className="text-red-500">*</span>
                             </label>
                             <input
+                                type="text"
                                 id="productName"
                                 name="productName"
+                                required
                                 value={formData.productName}
                                 onChange={handleChange}
-                                required
                                 error={errors.productName}
                                 className="border p-2 rounded"
                                 placeholder="Product Name"
