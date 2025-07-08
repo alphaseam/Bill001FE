@@ -1,27 +1,48 @@
-const BASE_URL = "http://localhost:3001/hotels";
-
+import api from "../services/api.js"
+// ✅ Fetch single hotel by ID
 export const getHotelById = async (id) => {
-  const res = await fetch(`${BASE_URL}/${id}`);
-  if (!res.ok) throw new Error("Hotel not found");
-  return res.json();
+  const res = await api.get(`hotels/${id}`);
+  return res.data;
 };
 
+// ✅ Create a new hotel (POST)
 export const createHotel = async (data) => {
-  const res = await fetch(BASE_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) throw new Error("Failed to create hotel");
-  return res.json();
+  const res = await api.post("hotels", data);
+  return res.data;
 };
 
+// ✅ Update existing hotel (PUT)
 export const updateHotel = async (id, data) => {
-  const res = await fetch(`${BASE_URL}/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+  const res = await api.put(`hotels/${id}`, data);
+  return res.data;
+};
+
+// ✅ Get paginated + filtered hotel list
+export const getHotels = async (
+  search = "",
+  page = 1,
+  limit = 10,
+  sort = "name",
+  order = "asc"
+) => {
+  const res = await api.get("hotels", {
+    params: {
+      q: search,
+      _page: page,
+      _limit: limit,
+      _sort: sort,
+      _order: order,
+    },
   });
-  if (!res.ok) throw new Error("Failed to update hotel");
-  return res.json();
+
+  return {
+    data: res.data,
+    total: parseInt(res.headers["x-total-count"] || "0"),
+  };
+};
+
+// ✅ Delete hotel
+export const deleteHotel = async (id) => {
+  const res = await api.delete(`hoy/${id}`);
+  return res.data;
 };

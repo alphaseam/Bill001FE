@@ -311,7 +311,7 @@ const BillEditPage = () => {
           Update Bill
         </button>
         <button
-          onClick={() => navigate("/billing")}
+          onClick={() => navigate("/admin/billing")}
           className="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600"
         >
           Cancel

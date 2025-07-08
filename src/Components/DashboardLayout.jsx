@@ -5,7 +5,6 @@ import { ImCross } from "react-icons/im";
 import { FiAlignJustify, FiBook } from "react-icons/fi";
 import { MdDashboard } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
-import { AiFillProduct } from "react-icons/ai";
 import { FaBox, FaHotel } from "react-icons/fa";
 
 const DashboardLayout = ({ children }) => {

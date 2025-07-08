@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getHotelById, createHotel, updateHotel } from '../services/hotelApi';
+=======
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { getHotelById, createHotel, updateHotel } from "../services/hotelApi";
+import DashboardLayout from "./DashboardLayout";
+>>>>>>> 9138388af4eae58b2bf4395fd865972de352f639
 
-const hotelTypes = ['1-Star', '2-Star', '3-Star', '4-Star', '5-Star'];
+const hotelTypes = ["1-Star", "2-Star", "3-Star", "4-Star", "5-Star"];
 
 const HotelForm = () => {
   const { id } = useParams();
@@ -86,15 +93,16 @@ const HotelForm = () => {
   };
 
   return (
+    <DashboardLayout>
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 bg-white rounded-lg shadow-md">
       <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">
-        {isEditMode ? 'Edit Hotel' : 'Add Hotel'}
+        {isEditMode ? "Edit Hotel" : "Add Hotel"}
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {[
           { label: "Hotel Name", name: "name" },
-          { label: "Owner Name", name: "owner" },
+          { label: "Owner Name", name: "owner", type: "text", },
           { label: "Mobile Number", name: "mobile", type: "number" },
           { label: "Email", name: "email", type: "email" },
         ].map(({ label, name, type = "text" }) => (
@@ -132,7 +140,7 @@ const HotelForm = () => {
             GST Number (optional)
           </label>
           <input
-            type="text"
+            type="number"
             name="gst"
             value={formData.gst}
             onChange={handleChange}
@@ -182,13 +190,15 @@ const HotelForm = () => {
           <button
             type="button"
             className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 w-full sm:w-auto"
-            onClick={() => navigate('/hotels')}
+            onClick={() => navigate("/hotels")}
           >
             Cancel
           </button>
         </div>
       </form>
     </div>
+        </DashboardLayout>
+
   );
 };
 
