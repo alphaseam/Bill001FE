@@ -1,37 +1,37 @@
 import axios from "axios";
 
+<<<<<<< HEAD
 // Create an instance of Axios
 export const api = axios.create({
 
   baseURL: `http://localhost:8080/api`,// fetch the data from backend url
+=======
+// ✅ Create an Axios instance
+const api = axios.create({
+  baseURL: `http://localhost:8080/api`, // your backend URL
+>>>>>>> 2cf4f0a5b84e9f1c5492657c2ca40fd1bbe44940
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request Interceptor
+// ✅ Request Interceptor
 api.interceptors.request.use(
   (config) => {
-    const token = (localStorage.getItem("token"));
+    const token = localStorage.getItem("token");
     console.log("Token from localStorage:", token);
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response Interceptor
+// ✅ Response Interceptor
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (response) => response,
+  (error) => Promise.reject(error)
 );
 
 export const authApi = {
