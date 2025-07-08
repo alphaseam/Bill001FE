@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../context/Authcontext';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import { authApi } from '../services/api';
 import { toast } from 'react-toastify';
 
 const Login = () => {
@@ -35,13 +35,13 @@ const Login = () => {
 
         try {
             if (isLogin) {
-                const res = await api.post('/auth/login', {
+                const res = await authApi.login({
                     email: formData.email,
                     password: formData.password,
                 });
                 login(res.data.accessToken, res.data.refreshToken);
             } else {
-                const res = await api.post('/auth/register', {
+                const res = await authApi.register({
                     email: formData.email,
                     password: formData.password,
                 });

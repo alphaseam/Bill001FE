@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getHotels, deleteHotel } from "../services/hotelApi";
 import ConfirmationModal from "./ConfirmationModal";
 import DashboardLayout from "../Components/DashboardLayout"
+import { hotelApi } from "../services/api";
 const ITEMS_PER_PAGE = 10;
 
 const HotelList = () => {
@@ -23,7 +23,7 @@ const HotelList = () => {
   const fetchHotels = async () => {
     setLoading(true);
     try {
-      const { data, total } = await getHotels(
+      const { data, total } = await hotelApi.getHotels(
         search,
         page,
         ITEMS_PER_PAGE,
@@ -45,7 +45,7 @@ const HotelList = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await deleteHotel(confirmId);
+      await hotelApi.deleteHotel(confirmId);
       setConfirmId(null);
       fetchHotels();
     } catch (err) {

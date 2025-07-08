@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getHotelById, createHotel, updateHotel } from "../services/hotelApi";
 import DashboardLayout from "./DashboardLayout";
+import { hotelApi } from "../services/api";
 
 const hotelTypes = ["1-Star", "2-Star", "3-Star", "4-Star", "5-Star"];
 
@@ -66,9 +66,9 @@ const HotelForm = () => {
     setLoading(true);
     try {
       if (isEditMode) {
-        await updateHotel(id, formData);
+        await hotelApi.updateHotel(id, formData);
       } else {
-        await createHotel(formData);
+        await hotelApi.createHotel(formData);
       }
       navigate("/hotels");
     } catch (err) {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { getBillById, updateBill } from "../../services/billingService";
+import { billingApi } from "../../services/api";
+
 
 const BillEditPage = () => {
   const { billId } = useParams();
@@ -19,7 +19,7 @@ const BillEditPage = () => {
   useEffect(() => {
     const fetchBill = async () => {
       try {
-        const response = await getBillById(billId);
+        const response = await billingApi.getBillById(billId);
 
         // ✅ Format date as YYYY-MM-DD
         const formattedDate = new Date(response.data.billDate)
@@ -93,7 +93,7 @@ const BillEditPage = () => {
     }
 
     try {
-      await updateBill(billId, formData);
+      await billingApi.updateBill(billId, formData);
       alert("Bill updated successfully!");
       navigate("/billing");
     } catch (error) {

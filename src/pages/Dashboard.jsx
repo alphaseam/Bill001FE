@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 import SummaryBlock from '../Components/SummaryBlock';
-
-import api from '../services/api';
 import Filter from '../Components/Filter';
 import SaleCharts from '../Components/SalesChart';
 import DashboardLayout from '../Components/DashboardLayout';
+import { dashboardApi } from '../services/api';
 
 export default function Dashboard() {
     const [filters, setFilters] = useState({ date: '', dealer: '', category: '' });
@@ -22,7 +21,7 @@ export default function Dashboard() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const res = await api.get('/reports/sales', { params: filters });
+            const res = await dashboardApi.getsaleReport(filters);
             console.log(res);
             const { totalRevenue, totalTransactions, trends, byCategory, byDealer } = res.data;
 

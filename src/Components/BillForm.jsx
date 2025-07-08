@@ -42,7 +42,7 @@ const BillForm = ({ billData, onSubmit }) => {
       ...form,
       items: [
         ...form.items,
-        { name: "", quantity: 1, unitPrice: 0, discount: 0, total: 0 },
+        { customerName: "", quantity: 1, unitPrice: 0, discount: 0, total: 0 },
       ],
     });
   };
@@ -54,7 +54,7 @@ const BillForm = ({ billData, onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const invalid = form.items.some((item) => !item.name || item.quantity <= 0);
+    const invalid = form.items.some((item) => !item.customerName || item.quantity <= 0);
     if (invalid) {
       alert("Check item rows. Quantity must be > 0 and Name is required.");
       return;
