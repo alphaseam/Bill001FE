@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getHotels, deleteHotel } from "../services/hotelApi";
+//import { getHotels, deleteHotel } from "../services/hotelApi";
 import ConfirmationModal from "./ConfirmationModal";
 import DashboardLayout from "../Components/DashboardLayout"
 const ITEMS_PER_PAGE = 10;

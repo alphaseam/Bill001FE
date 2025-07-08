@@ -1,39 +1,33 @@
 import axios from "axios";
 
-// Create an instance of Axios
+// ✅ Create an Axios instance
 const api = axios.create({
-
-  baseURL: `http://localhost:8080/api`,// fetch the data from backend url
+  baseURL: `http://localhost:8080/api`, // your backend URL
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request Interceptor
+// ✅ Request Interceptor
 api.interceptors.request.use(
   (config) => {
-    const token = (localStorage.getItem("token"));
+    const token = localStorage.getItem("token");
     console.log("Token from localStorage:", token);
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response Interceptor
+// ✅ Response Interceptor
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (response) => response,
+  (error) => Promise.reject(error)
 );
 
+// ✅ Product APIs
 export const productApi = {
   getProducts: async (hotelId) => {
     return await api.get("/products", { params: { hotelId } });
@@ -46,6 +40,31 @@ export const productApi = {
   },
   deleteProduct: async (id, hotelId) => {
     return await api.delete(`/products/${id}`, { params: { hotelId } });
-  }
+  },
 };
+
+// ✅ Billing APIs
+
+/**
+ * Get bill details by ID
+ * @param {string|number} billId
+ * @returns {Promise<AxiosResponse>}
+ */
+export const getBillById = (billId) => api.get(`/bills/${billId}`);
+
+/**
+ * Update a bill by ID
+ * @param {string|number} billId
+ * @param {Object} updatedData
+ * @returns {Promise<AxiosResponse>}
+ */
+export const updateBill = (billId, updatedData) => api.put(`/bills/${billId}`, updatedData);
+
+/**
+ * Create a new bill
+ * @param {Object} billPayload
+ * @returns {Promise<AxiosResponse>}
+ */
+export const createBill = (billPayload) => api.post(`/bill`, billPayload);
+
 export default api;
