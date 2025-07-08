@@ -1,13 +1,7 @@
-<<<<<<< HEAD
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { getHotelById, createHotel, updateHotel } from '../services/hotelApi';
-=======
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getHotelById, createHotel, updateHotel } from "../services/hotelApi";
 import DashboardLayout from "./DashboardLayout";
->>>>>>> 9138388af4eae58b2bf4395fd865972de352f639
 
 const hotelTypes = ["1-Star", "2-Star", "3-Star", "4-Star", "5-Star"];
 
@@ -94,110 +88,110 @@ const HotelForm = () => {
 
   return (
     <DashboardLayout>
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">
-        {isEditMode ? "Edit Hotel" : "Add Hotel"}
-      </h2>
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center">
+          {isEditMode ? "Edit Hotel" : "Add Hotel"}
+        </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {[
-          { label: "Hotel Name", name: "name" },
-          { label: "Owner Name", name: "owner", type: "text", },
-          { label: "Mobile Number", name: "mobile", type: "number" },
-          { label: "Email", name: "email", type: "email" },
-        ].map(({ label, name, type = "text" }) => (
-          <div key={name}>
-            <label className="block font-medium mb-1">{label}</label>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {[
+            { label: "Hotel Name", name: "name" },
+            { label: "Owner Name", name: "owner", type: "text", },
+            { label: "Mobile Number", name: "mobile", type: "number" },
+            { label: "Email", name: "email", type: "email" },
+          ].map(({ label, name, type = "text" }) => (
+            <div key={name}>
+              <label className="block font-medium mb-1">{label}</label>
+              <input
+                type={type}
+                name={name}
+                value={formData[name]}
+                onChange={handleChange}
+                className="w-full border px-3 py-2 rounded"
+              />
+              {errors[name] && (
+                <p className="text-sm text-red-500 mt-1">{errors[name]}</p>
+              )}
+            </div>
+          ))}
+
+          <div>
+            <label className="block font-medium mb-1">Address</label>
+            <textarea
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              rows="3"
+              className="w-full border px-3 py-2 rounded resize-none"
+            />
+            {errors.address && (
+              <p className="text-sm text-red-500 mt-1">{errors.address}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block font-medium mb-1">
+              GST Number (optional)
+            </label>
             <input
-              type={type}
-              name={name}
-              value={formData[name]}
+              type="number"
+              name="gst"
+              value={formData.gst}
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded"
             />
-            {errors[name] && (
-              <p className="text-sm text-red-500 mt-1">{errors[name]}</p>
+          </div>
+
+          <div>
+            <label className="block font-medium mb-1">Hotel Type</label>
+            <select
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+            >
+              <option value="">Select Type</option>
+              {hotelTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+            {errors.type && (
+              <p className="text-sm text-red-500 mt-1">{errors.type}</p>
             )}
           </div>
-        ))}
 
-        <div>
-          <label className="block font-medium mb-1">Address</label>
-          <textarea
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            rows="3"
-            className="w-full border px-3 py-2 rounded resize-none"
-          />
-          {errors.address && (
-            <p className="text-sm text-red-500 mt-1">{errors.address}</p>
-          )}
-        </div>
+          <div className="flex items-center gap-2">
+            <label className="font-medium">Active Status</label>
+            <input
+              type="checkbox"
+              name="status"
+              checked={formData.status}
+              onChange={handleChange}
+              className="w-4 h-4"
+            />
+          </div>
 
-        <div>
-          <label className="block font-medium mb-1">
-            GST Number (optional)
-          </label>
-          <input
-            type="number"
-            name="gst"
-            value={formData.gst}
-            onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
-          />
-        </div>
-
-        <div>
-          <label className="block font-medium mb-1">Hotel Type</label>
-          <select
-            name="type"
-            value={formData.type}
-            onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
-          >
-            <option value="">Select Type</option>
-            {hotelTypes.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-          {errors.type && (
-            <p className="text-sm text-red-500 mt-1">{errors.type}</p>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="font-medium">Active Status</label>
-          <input
-            type="checkbox"
-            name="status"
-            checked={formData.status}
-            onChange={handleChange}
-            className="w-4 h-4"
-          />
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4 mt-4">
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto"
-            disabled={loading}
-          >
-            {loading ? "Saving..." : isEditMode ? "Update Hotel" : "Add Hotel"}
-          </button>
-          <button
-            type="button"
-            className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 w-full sm:w-auto"
-            onClick={() => navigate("/hotels")}
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
-        </DashboardLayout>
+          <div className="flex flex-col sm:flex-row gap-4 mt-4">
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto"
+              disabled={loading}
+            >
+              {loading ? "Saving..." : isEditMode ? "Update Hotel" : "Add Hotel"}
+            </button>
+            <button
+              type="button"
+              className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 w-full sm:w-auto"
+              onClick={() => navigate("/hotels")}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </DashboardLayout>
 
   );
 };

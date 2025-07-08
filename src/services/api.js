@@ -3,7 +3,7 @@ import axios from "axios";
 // Create an instance of Axios
 const api = axios.create({
 
-  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,// fetch the data from backend url
+  baseURL: `http://localhost:8080/api`,// fetch the data from backend url
   headers: {
     'Content-Type': 'application/json',
   },
@@ -34,4 +34,18 @@ api.interceptors.response.use(
   }
 );
 
+export const productApi = {
+  getProducts: async (hotelId) => {
+    return await api.get("/products", { params: { hotelId } });
+  },
+  addProduct: async (product, hotelId) => {
+    return await api.post("/products", product, { params: { hotelId } });
+  },
+  updateProduct: async (id, product, hotelId) => {
+    return await api.put(`/products/${id}`, product, { params: { hotelId } });
+  },
+  deleteProduct: async (id, hotelId) => {
+    return await api.delete(`/products/${id}`, { params: { hotelId } });
+  }
+};
 export default api;

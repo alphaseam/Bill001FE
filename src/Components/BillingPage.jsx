@@ -61,11 +61,6 @@ const BillingPage = () => {
             <div ref={billRef} className="max-w-4xl mx-auto p-4 sm:p-6 md:p-8 bg-white shadow-md rounded-lg">
                 <h1 className="text-lg sm:text-2xl font-bold mb-6 text-center text-gray-700">Billing UI</h1>
 
-<<<<<<< HEAD
-
-=======
-                {/* Customer Info */}
->>>>>>> 9138388af4eae58b2bf4395fd865972de352f639
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-sm sm:text-base">
                     <div>
                         <label className="block mb-1 font-medium">Customer Name</label>
@@ -90,11 +85,6 @@ const BillingPage = () => {
                     </div>
                 </div>
 
-<<<<<<< HEAD
-
-=======
-                {/* Products Section */}
->>>>>>> 9138388af4eae58b2bf4395fd865972de352f639
                 <div className="max-h-[50vh] overflow-y-auto pr-1 space-y-4 mb-6 text-sm sm:text-base">
                     {products.map((item, index) => (
                         <div
@@ -114,7 +104,6 @@ const BillingPage = () => {
                                 />
                             </div>
 
-<<<<<<< HEAD
                             <input
                                 type="number"
                                 placeholder="Quantity"
@@ -136,48 +125,6 @@ const BillingPage = () => {
                                 value={item.discount === 0 ? '' : item.discount}
                                 onChange={(e) => handleProductChange(index, "discount", e.target.value)}
                             />
-=======
-                            {/* Quantity */}
-                            <div className="w-full max-w-2xl">
-                                <label htmlFor={`product-qty-${index}`} className="block mb-1 font-medium">Quantity</label>
-                                <input
-                                    id={`product-qty-${index}`}
-                                    type="number"
-                                    placeholder="Quantity"
-                                    className="w-full border px-3 py-2 rounded placeholder-gray-500"
-                                    value={item.qty === 0 ? '' : item.qty}
-                                    onChange={(e) => handleProductChange(index, "qty", e.target.value)}
-                                />
-                            </div>
-
-                            {/* Price */}
-                            <div className="w-full max-w-2xl">
-                                <label htmlFor={`product-price-${index}`} className="block mb-1 font-medium">Price</label>
-                                <input
-                                    id={`product-price-${index}`}
-                                    type="number"
-                                    placeholder="Price"
-                                    className="w-full border px-3 py-2 rounded placeholder-gray-500"
-                                    value={item.price === 0 ? '' : item.price}
-                                    onChange={(e) => handleProductChange(index, "price", e.target.value)}
-                                />
-                            </div>
-
-                            {/* Discount */}
-                            <div className="w-full max-w-2xl">
-                                <label htmlFor={`product-discount-${index}`} className="block mb-1 font-medium">Discount</label>
-                                <input
-                                    id={`product-discount-${index}`}
-                                    type="number"
-                                    placeholder="Discount"
-                                    className="w-full border px-3 py-2 rounded placeholder-gray-500"
-                                    value={item.discount === 0 ? '' : item.discount}
-                                    onChange={(e) => handleProductChange(index, "discount", e.target.value)}
-                                />
-                            </div>
-
-                            {/* Remove Button */}
->>>>>>> 9138388af4eae58b2bf4395fd865972de352f639
                             {products.length > 1 && (
                                 <div className="w-full max-w-2xl text-right">
                                     <button
@@ -200,12 +147,8 @@ const BillingPage = () => {
                     </button>
                 </div>
 
-<<<<<<< HEAD
 
 
-=======
-                {/* Totals */}
->>>>>>> 9138388af4eae58b2bf4395fd865972de352f639
                 <div className="border-t pt-4 space-y-2 text-sm sm:text-base">
                     <div className="flex justify-between">
                         <span>Subtotal:</span>
@@ -225,11 +168,6 @@ const BillingPage = () => {
                     </div>
                 </div>
 
-<<<<<<< HEAD
-
-=======
-                {/* Submit */}
->>>>>>> 9138388af4eae58b2bf4395fd865972de352f639
                 <div className="sticky bottom-4 z-10 bg-white pt-4 mt-6">
                     <button
                         onClick={handleSubmit}
@@ -241,11 +179,6 @@ const BillingPage = () => {
                 </div>
             </div>
 
-<<<<<<< HEAD
-
-=======
-            {/* Success Modal */}
->>>>>>> 9138388af4eae58b2bf4395fd865972de352f639
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4">
                     <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md text-center shadow-xl max-h-screen overflow-y-auto text-sm sm:text-base">
