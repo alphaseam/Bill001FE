@@ -72,6 +72,8 @@ const HotelForm = () => {
     if (!validate()) return;
 
     setLoading(true);
+    console.log("Submitting form data:", formData);
+
     try {
       if (isEditMode) {
         await hotelApi.updateHotel(id, formData);
@@ -105,7 +107,7 @@ const HotelForm = () => {
           {[
             { label: "Hotel Name", name: "hotelName" },
             { label: "Owner Name", name: "ownerName" },
-            { label: "Mobile Number", name: "mobile", type: "tel" },
+            { label: "Mobile Number", name: "mobile", type: "text" },
             { label: "Email", name: "email", type: "email" },
           ].map(({ label, name, type = "text" }) => (
             <div key={name}>

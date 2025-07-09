@@ -107,7 +107,7 @@ const HotelList = () => {
                       <strong>Hotel:</strong> {hotel.hotelName}
                     </div>
                     <div className="mb-2">
-                      <strong>Owner:</strong> {hotel.owmerName}
+                      <strong>Owner:</strong> {hotel.ownerName}
                     </div>
                     <div className="mb-2">
                       <strong>Mobile:</strong> {hotel.mobile}

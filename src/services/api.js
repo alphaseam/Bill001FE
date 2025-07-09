@@ -51,9 +51,9 @@ export const hotelApi = {
   getHotelById: (id) => api.get(`/hotel/${id}`),
   updateHotel: (id, hotel) => api.put(`/hotel/${id}`, hotel),
   deleteHotel: (id) => api.delete(`/hotel/${id}`),
-  partallyUpdateHotel: (id, hotel) => api.patch(`/hotel/${id}`, hotel),
+  partiallyUpdateHotel: (id, hotel) => api.patch(`/hotel/${id}`, hotel),
   createHotel: (hotel) => api.post("/hotel", hotel),
-  getHoetlByUserId: (userId) => api.get("/hotel/user", { params: { userId } }),
+  getHotelByUserId: (userId) => api.get("/hotel/user", { params: { userId } }),
   getAllHotels: () => api.get("/hotel/all"),
 };
 
