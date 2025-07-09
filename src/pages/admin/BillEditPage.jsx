@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { getBillById, updateBill } from "../../services/billingService";
+//import { getBillById, updateBill } from "../../services/api";
 
 const BillEditPage = () => {
   const { billId } = useParams();

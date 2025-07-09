@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-//import BillingPage from "./Components/BillingPage"; // ✅ Ensure this path is correct
 import Product from "./pages/Product";
 import Admin from "./pages/admin/Admin";
 import BillEditPage from "./pages/admin/BillEditPage";
@@ -54,10 +53,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route
-            path="billing/edit/:billId"
-            element={<BillEditPage />}
-          />
+          <Route path="billing/edit/:billId" element={<BillEditPage />} />
         </Route>
 
         <Route
@@ -90,7 +86,7 @@ function App() {
           path="/billling"
           element={
             <PrivateRoute>
-              <BillingPage/>
+              <BillingPage />
             </PrivateRoute>
           }
         />

@@ -48,4 +48,35 @@ export const productApi = {
     return await api.delete(`/products/${id}`, { params: { hotelId } });
   }
 };
+
+
+//  Hotel APIs 
+export const hotelApi = {
+  getHotels: async () => {
+    const res = await api.get("/hotel/all");
+    return {
+      data: res.data.data,
+      total: res.data.data.length,
+    };
+  },
+  getHotelById: async (id) => {
+    const res = await api.get(`/hotel/${id}`);
+    return res.data.data;
+  },
+  createHotel: async (data) => {
+    const res = await api.post("/hotel", data);
+    return res.data;
+  },
+  updateHotel: async (id, data) => {
+    const res = await api.put(`/hotel/${id}`, data);
+    return res.data.data;
+  },
+  deleteHotel: async (id) => {
+    const res = await api.delete(`/hotel/${id}`);
+    return res.data.data;
+  },
+};
+
+
+
 export default api;

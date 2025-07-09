@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getHotels, deleteHotel } from "../services/hotelApi";
+import { hotelApi } from "../services/api";
 import ConfirmationModal from "./ConfirmationModal";
-import DashboardLayout from "../Components/DashboardLayout"
+import DashboardLayout from "../Components/DashboardLayout";
 const ITEMS_PER_PAGE = 10;
 
 const HotelList = () => {
@@ -23,13 +23,8 @@ const HotelList = () => {
   const fetchHotels = async () => {
     setLoading(true);
     try {
-      const { data, total } = await getHotels(
-        search,
-        page,
-        ITEMS_PER_PAGE,
-        sortField,
-        "asc"
-      );
+      const { data, total } = await hotelApi.getHotels();
+      console.log(data);
       setHotels(data);
       setTotalPages(Math.ceil(total / ITEMS_PER_PAGE));
     } catch (err) {
@@ -45,7 +40,8 @@ const HotelList = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await deleteHotel(confirmId);
+      await hotelApi.deleteHotel(confirmId);
+
       setConfirmId(null);
       fetchHotels();
     } catch (err) {
@@ -97,14 +93,14 @@ const HotelList = () => {
             <div className="sm:hidden space-y-4">
               {hotels.map((hotel) => (
                 <div
-                  key={hotel.id}
+                  key={hotel.hotelId}
                   className="border rounded-lg p-4 shadow-sm bg-white"
                 >
                   <div className="mb-2">
-                    <strong>Hotel:</strong> {hotel.name}
+                    <strong>Hotel:</strong> {hotel.hotelName}
                   </div>
                   <div className="mb-2">
-                    <strong>Owner:</strong> {hotel.owner}
+                    <strong>Owner:</strong> {hotel.owmerName}
                   </div>
                   <div className="mb-2">
                     <strong>Mobile:</strong> {hotel.mobile}
@@ -115,20 +111,30 @@ const HotelList = () => {
                   <div className="mb-2">
                     <strong>Status:</strong>
                     <span
-                      className={`ml-2 px-2 py-1 text-sm rounded ${hotel.status ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800"}`}
+                      className={`ml-2 px-2 py-1 text-sm rounded ${
+                        hotel.isActive === true ||
+                        hotel.isActive === "true" ||
+                        hotel.isActive === "active"
+                          ? "bg-green-200 text-green-800"
+                          : "bg-red-200 text-red-800"
+                      }`}
                     >
-                      {hotel.status ? "Active" : "Inactive"}
+                      {hotel.isActive === true ||
+                      hotel.isActive === "true" ||
+                      hotel.isActive === "active"
+                        ? "Active"
+                        : "Inactive"}
                     </span>
                   </div>
                   <div className="flex justify-end gap-4 mt-2">
                     <button
-                      onClick={() => navigate(`/hotels/edit/${hotel.id}`)}
+                      onClick={() => navigate(`/hotels/edit/${hotel.hotelId}`)}
                       className="text-blue-600 hover:underline"
                     >
                       Edit
                     </button>
                     <button
-                      onClick={() => confirmDelete(hotel.id)}
+                      onClick={() => confirmDelete(hotel.hotelId)}
                       className="text-red-600 hover:underline"
                     >
                       Delete
@@ -159,27 +165,39 @@ const HotelList = () => {
                     </tr>
                   ) : (
                     hotels.map((hotel) => (
-                      <tr key={hotel.id} className="hover:bg-gray-50">
-                        <td className="p-2 border">{hotel.name}</td>
-                        <td className="p-2 border">{hotel.owner}</td>
+                      <tr key={hotel.hotelId} className="hover:bg-gray-50">
+                        <td className="p-2 border">{hotel.hotelName}</td>
+                        <td className="p-2 border">{hotel.ownerName}</td>
                         <td className="p-2 border">{hotel.mobile}</td>
                         <td className="p-2 border">{hotel.email}</td>
                         <td className="p-2 border">
                           <span
-                            className={`px-2 py-1 text-sm rounded ${hotel.status ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800"}`}
+                            className={`ml-2 px-2 py-1 text-sm rounded ${
+                              hotel.isActive === true ||
+                              hotel.isActive === "true" ||
+                              hotel.isActive === "active"
+                                ? "bg-green-200 text-green-800"
+                                : "bg-red-200 text-red-800"
+                            }`}
                           >
-                            {hotel.status ? "Active" : "Inactive"}
+                            {hotel.isActive === true ||
+                            hotel.isActive === "true" ||
+                            hotel.isActive === "active"
+                              ? "Active"
+                              : "Inactive"}
                           </span>
                         </td>
                         <td className="p-2 border space-x-2">
                           <button
-                            onClick={() => navigate(`/hotels/edit/${hotel.id}`)}
+                            onClick={() =>
+                              navigate(`/hotels/edit/${hotel.hotelId}`)
+                            }
                             className="text-blue-600 hover:underline"
                           >
                             Edit
                           </button>
                           <button
-                            onClick={() => confirmDelete(hotel.id)}
+                            onClick={() => confirmDelete(hotel.hotelId)}
                             className="text-red-600 hover:underline"
                           >
                             Delete
