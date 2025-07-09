@@ -27,7 +27,7 @@ const HotelList = () => {
       const hotelList = Array.isArray(response?.data?.data)
         ? response.data.data
         : [];
-
+      console.log("Fetched hotel data:", hotelList);
       console.log(response);
 
       setHotels(hotelList);
