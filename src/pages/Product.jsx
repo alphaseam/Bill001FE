@@ -12,7 +12,7 @@ const Product = () => {
 
     const fetchproducts = async () => {
         try {
-            const response = productApi.getProducts(1); // Assuming hotelId is 1 for this example
+            const response = await productApi.getProducts(1); // Assuming hotelId is 1 for this example
             setProducts(response.data);
             console.log("Products fetched:", response.data);
         } catch (error) {

@@ -59,7 +59,7 @@ const ProductList = ({ products, onEdit, onDelete }) => {
                                     <QRCodePreview
                                         itemNumber={p.quantity}
                                         price={p.price}
-                                        size={p.size}
+
                                     />
                                 </td>
                             </tr>

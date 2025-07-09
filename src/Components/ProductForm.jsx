@@ -5,6 +5,7 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
         productName: "",
+        productCode: "",
         category: "",
         price: "",
         quantity: "",
@@ -74,7 +75,7 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
                 if (val) data.append(key, val);
             });
             onSubmit(data);
-            setFormData(resetData);
+            resetData();
             setErrors({});
         } catch (error) {
             console.error("Error submitting form:", error);
@@ -84,11 +85,12 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
     const resetData = () => {
         setFormData({
             productName: "",
+            productCode: "",
             category: "",
             price: "",
             quantity: "",
             size: "",
-            image: null,
+            productimage: null,
         });
     }
     return (
@@ -122,6 +124,25 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
                             )}
                         </div>
 
+                        <div className="flex flex-col">
+                            <label htmlFor="productCode" className="mb-1 font-medium text-sm">
+                                Product code <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="productCode"
+                                name="productCode"
+                                required
+                                value={formData.productCode}
+                                onChange={handleChange}
+                                error={errors.productCode}
+                                className="border p-2 rounded"
+                                placeholder="Product code"
+                            />
+                            {errors.productName && (
+                                <p className="text-red-500 text-xs mt-1">{errors.productName}</p>
+                            )}
+                        </div>
                         {/* Category */}
                         <div className="flex flex-col">
                             <label htmlFor="category" className="mb-1 font-medium text-sm">

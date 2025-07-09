@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { hotelApi } from "../services/api";
 import DashboardLayout from "./DashboardLayout";
+import { hotelApi } from "../services/api";
 
 const hotelTypes = ["1-Star", "2-Star", "3-Star", "4-Star", "5-Star"];
 
@@ -29,23 +29,28 @@ const HotelForm = () => {
   useEffect(() => {
     if (!isEditMode) return;
 
-    hotelApi
-      .getHotelById(id)
-      .then((data) => {
-        if (data) {
+    const fetchHotel = async () => {
+      try {
+        const response = await hotelApi.getHotelById(id);
+        const hotel = response?.data?.data;
+        if (hotel) {
           setFormData({
-            hotelName: data.hotelName || "",
-            ownerName: data.ownerName || "",
-            mobile: data.mobile || "",
-            email: data.email || "",
-            address: data.address || "",
-            gstNumber: data.gstNumber || "",
-            hotelType: data.hotelType || "",
-            isActive: data.isActive ?? true,
+            hotelName: hotel.hotelName || "",
+            ownerName: hotel.ownerName || "",
+            mobile: hotel.mobile || "",
+            email: hotel.email || "",
+            address: hotel.address || "",
+            gstNumber: hotel.gstNumber || "",
+            hotelType: hotel.hotelType || "",
+            isActive: hotel.isActive ?? true,
           });
         }
-      })
-      .catch((err) => console.error("Failed to fetch hotel:", err));
+      } catch (err) {
+        console.error("Failed to fetch hotel:", err);
+      }
+    };
+
+    fetchHotel();
   }, [id]);
 
   const validate = () => {
@@ -100,7 +105,7 @@ const HotelForm = () => {
           {[
             { label: "Hotel Name", name: "hotelName" },
             { label: "Owner Name", name: "ownerName" },
-            { label: "Mobile Number", name: "mobile", type: "number" },
+            { label: "Mobile Number", name: "mobile", type: "tel" },
             { label: "Email", name: "email", type: "email" },
           ].map(({ label, name, type = "text" }) => (
             <div key={name}>

@@ -7,7 +7,7 @@ export const calculateTotals = (items) => {
     item.total = quantity * unitPrice - discount;
     subtotal += item.total;
   });
-  const tax = subtotal * 0.18;
+  const tax = subtotal * 0.12;
   const finalAmount = subtotal + tax;
   return { subtotal, tax, finalAmount };
 };

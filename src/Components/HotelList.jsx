@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { hotelApi } from "../services/api";
 import ConfirmationModal from "./ConfirmationModal";
 import DashboardLayout from "../Components/DashboardLayout";
+import { hotelApi } from "../services/api";
 const ITEMS_PER_PAGE = 10;
 
 const HotelList = () => {
@@ -23,12 +23,19 @@ const HotelList = () => {
   const fetchHotels = async () => {
     setLoading(true);
     try {
-      const { data, total } = await hotelApi.getHotels();
-      console.log(data);
-      setHotels(data);
-      setTotalPages(Math.ceil(total / ITEMS_PER_PAGE));
+      const response = await hotelApi.getAllHotels();
+      const hotelList = Array.isArray(response?.data?.data)
+        ? response.data.data
+        : [];
+
+      console.log(response);
+
+      setHotels(hotelList);
+      const totalItems = hotelList.length;
+      setTotalPages(Math.ceil(totalItems / ITEMS_PER_PAGE));
     } catch (err) {
       console.error("Error loading hotels:", err);
+      setHotels([]);
     } finally {
       setLoading(false);
     }
@@ -41,7 +48,6 @@ const HotelList = () => {
   const handleConfirmDelete = async () => {
     try {
       await hotelApi.deleteHotel(confirmId);
-
       setConfirmId(null);
       fetchHotels();
     } catch (err) {
@@ -91,57 +97,60 @@ const HotelList = () => {
         ) : (
           <>
             <div className="sm:hidden space-y-4">
-              {hotels.map((hotel) => (
-                <div
-                  key={hotel.hotelId}
-                  className="border rounded-lg p-4 shadow-sm bg-white"
-                >
-                  <div className="mb-2">
-                    <strong>Hotel:</strong> {hotel.hotelName}
-                  </div>
-                  <div className="mb-2">
-                    <strong>Owner:</strong> {hotel.owmerName}
-                  </div>
-                  <div className="mb-2">
-                    <strong>Mobile:</strong> {hotel.mobile}
-                  </div>
-                  <div className="mb-2">
-                    <strong>Email:</strong> {hotel.email}
-                  </div>
-                  <div className="mb-2">
-                    <strong>Status:</strong>
-                    <span
-                      className={`ml-2 px-2 py-1 text-sm rounded ${
-                        hotel.isActive === true ||
+              {Array.isArray(hotels) &&
+                hotels.map((hotel) => (
+                  <div
+                    key={hotel.hotelId}
+                    className="border rounded-lg p-4 shadow-sm bg-white"
+                  >
+                    <div className="mb-2">
+                      <strong>Hotel:</strong> {hotel.hotelName}
+                    </div>
+                    <div className="mb-2">
+                      <strong>Owner:</strong> {hotel.owmerName}
+                    </div>
+                    <div className="mb-2">
+                      <strong>Mobile:</strong> {hotel.mobile}
+                    </div>
+                    <div className="mb-2">
+                      <strong>Email:</strong> {hotel.email}
+                    </div>
+                    <div className="mb-2">
+                      <strong>Status:</strong>
+                      <span
+                        className={`ml-2 px-2 py-1 text-sm rounded ${
+                          hotel.isActive === true ||
+                          hotel.isActive === "true" ||
+                          hotel.isActive === "active"
+                            ? "bg-green-200 text-green-800"
+                            : "bg-red-200 text-red-800"
+                        }`}
+                      >
+                        {hotel.isActive === true ||
                         hotel.isActive === "true" ||
                         hotel.isActive === "active"
-                          ? "bg-green-200 text-green-800"
-                          : "bg-red-200 text-red-800"
-                      }`}
-                    >
-                      {hotel.isActive === true ||
-                      hotel.isActive === "true" ||
-                      hotel.isActive === "active"
-                        ? "Active"
-                        : "Inactive"}
-                    </span>
+                          ? "Active"
+                          : "Inactive"}
+                      </span>
+                    </div>
+                    <div className="flex justify-end gap-4 mt-2">
+                      <button
+                        onClick={() =>
+                          navigate(`/hotels/edit/${hotel.hotelId}`)
+                        }
+                        className="text-blue-600 hover:underline"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => confirmDelete(hotel.hotelId)}
+                        className="text-red-600 hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex justify-end gap-4 mt-2">
-                    <button
-                      onClick={() => navigate(`/hotels/edit/${hotel.hotelId}`)}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => confirmDelete(hotel.hotelId)}
-                      className="text-red-600 hover:underline"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
 
             <div className="hidden sm:block overflow-x-auto">

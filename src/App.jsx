@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import HotelList from "./Components/HotelList";
 import HotelForm from "./Components/HotelForm";
-import BillingPage from "./Components/BillingPage";
+import BillingPage from "./pages/admin/BillingPage";
 function App() {
   return (
     <>
