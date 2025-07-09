@@ -75,7 +75,7 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
                 if (val) data.append(key, val);
             });
             onSubmit(data);
-            setFormData(resetData);
+            resetData();
             setErrors({});
         } catch (error) {
             console.error("Error submitting form:", error);
@@ -90,7 +90,7 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
             price: "",
             quantity: "",
             size: "",
-            image: null,
+            productimage: null,
         });
     }
     return (

@@ -23,7 +23,7 @@ const HotelList = () => {
   const fetchHotels = async () => {
     setLoading(true);
     try {
-      const { data, total } = await hotelApi.getHotels(
+      const { data, total } = await hotelApi.getAllHotels(
         search,
         page,
         ITEMS_PER_PAGE,

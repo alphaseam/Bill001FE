@@ -3,10 +3,10 @@ import { FaDownload } from "react-icons/fa";
 import QRCode from "react-qr-code";
 
 
-const QRCodePreview = ({ itemNumber, price, size }) => {
-    if (!itemNumber || !price || !size) return null;
+const QRCodePreview = ({ itemNumber, price }) => {
+    if (!itemNumber || !price) return null;
 
-    const qrValue = `Item Number: ${itemNumber}, Price: ${price}, Size: ${size} ,total: ${itemNumber * price}`;
+    const qrValue = `Item Number: ${itemNumber}, Price: ${price},total: ${itemNumber * price}`;
 
     const handleDownload = () => {
         const svg = document.querySelector("#qr-code svg");

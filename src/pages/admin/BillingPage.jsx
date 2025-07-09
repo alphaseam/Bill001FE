@@ -1,18 +1,19 @@
 import React, { useState, useRef } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { billingApi } from '../../services/api';
 
 
 const BillingPage = () => {
   const [customer, setCustomer] = useState({ customerName: '', mobileNumber: '' });
   const [products, setProducts] = useState([
-    { productId: null, productName: '', quantity: 0, unitPrice: 0, discount: 0 },
+    { productId: '', productName: '', quantity: 0, unitPrice: 0, discount: 0 },
   ]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const billRef = useRef();
 
-  const taxRate = 0.18;
+  const taxRate = 0.18; // 18% tax
 
   const handleProductChange = (index, field, value) => {
     const updated = [...products];
@@ -54,7 +55,7 @@ const BillingPage = () => {
 
     // ✅ Backend expects "items" not "products"
     const items = products.map((p) => ({
-      productId: null,
+      productId: p.productId || null, // Ensure productId is included
       productName: p.productName,
       quantity: p.quantity,
       unitPrice: p.unitPrice,
@@ -71,25 +72,25 @@ const BillingPage = () => {
 
     setLoading(true);
     try {
-      const response = await api.post('/bill/mobile', payload);
+      const response = await billingApi.createBill(payload);
 
       if (response.status === 200) {
         setShowModal(true);
 
-        setTimeout(async () => {
-          const canvas = await html2canvas(billRef.current);
-          const imgData = canvas.toDataURL('image/png');
-          const pdf = new jsPDF();
-          const imgProps = pdf.getImageProperties(imgData);
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-          pdf.save('invoice.pdf');
-        }, 300);
+        // setTimeout(async () => {
+        //   const canvas = await html2canvas(billRef.current);
+        //   const imgData = canvas.toDataURL('image/png');
+        //   const pdf = new jsPDF();
+        //   const imgProps = pdf.getImageProperties(imgData);
+        //   const pdfWidth = pdf.internal.pageSize.getWidth();
+        //   const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        //   pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        //   pdf.save('invoice.pdf');
+        // }, 300);
 
         setCustomer({ customerName: '', mobileNumber: '' });
         setProducts([
-          { productId: null, productName: '', quantity: 0, unitPrice: 0, discount: 0 },
+          { productId: '', productName: '', quantity: 0, unitPrice: 0, discount: 0 },
         ]);
       }
     } catch (error) {
@@ -136,6 +137,15 @@ const BillingPage = () => {
                   className="w-full border px-3 py-2 rounded"
                   value={item.productName}
                   onChange={(e) => handleProductChange(index, 'productName', e.target.value)}
+                />
+              </div>
+              <div className="mb-2">
+                <label className="block mb-1">Product Id</label>
+                <input
+                  type="text"
+                  className="w-full border px-3 py-2 rounded"
+                  value={item.productId}
+                  onChange={(e) => handleProductChange(index, 'productId', e.target.value)}
                 />
               </div>
               <div className="grid grid-cols-3 gap-2">

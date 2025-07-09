@@ -1,15 +1,9 @@
 import axios from "axios";
 
-<<<<<<< HEAD
 // Create an instance of Axios
 export const api = axios.create({
 
   baseURL: `http://localhost:8080/api`,// fetch the data from backend url
-=======
-// ✅ Create an Axios instance
-const api = axios.create({
-  baseURL: `http://localhost:8080/api`, // your backend URL
->>>>>>> 2cf4f0a5b84e9f1c5492657c2ca40fd1bbe44940
   headers: {
     'Content-Type': 'application/json',
   },

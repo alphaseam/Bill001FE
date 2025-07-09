@@ -50,7 +50,11 @@ const Login = () => {
             toast.success(isLogin ? 'Logged in successfully!' : 'Registered successfully!');
             navigate('/dashboard');
         } catch (err) {
-            setSubmitError('Invalid email or password');
+            const message =
+                err?.response?.data?.message ||
+                (isLogin ? 'Invalid email or password' : 'Registration failed. Email might already be registered.');
+            setSubmitError(message);
+            toast.error(message);
         }
     };
 
