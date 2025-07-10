@@ -54,22 +54,7 @@ function App() {
               </PrivateRoute>
             }
           />
-<<<<<<< HEAD
-          <Route
-            path="billinglist"
-            element={
-              <PrivateRoute>
-                <BillList />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="billing/edit/:billId"
-            element={<BillEditPage />}
-          />
-=======
           <Route path="billing/edit/:billId" element={<BillEditPage />} />
->>>>>>> 9a8c66640534d5925a9db3ca6aed468ef2e799f3
         </Route>
 
         <Route

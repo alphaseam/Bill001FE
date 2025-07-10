@@ -13,6 +13,7 @@ const HotelList = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [sortField, setSortField] = useState("name");
+  const [sortOrder, setSortOrder] = useState("asc");
   const [loading, setLoading] = useState(false);
   const [confirmId, setConfirmId] = useState(null);
 
@@ -20,21 +21,45 @@ const HotelList = () => {
 
   useEffect(() => {
     fetchHotels();
-  }, [search, page, sortField]);
+  }, [search, sortField, sortOrder]);
 
   const fetchHotels = async () => {
     setLoading(true);
     try {
       const response = await hotelApi.getAllHotels();
-      const hotelList = Array.isArray(response?.data?.data)
+      let hotelList = Array.isArray(response?.data?.data)
         ? response.data.data
         : [];
-      console.log("Fetched hotel data:", hotelList);
-      console.log(response);
 
-      setHotels(hotelList);
-      const totalItems = hotelList.length;
-      setTotalPages(Math.ceil(totalItems / ITEMS_PER_PAGE));
+      // 🔍 Search by hotelName or ownerName
+      if (search.trim() !== "") {
+        const lowerSearch = search.toLowerCase();
+        hotelList = hotelList.filter(
+          (hotel) =>
+            hotel.hotelName?.toLowerCase().includes(lowerSearch) ||
+            hotel.ownerName?.toLowerCase().includes(lowerSearch)
+        );
+      }
+
+      // ⬆️⬇️ Sort
+      if (sortField === "name") {
+        hotelList.sort((a, b) => {
+          const result = a.hotelName.localeCompare(b.hotelName);
+          return sortOrder === "asc" ? result : -result;
+        });
+      } else if (sortField === "createdAt") {
+        hotelList.sort((a, b) => {
+          const result = new Date(a.createdAt) - new Date(b.createdAt);
+          return sortOrder === "asc" ? result : -result;
+        });
+      }
+
+      setTotalPages(Math.ceil(hotelList.length / ITEMS_PER_PAGE));
+      const paginated = hotelList.slice(
+        (page - 1) * ITEMS_PER_PAGE,
+        page * ITEMS_PER_PAGE
+      );
+      setHotels(paginated);
     } catch (err) {
       console.error("Error loading hotels:", err);
       setHotels([]);
@@ -59,6 +84,16 @@ const HotelList = () => {
     }
   };
 
+  const toggleSort = (field) => {
+    if (sortField === field) {
+      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortOrder("asc");
+    }
+    setPage(1);
+  };
+
   return (
     <DashboardLayout>
       <div className="max-w-6xl mx-auto p-4 sm:p-6">
@@ -75,20 +110,15 @@ const HotelList = () => {
         <div className="flex flex-col sm:flex-row gap-4 mb-4">
           <input
             type="text"
-            placeholder="Search by name or owner..."
+            placeholder="Search by hotel name or owner..."
             value={search}
-            onChange={(e) => {
-              const input = e.target.value;
-              if (/^[a-zA-Z\s]*$/.test(input)) {
-                setSearch(input);
-              }
-            }}
+            onChange={(e) => setSearch(e.target.value)}
             className="border px-3 py-2 w-full rounded"
           />
 
           <select
             value={sortField}
-            onChange={(e) => setSortField(e.target.value)}
+            onChange={(e) => toggleSort(e.target.value)}
             className="border px-3 py-2 rounded"
           >
             <option value="name">Sort by Name</option>
@@ -100,71 +130,29 @@ const HotelList = () => {
           <p>Loading hotels...</p>
         ) : (
           <>
-            <div className="sm:hidden space-y-4">
-              {Array.isArray(hotels) &&
-                hotels.map((hotel) => (
-                  <div
-                    key={hotel.hotelId}
-                    className="border rounded-lg p-4 shadow-sm bg-white"
-                  >
-                    <div className="mb-2">
-                      <strong>Hotel:</strong> {hotel.hotelName}
-                    </div>
-                    <div className="mb-2">
-                      <strong>Owner:</strong> {hotel.ownerName}
-                    </div>
-                    <div className="mb-2">
-                      <strong>Mobile:</strong> {hotel.mobile}
-                    </div>
-                    <div className="mb-2">
-                      <strong>Email:</strong> {hotel.email}
-                    </div>
-                    <div className="mb-2">
-                      <strong>Status:</strong>
-                      <span
-                        className={`ml-2 px-2 py-1 text-sm rounded ${
-                          hotel.isActive === true ||
-                          hotel.isActive === "true" ||
-                          hotel.isActive === "active"
-                            ? "bg-green-200 text-green-800"
-                            : "bg-red-200 text-red-800"
-                        }`}
-                      >
-                        {hotel.isActive === true ||
-                        hotel.isActive === "true" ||
-                        hotel.isActive === "active"
-                          ? "Active"
-                          : "Inactive"}
-                      </span>
-                    </div>
-                    <div className="flex justify-end gap-4 mt-2">
-                      <button
-                        onClick={() =>
-                          navigate(`/hotels/edit/${hotel.hotelId}`)
-                        }
-                        className="text-blue-600 hover:underline"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => confirmDelete(hotel.hotelId)}
-                        className="text-red-600 hover:underline"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                ))}
-            </div>
-
             <div className="hidden sm:block overflow-x-auto">
               <table className="min-w-full border border-gray-300">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th className="p-2 border">Hotel Name</th>
+                    <th
+                      className="p-2 border cursor-pointer"
+                      onClick={() => toggleSort("name")}
+                    >
+                      Hotel Name{" "}
+                      {sortField === "name" &&
+                        (sortOrder === "asc" ? "↑" : "↓")}
+                    </th>
                     <th className="p-2 border">Owner</th>
                     <th className="p-2 border">Mobile</th>
                     <th className="p-2 border">Email</th>
+                    {/* <th
+                      className="p-2 border cursor-pointer"
+                      onClick={() => toggleSort("createdAt")}
+                    >
+                      Date Added{" "}
+                      {sortField === "createdAt" &&
+                        (sortOrder === "asc" ? "↑" : "↓")}
+                    </th> */}
                     <th className="p-2 border">Status</th>
                     <th className="p-2 border">Actions</th>
                   </tr>
@@ -172,7 +160,7 @@ const HotelList = () => {
                 <tbody>
                   {hotels.length === 0 ? (
                     <tr>
-                      <td colSpan="6" className="p-4 text-center">
+                      <td colSpan="7" className="p-4 text-center">
                         No hotels found
                       </td>
                     </tr>
@@ -183,38 +171,37 @@ const HotelList = () => {
                         <td className="p-2 border">{hotel.ownerName}</td>
                         <td className="p-2 border">{hotel.mobile}</td>
                         <td className="p-2 border">{hotel.email}</td>
+                        {/* <td className="p-2 border">
+                          {new Date(hotel.createdAt).toLocaleDateString()}
+                        </td> */}
                         <td className="p-2 border">
                           <span
                             className={`ml-2 px-2 py-1 text-sm rounded ${
-                              hotel.isActive === true ||
-                              hotel.isActive === "true" ||
-                              hotel.isActive === "active"
+                              hotel.isActive
                                 ? "bg-green-200 text-green-800"
                                 : "bg-red-200 text-red-800"
                             }`}
                           >
-                            {hotel.isActive === true ||
-                            hotel.isActive === "true" ||
-                            hotel.isActive === "active"
-                              ? "Active"
-                              : "Inactive"}
+                            {hotel.isActive ? "Active" : "Inactive"}
                           </span>
                         </td>
-                        <td className="p-2 border space-x-2">
-                          <button
-                            onClick={() =>
-                              navigate(`/hotels/edit/${hotel.hotelId}`)
-                            }
-                            className="text-blue-600 hover:underline"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => confirmDelete(hotel.hotelId)}
-                            className="text-red-600 hover:underline"
-                          >
-                            Delete
-                          </button>
+                        <td className="p-2 border">
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() =>
+                                navigate(`/hotels/edit/${hotel.hotelId}`)
+                              }
+                              className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => confirmDelete(hotel.hotelId)}
+                              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))
@@ -230,7 +217,9 @@ const HotelList = () => {
             <button
               key={i + 1}
               onClick={() => setPage(i + 1)}
-              className={`px-3 py-1 border rounded ${page === i + 1 ? "bg-blue-600 text-white" : "bg-white"}`}
+              className={`px-3 py-1 border rounded ${
+                page === i + 1 ? "bg-blue-600 text-white" : "bg-white"
+              }`}
             >
               {i + 1}
             </button>

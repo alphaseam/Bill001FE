@@ -59,8 +59,13 @@ const HotelForm = () => {
     const newErrors = {};
     if (!formData.hotelName) newErrors.hotelName = "Hotel name is required";
     if (!formData.ownerName) newErrors.ownerName = "Owner name is required";
-    if (!formData.mobile || !/^\d{10}$/.test(formData.mobile))
-      newErrors.mobile = "Valid 10-digit mobile required";
+    if (
+      !formData.mobile ||
+      !/^\d{10}$/.test(formData.mobile) ||
+      /^0{10}$/.test(formData.mobile)
+    ) {
+      newErrors.mobile = "Enter a valid 10-digit mobile number.";
+    }
     if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Valid email required";
     if (!formData.address) newErrors.address = "Address is required";
@@ -116,14 +121,21 @@ const HotelForm = () => {
             { label: "Email", name: "email", type: "email" },
           ].map(({ label, name, type = "text" }) => (
             <div key={name}>
-              <label className="block font-medium mb-1">{label}</label>
+              <label className="block font-medium mb-1">
+                {label} <span className="text-red-500">*</span>
+              </label>
               <input
                 type={type}
                 name={name}
                 value={formData[name]}
                 onChange={handleChange}
                 className="w-full border px-3 py-2 rounded"
+                placeholder={name === "mobile" ? "Enter 10-digit mobile" : ""}
+                pattern={name === "mobile" ? "\\d{10}" : undefined}
+                maxLength={name === "mobile" ? 10 : undefined}
+                inputMode={name === "mobile" ? "numeric" : undefined}
               />
+
               {errors[name] && (
                 <p className="text-sm text-red-500 mt-1">{errors[name]}</p>
               )}
@@ -131,7 +143,10 @@ const HotelForm = () => {
           ))}
 
           <div>
-            <label className="block font-medium mb-1">Address</label>
+            <label className="block font-medium mb-1">
+              Address <span className="text-red-500">*</span>
+            </label>
+
             <textarea
               name="address"
               value={formData.address}
@@ -145,9 +160,7 @@ const HotelForm = () => {
           </div>
 
           <div>
-            <label className="block font-medium mb-1">
-              GST Number (optional)
-            </label>
+            <label className="block font-medium mb-1">GST Number</label>
             <input
               type="text"
               name="gstNumber"
@@ -158,7 +171,9 @@ const HotelForm = () => {
           </div>
 
           <div>
-            <label className="block font-medium mb-1">Hotel Type</label>
+            <label className="block font-medium mb-1">
+              Hotel Type <span className="text-red-500">*</span>
+            </label>
             <select
               name="hotelType"
               value={formData.hotelType}
@@ -178,7 +193,9 @@ const HotelForm = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="font-medium">Active Status</label>
+            <label className="block font-medium mb-1">
+              Active Status <span className="text-red-500">*</span>
+            </label>
             <input
               type="checkbox"
               name="isActive"
