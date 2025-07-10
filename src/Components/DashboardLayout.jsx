@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/Authcontext";
+import { AuthContext } from "../context/AuthContext";
 import { ImCross } from "react-icons/im";
 import { FiAlignJustify, FiBook } from "react-icons/fi";
 import { MdDashboard } from "react-icons/md";
@@ -52,7 +52,7 @@ const DashboardLayout = ({ children }) => {
             </span>
           </Link>
 
-          <Link
+          {/* <Link
             to="/billing"
             className={`flex items-center space-x-1 hover:text-blue-300 `}
           >
@@ -60,7 +60,7 @@ const DashboardLayout = ({ children }) => {
             <span className={`md:block ${show ? "block" : "hidden"}`}>
               Billing
             </span>
-          </Link>
+          </Link> */}
           <Link
             to="/product"
             className={`flex items-center space-x-1 hover:text-blue-300 `}

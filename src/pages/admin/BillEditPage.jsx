@@ -97,22 +97,45 @@ const BillEditPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // stop page refresh
+    e.preventDefault();
 
-    if (!formData.customerName || !formData.mobileNumber || !formData.items.length) {
+    if (!formData.customerId || !formData.items.length) {
       alert("Please fill all required fields.");
       return;
     }
 
+    const subtotal = formData.items.reduce(
+      (sum, item) => sum + item.quantity * item.unitPrice - item.discount,
+      0
+    );
+    const tax = subtotal * 0.12;
+    const total = subtotal + tax;
+
+    const payload = {
+      customerId: formData.customerId,
+      items: formData.items.map((item) => ({
+        productId: item.productId || 0, // You might need to add `productId` to your item inputs
+        quantity: item.quantity,
+        price: item.unitPrice,
+      })),
+      discount: formData.items.reduce((sum, item) => sum + (item.discount || 0), 0),
+      subtotal,
+      tax,
+      total,
+      billDate: formData.billDate,
+      remarks: formData.remarks || "",
+    };
+
     try {
-      await billingApi.updateBill(billId, formData);
+      await billingApi.updateBill(billId, payload);
       alert("Bill updated successfully!");
-      navigate("/billing");
+      navigate("/admin/billinglist");
     } catch (err) {
       console.error("Failed to update bill:", err);
       alert("Failed to update bill.");
     }
   };
+
 
   /** ---------- RENDER ---------- */
   return (
@@ -274,7 +297,7 @@ const BillEditPage = () => {
         </button>
         <button
           type="button"
-          onClick={() => navigate("/admin/billing")}
+          onClick={() => navigate("/admin/billinglist")}
           className="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600"
         >
           Cancel

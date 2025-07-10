@@ -77,16 +77,16 @@ const BillingPage = () => {
       if (response.status === 200) {
         setShowModal(true);
 
-        // setTimeout(async () => {
-        //   const canvas = await html2canvas(billRef.current);
-        //   const imgData = canvas.toDataURL('image/png');
-        //   const pdf = new jsPDF();
-        //   const imgProps = pdf.getImageProperties(imgData);
-        //   const pdfWidth = pdf.internal.pageSize.getWidth();
-        //   const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        //   pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        //   pdf.save('invoice.pdf');
-        // }, 300);
+        setTimeout(async () => {
+          const canvas = await html2canvas(billRef.current);
+          const imgData = canvas.toDataURL('image/png');
+          const pdf = new jsPDF();
+          const imgProps = pdf.getImageProperties(imgData);
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+          pdf.save('invoice.pdf');
+        }, 300);
 
         setCustomer({ customerName: '', mobileNumber: '' });
         setProducts([
@@ -218,6 +218,7 @@ const BillingPage = () => {
           </button>
         </div>
       </div>
+
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">

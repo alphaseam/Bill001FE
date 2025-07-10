@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import HotelList from "./Components/HotelList";
 import HotelForm from "./Components/HotelForm";
 import BillingPage from "./pages/admin/BillingPage";
+import BillList from "./Components/BillList";
 function App() {
   return (
     <>
@@ -55,6 +56,14 @@ function App() {
             }
           />
           <Route
+            path="billinglist"
+            element={
+              <PrivateRoute>
+                <BillList />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="billing/edit/:billId"
             element={<BillEditPage />}
           />
@@ -90,7 +99,7 @@ function App() {
           path="/billling"
           element={
             <PrivateRoute>
-              <BillingPage/>
+              <BillingPage />
             </PrivateRoute>
           }
         />

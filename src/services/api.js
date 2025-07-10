@@ -10,17 +10,12 @@ export const api = axios.create({
 });
 
 // ✅ Request Interceptor
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    console.log("Token from localStorage:", token);
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+api.interceptors.request.use(cfg => {
+  const token = localStorage.getItem("accessToken");
+  if (token) cfg.headers.Authorization = `Bearer ${token}`;
+  return cfg;
+});
+
 
 // ✅ Response Interceptor
 api.interceptors.response.use(
@@ -59,7 +54,7 @@ export const billingApi = {
   createBill: (billData) => api.post("/bill/mobile", billData),
   getBillById: (billId) => api.get(`/bill/${billId}`),
   deleteBill: (billId) => api.delete(`/bill/${billId}`),
-  updateBill: (billId, bill) => api.put(`/bill/${billId}`, bill),
-  getBills: () => api.get("/bill"),
+  updateBill: (id, data) => api.patch(`/bill/${id}`, data),
+  getBills: () => api.get("/bill/all"),
   createBillForWhatsapp: (billData) => api.post("/bill", billData),
 };

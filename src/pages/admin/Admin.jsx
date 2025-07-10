@@ -1,20 +1,25 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { ImCross } from "react-icons/im";
 import { FiAlignJustify } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 const Admin = () => {
   const [showSidebar, setShowSidebar] = useState(true);
+  const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
       <aside
-        className={`bg-gray-800 text-white p-4 transition-all duration-300 ${
-          showSidebar ? "w-64" : "w-14"
-        }`}
+        className={`bg-gray-800 text-white p-4 transition-all duration-300 ${showSidebar ? "w-64" : "w-14"
+          }`}
       >
         {/* Toggle Button (Mobile) */}
         <button
@@ -26,9 +31,8 @@ const Admin = () => {
 
         {/* Title */}
         <h2
-          className={`text-xl font-bold mb-6 ${
-            showSidebar ? "block" : "hidden"
-          }`}
+          className={`text-xl font-bold mb-6 ${showSidebar ? "block" : "hidden"
+            }`}
         >
           Admin Panel
         </h2>
@@ -41,11 +45,12 @@ const Admin = () => {
           >
             {showSidebar ? "Billing" : "B"}
           </NavLink>
+
           <NavLink
-            to="/admin/billing/edit/1"
+            to="/admin/billinglist"
             className="block py-2 hover:bg-gray-700 px-2 rounded"
           >
-            {showSidebar ? "Edit Bill" : "E"}
+            {showSidebar ? "Bill List" : "L"}
           </NavLink>
         </nav>
       </aside>
@@ -67,7 +72,7 @@ const Admin = () => {
             </button>
 
             <button
-              onClick={() => alert("Logout logic here")}
+              onClick={handleLogout}
               className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 w-full sm:w-auto"
             >
               Logout
