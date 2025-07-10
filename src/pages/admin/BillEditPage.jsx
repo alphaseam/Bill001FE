@@ -13,7 +13,6 @@ const BillEditPage = () => {
   const { billId } = useParams();
   const navigate = useNavigate();
 
-  /** ---------- STATE ---------- */
   const [formData, setFormData] = useState({
     customerName: "",
     mobileNumber: "",
@@ -34,7 +33,7 @@ const BillEditPage = () => {
         const { data: bill } = await billingApi.getBillById(billId);
 
         console.log("Fetched bill:", bill);
-        // format billDate → "YYYY-MM-DD"
+
         const billDate =
           bill?.createdAt && !isNaN(new Date(bill.createdAt))
             ? new Date(bill.createdAt).toISOString().split("T")[0]
@@ -56,7 +55,6 @@ const BillEditPage = () => {
     })();
   }, [billId]);
 
-  /** ---------- HELPERS ---------- */
   const calculateTotals = (items) => {
     const subtotal = items.reduce(
       (acc, itm) =>
@@ -68,7 +66,6 @@ const BillEditPage = () => {
     setTotals({ subtotal, tax, finalAmount: subtotal + tax });
   };
 
-  /** ---------- EVENT HANDLERS ---------- */
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -99,7 +96,11 @@ const BillEditPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.customerId || !formData.items.length) {
+    if (
+      !formData.customerName ||
+      !formData.mobileNumber ||
+      !formData.items.length
+    ) {
       alert("Please fill all required fields.");
       return;
     }
@@ -136,10 +137,11 @@ const BillEditPage = () => {
     }
   };
 
-
-  /** ---------- RENDER ---------- */
   return (
-    <form onSubmit={handleSubmit} className="p-4 sm:p-6 max-w-5xl mx-auto bg-white rounded shadow">
+    <form
+      onSubmit={handleSubmit}
+      className="p-4 sm:p-6 max-w-5xl mx-auto bg-white rounded shadow"
+    >
       <h2 className="text-2xl font-bold mb-4">Edit Bill #{billId}</h2>
 
       {/* ---------- BILL INFO ---------- */}
@@ -176,25 +178,32 @@ const BillEditPage = () => {
         </label>
       </div>
 
-      {/* ---------- ITEMS (DESKTOP TABLE) ---------- */}
       <div className="hidden sm:block overflow-x-auto">
         <table className="min-w-full border text-sm">
           <thead>
             <tr className="bg-gray-100">
-              {["Item", "Qty", "Unit Price", "Discount", "Total", ""].map((h) => (
-                <th key={h} className="p-2 border">{h}</th>
-              ))}
+              {["Item", "Qty", "Unit Price", "Discount", "Total", ""].map(
+                (h) => (
+                  <th key={h} className="p-2 border">
+                    {h}
+                  </th>
+                )
+              )}
             </tr>
           </thead>
           <tbody>
             {formData.items.map((item, idx) => {
-              const total = (+item.quantity || 0) * (+item.unitPrice || 0) - (+item.discount || 0);
+              const total =
+                (+item.quantity || 0) * (+item.unitPrice || 0) -
+                (+item.discount || 0);
               return (
                 <tr key={idx}>
                   <td className="p-2 border">
                     <input
                       value={item.itemName ?? ""}
-                      onChange={(e) => handleItemChange(idx, "itemName", e.target.value)}
+                      onChange={(e) =>
+                        handleItemChange(idx, "itemName", e.target.value)
+                      }
                       className="border p-1 w-full"
                       placeholder="Item Name"
                     />
@@ -204,7 +213,9 @@ const BillEditPage = () => {
                       <input
                         type="number"
                         value={item[field] ?? 0}
-                        onChange={(e) => handleItemChange(idx, field, e.target.value)}
+                        onChange={(e) =>
+                          handleItemChange(idx, field, e.target.value)
+                        }
                         className="border p-1 w-full"
                       />
                     </td>
@@ -226,18 +237,24 @@ const BillEditPage = () => {
         </table>
       </div>
 
-      {/* ---------- ITEMS (MOBILE CARDS) ---------- */}
       <div className="sm:hidden space-y-4">
         {formData.items.map((item, idx) => {
-          const total = (+item.quantity || 0) * (+item.unitPrice || 0) - (+item.discount || 0);
+          const total =
+            (+item.quantity || 0) * (+item.unitPrice || 0) -
+            (+item.discount || 0);
           return (
-            <div key={idx} className="border rounded p-3 bg-gray-50 shadow-sm space-y-2">
+            <div
+              key={idx}
+              className="border rounded p-3 bg-gray-50 shadow-sm space-y-2"
+            >
               <label className="block">
                 <span className="text-sm font-medium">Item Name</span>
                 <input
                   className="border p-1 w-full"
                   value={item.itemName ?? ""}
-                  onChange={(e) => handleItemChange(idx, "itemName", e.target.value)}
+                  onChange={(e) =>
+                    handleItemChange(idx, "itemName", e.target.value)
+                  }
                   placeholder="Item Name"
                 />
               </label>
@@ -245,19 +262,25 @@ const BillEditPage = () => {
               <div className="flex gap-2">
                 {["quantity", "unitPrice", "discount"].map((field) => (
                   <label key={field} className="w-1/3 block">
-                    <span className="text-sm capitalize">{field === "unitPrice" ? "Price" : field}</span>
+                    <span className="text-sm capitalize">
+                      {field === "unitPrice" ? "Price" : field}
+                    </span>
                     <input
                       type="number"
                       className="border p-1 w-full"
                       value={item[field] ?? 0}
-                      onChange={(e) => handleItemChange(idx, field, e.target.value)}
+                      onChange={(e) =>
+                        handleItemChange(idx, field, e.target.value)
+                      }
                     />
                   </label>
                 ))}
               </div>
 
               <div className="flex justify-between items-center">
-                <p className="text-sm font-semibold">Total: ₹{total.toFixed(2)}</p>
+                <p className="text-sm font-semibold">
+                  Total: ₹{total.toFixed(2)}
+                </p>
                 <button
                   type="button"
                   onClick={() => deleteItem(idx)}
@@ -271,7 +294,6 @@ const BillEditPage = () => {
         })}
       </div>
 
-      {/* ---------- ADD ITEM BUTTON ---------- */}
       <button
         type="button"
         onClick={addItem}
@@ -280,14 +302,14 @@ const BillEditPage = () => {
         Add Item
       </button>
 
-      {/* ---------- TOTALS ---------- */}
       <div className="mt-6 text-right text-sm">
         <p>Subtotal: ₹{totals.subtotal.toFixed(2)}</p>
         <p>Tax (12%): ₹{totals.tax.toFixed(2)}</p>
-        <p className="font-bold">Final Amount: ₹{totals.finalAmount.toFixed(2)}</p>
+        <p className="font-bold">
+          Final Amount: ₹{totals.finalAmount.toFixed(2)}
+        </p>
       </div>
 
-      {/* ---------- ACTION BUTTONS ---------- */}
       <div className="mt-6 sticky bottom-0 bg-white p-4 shadow-inner flex flex-col sm:flex-row gap-4 justify-end">
         <button
           type="submit"

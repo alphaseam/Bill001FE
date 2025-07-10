@@ -2,59 +2,69 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import DashboardLayout from "./DashboardLayout";
 import { hotelApi } from "../services/api";
+import { toast } from "react-toastify";
 
 const hotelTypes = ["1-Star", "2-Star", "3-Star", "4-Star", "5-Star"];
 
 const HotelForm = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
+  console.log("hotelId from URL params:", id);
+
   const isEditMode = Boolean(id);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: "",
-    owner: "",
+    hotelName: "",
+    ownerName: "",
     mobile: "",
     email: "",
     address: "",
-    gst: "",
-    type: "",
-    status: true,
+    gstNumber: "",
+    hotelType: "",
+    isActive: true,
   });
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (isEditMode) {
-      getHotelById(id)
-        .then((data) => {
-          if (data) {
-            setFormData({
-              name: data.name || "",
-              owner: data.owner || "",
-              mobile: data.mobile || "",
-              email: data.email || "",
-              address: data.address || "",
-              gst: data.gst || "",
-              type: data.type || "",
-              status: data.status ?? true,
-            });
-          }
-        })
-        .catch((err) => console.error("Failed to fetch hotel:", err));
-    }
+    if (!isEditMode) return;
+
+    const fetchHotel = async () => {
+      try {
+        const response = await hotelApi.getHotelById(id);
+        const hotel = response?.data?.data;
+        if (hotel) {
+          setFormData({
+            hotelName: hotel.hotelName || "",
+            ownerName: hotel.ownerName || "",
+            mobile: hotel.mobile || "",
+            email: hotel.email || "",
+            address: hotel.address || "",
+            gstNumber: hotel.gstNumber || "",
+            hotelType: hotel.hotelType || "",
+            isActive: hotel.isActive ?? true,
+          });
+        }
+      } catch (err) {
+        console.error("Failed to fetch hotel:", err);
+        toast.error("Failed to fetch hotel");
+      }
+    };
+
+    fetchHotel();
   }, [id]);
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.name) newErrors.name = "Hotel name is required";
-    if (!formData.owner) newErrors.owner = "Owner name is required";
+    if (!formData.hotelName) newErrors.hotelName = "Hotel name is required";
+    if (!formData.ownerName) newErrors.ownerName = "Owner name is required";
     if (!formData.mobile || !/^\d{10}$/.test(formData.mobile))
       newErrors.mobile = "Valid 10-digit mobile required";
     if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Valid email required";
     if (!formData.address) newErrors.address = "Address is required";
-    if (!formData.type) newErrors.type = "Hotel type is required";
+    if (!formData.hotelType) newErrors.hotelType = "Hotel type is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -64,15 +74,20 @@ const HotelForm = () => {
     if (!validate()) return;
 
     setLoading(true);
+    console.log("Submitting form data:", formData);
+
     try {
       if (isEditMode) {
         await hotelApi.updateHotel(id, formData);
+        toast.success("Hotel updated successfully!");
       } else {
         await hotelApi.createHotel(formData);
+        toast.success("Hotel added successfully!");
       }
       navigate("/hotels");
     } catch (err) {
-      console.error(err);
+      console.error("Save failed:", err);
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -95,9 +110,9 @@ const HotelForm = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {[
-            { label: "Hotel Name", name: "name" },
-            { label: "Owner Name", name: "owner", type: "text", },
-            { label: "Mobile Number", name: "mobile", type: "number" },
+            { label: "Hotel Name", name: "hotelName" },
+            { label: "Owner Name", name: "ownerName" },
+            { label: "Mobile Number", name: "mobile", type: "text" },
             { label: "Email", name: "email", type: "email" },
           ].map(({ label, name, type = "text" }) => (
             <div key={name}>
@@ -134,9 +149,9 @@ const HotelForm = () => {
               GST Number (optional)
             </label>
             <input
-              type="number"
-              name="gst"
-              value={formData.gst}
+              type="text"
+              name="gstNumber"
+              value={formData.gstNumber}
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded"
             />
@@ -145,8 +160,8 @@ const HotelForm = () => {
           <div>
             <label className="block font-medium mb-1">Hotel Type</label>
             <select
-              name="type"
-              value={formData.type}
+              name="hotelType"
+              value={formData.hotelType}
               onChange={handleChange}
               className="w-full border px-3 py-2 rounded"
             >
@@ -157,8 +172,8 @@ const HotelForm = () => {
                 </option>
               ))}
             </select>
-            {errors.type && (
-              <p className="text-sm text-red-500 mt-1">{errors.type}</p>
+            {errors.hotelType && (
+              <p className="text-sm text-red-500 mt-1">{errors.hotelType}</p>
             )}
           </div>
 
@@ -166,8 +181,8 @@ const HotelForm = () => {
             <label className="font-medium">Active Status</label>
             <input
               type="checkbox"
-              name="status"
-              checked={formData.status}
+              name="isActive"
+              checked={formData.isActive}
               onChange={handleChange}
               className="w-4 h-4"
             />
@@ -179,7 +194,11 @@ const HotelForm = () => {
               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto"
               disabled={loading}
             >
-              {loading ? "Saving..." : isEditMode ? "Update Hotel" : "Add Hotel"}
+              {loading
+                ? "Saving..."
+                : isEditMode
+                  ? "Update Hotel"
+                  : "Add Hotel"}
             </button>
             <button
               type="button"
@@ -192,7 +211,6 @@ const HotelForm = () => {
         </form>
       </div>
     </DashboardLayout>
-
   );
 };
 

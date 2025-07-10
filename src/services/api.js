@@ -2,10 +2,9 @@ import axios from "axios";
 
 // Create an instance of Axios
 export const api = axios.create({
-
-  baseURL: `http://localhost:8080/api`,// fetch the data from backend url
+  baseURL: `http://localhost:8080/api`, // fetch the data from backend url
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -26,27 +25,30 @@ api.interceptors.response.use(
 export const authApi = {
   login: (credentials) => api.post("/auth/login", credentials),
   register: (userData) => api.post("/auth/register", userData),
-}
+};
 
 export const productApi = {
   getProducts: (hotelId) => api.get("/products", { params: { hotelId } }),
-  addProduct: (product, hotelId) => api.post("/products", product, { params: { hotelId } }),
-  updateProduct: (id, product, hotelId) => api.put(`/products/${id}`, product, { params: { hotelId } }),
-  deleteProduct: (id, hotelId) => api.delete(`/products/${id}`, { params: { hotelId } }),
+  addProduct: (product, hotelId) =>
+    api.post("/products", product, { params: { hotelId } }),
+  updateProduct: (id, product, hotelId) =>
+    api.put(`/products/${id}`, product, { params: { hotelId } }),
+  deleteProduct: (id, hotelId) =>
+    api.delete(`/products/${id}`, { params: { hotelId } }),
   getAllProducts: (hotelId) => api.get("products", { params: { hotelId } }),
 };
 
 export const dashboardApi = {
   getsaleReport: (filters) => api.get("/reports/sales", { params: filters }),
-}
+};
 
 export const hotelApi = {
   getHotelById: (id) => api.get(`/hotel/${id}`),
   updateHotel: (id, hotel) => api.put(`/hotel/${id}`, hotel),
   deleteHotel: (id) => api.delete(`/hotel/${id}`),
-  partallyUpdateHotel: (id, hotel) => api.patch(`/hotel/${id}`, hotel),
+  partiallyUpdateHotel: (id, hotel) => api.patch(`/hotel/${id}`, hotel),
   createHotel: (hotel) => api.post("/hotel", hotel),
-  getHoetlByUserId: (userId) => api.get("/hotel/user", { params: { userId } }),
+  getHotelByUserId: (userId) => api.get("/hotel/user", { params: { userId } }),
   getAllHotels: () => api.get("/hotel/all"),
 };
 

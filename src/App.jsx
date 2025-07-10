@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-//import BillingPage from "./Components/BillingPage"; // ✅ Ensure this path is correct
 import Product from "./pages/Product";
 import Admin from "./pages/admin/Admin";
 import BillEditPage from "./pages/admin/BillEditPage";
@@ -55,6 +54,7 @@ function App() {
               </PrivateRoute>
             }
           />
+<<<<<<< HEAD
           <Route
             path="billinglist"
             element={
@@ -67,6 +67,9 @@ function App() {
             path="billing/edit/:billId"
             element={<BillEditPage />}
           />
+=======
+          <Route path="billing/edit/:billId" element={<BillEditPage />} />
+>>>>>>> 9a8c66640534d5925a9db3ca6aed468ef2e799f3
         </Route>
 
         <Route
