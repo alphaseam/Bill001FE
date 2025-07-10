@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "./ConfirmationModal";
 import DashboardLayout from "../Components/DashboardLayout";
 import { hotelApi } from "../services/api";
+import { toast } from "react-toastify";
+
 const ITEMS_PER_PAGE = 10;
 
 const HotelList = () => {
@@ -48,10 +50,12 @@ const HotelList = () => {
   const handleConfirmDelete = async () => {
     try {
       await hotelApi.deleteHotel(confirmId);
+      toast.success("Hotel deleted");
       setConfirmId(null);
       fetchHotels();
     } catch (err) {
       console.error("Failed to delete:", err);
+      toast.error("Delete failed");
     }
   };
 

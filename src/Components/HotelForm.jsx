@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import DashboardLayout from "./DashboardLayout";
 import { hotelApi } from "../services/api";
+import { toast } from "react-toastify";
 
 const hotelTypes = ["1-Star", "2-Star", "3-Star", "4-Star", "5-Star"];
 
@@ -47,6 +48,7 @@ const HotelForm = () => {
         }
       } catch (err) {
         console.error("Failed to fetch hotel:", err);
+        toast.error("Failed to fetch hotel");
       }
     };
 
@@ -77,12 +79,15 @@ const HotelForm = () => {
     try {
       if (isEditMode) {
         await hotelApi.updateHotel(id, formData);
+        toast.success("Hotel updated successfully!");
       } else {
         await hotelApi.createHotel(formData);
+        toast.success("Hotel added successfully!");
       }
       navigate("/hotels");
     } catch (err) {
       console.error("Save failed:", err);
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
