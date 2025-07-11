@@ -21,7 +21,7 @@ const HotelList = () => {
 
   useEffect(() => {
     fetchHotels();
-  }, [search, sortField, sortOrder]);
+  }, [search, sortField, sortOrder, page]);
 
   const fetchHotels = async () => {
     setLoading(true);
@@ -31,7 +31,7 @@ const HotelList = () => {
         ? response.data.data
         : [];
 
-      // 🔍 Search by hotelName or ownerName
+      // Search filter
       if (search.trim() !== "") {
         const lowerSearch = search.toLowerCase();
         hotelList = hotelList.filter(
@@ -41,7 +41,7 @@ const HotelList = () => {
         );
       }
 
-      // ⬆️⬇️ Sort
+      // Sort logic
       if (sortField === "name") {
         hotelList.sort((a, b) => {
           const result = a.hotelName.localeCompare(b.hotelName);
@@ -96,7 +96,7 @@ const HotelList = () => {
 
   return (
     <DashboardLayout>
-      <div className="max-w-6xl mx-auto p-4 sm:p-6">
+      <div className="w-full max-w-6xl mx-auto p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
           <h2 className="text-xl sm:text-2xl font-bold">Hotel List</h2>
           <button
@@ -130,6 +130,7 @@ const HotelList = () => {
           <p>Loading hotels...</p>
         ) : (
           <>
+            {/* ✅ Desktop Table View */}
             <div className="hidden sm:block overflow-x-auto">
               <table className="min-w-full border border-gray-300">
                 <thead className="bg-gray-100">
@@ -145,14 +146,6 @@ const HotelList = () => {
                     <th className="p-2 border">Owner</th>
                     <th className="p-2 border">Mobile</th>
                     <th className="p-2 border">Email</th>
-                    {/* <th
-                      className="p-2 border cursor-pointer"
-                      onClick={() => toggleSort("createdAt")}
-                    >
-                      Date Added{" "}
-                      {sortField === "createdAt" &&
-                        (sortOrder === "asc" ? "↑" : "↓")}
-                    </th> */}
                     <th className="p-2 border">Status</th>
                     <th className="p-2 border">Actions</th>
                   </tr>
@@ -160,7 +153,7 @@ const HotelList = () => {
                 <tbody>
                   {hotels.length === 0 ? (
                     <tr>
-                      <td colSpan="7" className="p-4 text-center">
+                      <td colSpan="6" className="p-4 text-center">
                         No hotels found
                       </td>
                     </tr>
@@ -171,12 +164,9 @@ const HotelList = () => {
                         <td className="p-2 border">{hotel.ownerName}</td>
                         <td className="p-2 border">{hotel.mobile}</td>
                         <td className="p-2 border">{hotel.email}</td>
-                        {/* <td className="p-2 border">
-                          {new Date(hotel.createdAt).toLocaleDateString()}
-                        </td> */}
                         <td className="p-2 border">
                           <span
-                            className={`ml-2 px-2 py-1 text-sm rounded ${
+                            className={`px-2 py-1 text-sm rounded ${
                               hotel.isActive
                                 ? "bg-green-200 text-green-800"
                                 : "bg-red-200 text-red-800"
@@ -209,9 +199,65 @@ const HotelList = () => {
                 </tbody>
               </table>
             </div>
+
+            {/* ✅ Mobile View */}
+            <div className="sm:hidden space-y-4 mt-4">
+              {hotels.length === 0 ? (
+                <p className="text-center text-gray-600">No hotels found</p>
+              ) : (
+                hotels.map((hotel) => (
+                  <div
+                    key={hotel.hotelId}
+                    className="border rounded-lg p-4 shadow-sm bg-white text-sm"
+                  >
+                    <div className="mb-2">
+                      <strong>Hotel:</strong> {hotel.hotelName}
+                    </div>
+                    <div className="mb-2">
+                      <strong>Owner:</strong> {hotel.ownerName}
+                    </div>
+                    <div className="mb-2">
+                      <strong>Mobile:</strong> {hotel.mobile}
+                    </div>
+                    <div className="mb-2">
+                      <strong>Email:</strong> {hotel.email}
+                    </div>
+                    <div className="mb-2">
+                      <strong>Status:</strong>{" "}
+                      <span
+                        className={`ml-1 px-2 py-1 text-xs rounded ${
+                          hotel.isActive
+                            ? "bg-green-200 text-green-800"
+                            : "bg-red-200 text-red-800"
+                        }`}
+                      >
+                        {hotel.isActive ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+                    <div className="flex justify-end gap-2 mt-3">
+                      <button
+                        onClick={() =>
+                          navigate(`/hotels/edit/${hotel.hotelId}`)
+                        }
+                        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => confirmDelete(hotel.hotelId)}
+                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </>
         )}
 
+        {/* Pagination */}
         <div className="mt-4 flex justify-center gap-2 flex-wrap">
           {[...Array(totalPages).keys()].map((i) => (
             <button
@@ -226,6 +272,7 @@ const HotelList = () => {
           ))}
         </div>
 
+        {/* Confirmation Modal */}
         {confirmId && (
           <ConfirmationModal
             title="Delete Hotel"
