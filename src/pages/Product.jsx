@@ -23,7 +23,7 @@ const Product = () => {
     // Fetch products once
     useEffect(() => {
         fetchproducts();
-    }, []);
+    }, [products]);
 
 
     const handleSave = async (product) => {
@@ -45,6 +45,7 @@ const Product = () => {
                     .then(res => {
                         setProducts(...products, res.data);
                         toast.success("Product added");
+                        setProducts(prev => !prev);
                     });
             } catch (error) {
                 console.error("Error adding product:", error);
