@@ -9,6 +9,7 @@ import { productApi } from "../services/api";
 const Product = () => {
     const [products, setProducts] = useState([]);
     const [Edit, setEdit] = useState(null);
+    const [productAdded, setProductAdded] = useState(false);
 
     const fetchproducts = async () => {
         try {
@@ -23,7 +24,7 @@ const Product = () => {
     // Fetch products once
     useEffect(() => {
         fetchproducts();
-    }, []);
+    }, [productAdded]);
 
 
     const handleSave = async (product) => {
@@ -45,6 +46,7 @@ const Product = () => {
                     .then(res => {
                         setProducts(...products, res.data);
                         toast.success("Product added");
+                        setProductAdded(prev => !prev);
                     });
             } catch (error) {
                 console.error("Error adding product:", error);

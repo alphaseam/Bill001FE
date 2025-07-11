@@ -54,7 +54,18 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route path="billing/edit/:billId" element={<BillEditPage />} />
+          <Route
+            path="billinglist"
+            element={
+              <PrivateRoute>
+                <BillList />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="billing/edit/:billId"
+            element={<BillEditPage />}
+          />
         </Route>
 
         <Route
