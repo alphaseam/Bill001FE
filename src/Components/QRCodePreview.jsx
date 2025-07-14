@@ -32,9 +32,9 @@ const QRCodePreview = ({ itemNumber, price }) => {
             </div>
             <button
                 onClick={handleDownload}
-                className=""
+                className="cursor-pointer"
             >
-                <FaDownload />
+                <FaDownload size={20} />
             </button>
         </div>
     );

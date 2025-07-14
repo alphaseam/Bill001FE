@@ -37,7 +37,14 @@ function App() {
             </PrivateRoute>
           }
         />
-
+        <Route
+          path="/product/:hotelId"
+          element={
+            <PrivateRoute>
+              <Product />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/admin"
           element={

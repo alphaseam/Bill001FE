@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import Swal from 'sweetalert2';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { billingApi } from '../../services/api';
-
 
 const BillingPage = () => {
   const [customer, setCustomer] = useState({ customerName: '', mobileNumber: '' });
@@ -10,10 +10,9 @@ const BillingPage = () => {
     { productId: '', productName: '', quantity: 0, unitPrice: 0, discount: 0 },
   ]);
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const billRef = useRef();
 
-  const taxRate = 0.18; // 18% tax
+  const taxRate = 0.18;
 
   const handleProductChange = (index, field, value) => {
     const updated = [...products];
@@ -22,10 +21,7 @@ const BillingPage = () => {
   };
 
   const addProduct = () =>
-    setProducts([
-      ...products,
-      { productId: null, productName: '', quantity: 0, unitPrice: 0, discount: 0 },
-    ]);
+    setProducts([...products, { productId: '', productName: '', quantity: 0, unitPrice: 0, discount: 0 }]);
 
   const removeProduct = (index) => setProducts(products.filter((_, i) => i !== index));
 
@@ -35,14 +31,18 @@ const BillingPage = () => {
   const grandTotal = subtotal - totalDiscount + tax;
 
   const validateForm = () => {
-    if (!customer.customerName.trim() || !/^\d{10}$/.test(customer.mobileNumber)) {
-      alert('Please enter valid customer name and 10-digit mobile number.');
+    if (!customer.customerName.trim()) {
+      toast.error('Customer name is required');
+      return false;
+    }
+    if (!/^\d{10}$/.test(customer.mobileNumber)) {
+      toast.error('Mobile number must be 10 digits');
       return false;
     }
 
     for (let p of products) {
       if (!p.productName.trim() || p.quantity <= 0 || p.unitPrice <= 0) {
-        alert('Please fill all product fields with valid values.');
+        toast.error('Please fill all product fields with valid values');
         return false;
       }
     }
@@ -53,9 +53,8 @@ const BillingPage = () => {
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    // ✅ Backend expects "items" not "products"
     const items = products.map((p) => ({
-      productId: p.productId || null, // Ensure productId is included
+      productId: p.productId || null,
       productName: p.productName,
       quantity: p.quantity,
       unitPrice: p.unitPrice,
@@ -68,40 +67,26 @@ const BillingPage = () => {
       items,
     };
 
-    console.log('📦 Sending payload:', payload);
-
     setLoading(true);
     try {
       const response = await billingApi.createBill(payload);
 
       if (response.status === 200) {
-        setShowModal(true);
-
-        setTimeout(async () => {
-          const canvas = await html2canvas(billRef.current);
-          const imgData = canvas.toDataURL('image/png');
-          const pdf = new jsPDF();
-          const imgProps = pdf.getImageProperties(imgData);
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-          pdf.save('invoice.pdf');
-        }, 300);
-
         setCustomer({ customerName: '', mobileNumber: '' });
-        setProducts([
-          { productId: '', productName: '', quantity: 0, unitPrice: 0, discount: 0 },
-        ]);
+        setProducts([{ productId: '', productName: '', quantity: 0, unitPrice: 0, discount: 0 }]);
+
+        toast.success("Bill created Sucessfully")
       }
     } catch (error) {
       console.error('🔴 Error creating bill:', error);
-      alert('Error occurred. Please check the console for details.');
+      toast.error('Failed to create bill. Check console for details.');
     }
     setLoading(false);
   };
 
   return (
     <>
+      <ToastContainer position="top-right" autoClose={3000} />
       <div ref={billRef} className="max-w-4xl mx-auto p-4 bg-white shadow rounded">
         <h1 className="text-2xl font-bold mb-4 text-center">Billing UI</h1>
 
@@ -218,30 +203,6 @@ const BillingPage = () => {
           </button>
         </div>
       </div>
-
-
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded shadow text-center">
-            <h2 className="text-xl font-bold text-green-700 mb-2">✅ Bill Created Successfully!</h2>
-            <p className="mb-4">Your invoice has been saved and downloaded as PDF.</p>
-            <div className="flex gap-3 justify-center">
-              <button
-                onClick={() => setShowModal(false)}
-                className="bg-green-600 text-white px-4 py-2 rounded"
-              >
-                Close
-              </button>
-              <button
-                onClick={() => window.print()}
-                className="bg-blue-600 text-white px-4 py-2 rounded"
-              >
-                🖨️ Print Preview
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };

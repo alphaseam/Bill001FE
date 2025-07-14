@@ -1,101 +1,80 @@
 import React, { useEffect, useState } from 'react';
-
-import SummaryBlock from '../Components/SummaryBlock';
-import Filter from '../Components/Filter';
-import SaleCharts from '../Components/SalesChart';
-import DashboardLayout from '../Components/DashboardLayout';
 import { dashboardApi } from '../services/api';
+import Filter from '../Components/Filter'
+import SummaryBlocks from '../Components/SummaryBlock';
+import Charts from '../Components/Charts';
+import DashboardLayout from '../Components/DashboardLayout';
 
-export default function Dashboard() {
-    const [filters, setFilters] = useState({ date: '', dealer: '', category: '' });
-    const [summary, setSummary] = useState({});
-    const [lineData, setLineData] = useState({});
-    const [barData, setBarData] = useState({});
-    const [pieData, setPieData] = useState({});
-    const [Doughnut, setDoughnut] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
-
-    // Uncomment the following code to fetch data from the API
+const Dashboard = () => {
+    const [filters, setFilters] = useState({ dateRange: null, dealer: '', category: '' });
+    const [loading, setLoading] = useState(false);
+    const [summary, setSummary] = useState({ totalSales: 0, invoices: 0 });
+    const [chartData, setChartData] = useState({ line: [], bar: [], pie: [] });
+    const [noData, setNoData] = useState(false);
 
     const fetchData = async () => {
-        setLoading(true);
         try {
-            const res = await dashboardApi.getsaleReport(filters);
-            console.log(res);
-            const { totalRevenue, totalTransactions, trends, byCategory, byDealer } = res.data;
+            setLoading(true);
+            setNoData(false);
+            const { dateRange } = filters;
 
-            setSummary({ totalRevenue, totalTransactions });
+            const from = dateRange?.[0];
+            const to = dateRange?.[1];
 
-            setLineData({
-                labels: trends.map(t => t.date),
-                datasets: [{
-                    label: 'Sales',
-                    data: trends.map(t => t.sales),
-                    borderColor: '#4f46e5',
-                    backgroundColor: '#c7d2fe',
-                }],
+            const fromDate = from?.toISOString().split('T')[0];
+            const toDate = to?.toISOString().split('T')[0];
+
+            const fromMonth = from?.getMonth() + 1; // January = 0, so add 1
+            const fromYear = from?.getFullYear();
+
+            const toMonth = to?.getMonth() + 1;
+            const toYear = to?.getFullYear();
+
+            const res = await dashboardApi.getDailySales(fromDate, toDate);
+
+            if (res.data.length === 0) {
+                setNoData(true);
+                setChartData({ line: [], bar: [], pie: [] });
+                return;
+            }
+
+            setSummary({
+                totalSales: res.totalRevenue,
+                invoices: res.totalTransactions,
             });
 
-            setBarData({
-                labels: byCategory.map(c => c.category),
-                datasets: [{
-                    label: 'Sales',
-                    data: byCategory.map(c => c.sales),
-                    backgroundColor: '#34d399',
-                    broderWidth: 1,
-                }],
+            setChartData({
+                line: res.totalRevenue,
+                bar: await dashboardApi.getProductWiseMonthly(fromMonth, fromYear).then(r => r.data),
+                pie: res.data.reduce((acc, curr) => {
+                    const dealer = curr.dealer || 'Unknown';
+                    acc[dealer] = (acc[dealer] || 0) + curr.amount;
+                    return acc;
+                }, {}),
             });
-
-            setPieData({
-                labels: byDealer.map(d => d.dealer),
-                datasets: [{
-                    label: 'Sales',
-                    data: byDealer.map(d => d.sales),
-                    backgroundColor: ['#f87171', '#60a5fa', '#fbbf24'],
-                }],
-            });
-
-            setDoughnut({
-                labels: date.map(d => d.date),
-                datasets: [{
-                    label: 'Sales',
-                    data: date.map(d => d.sales),
-                    backgroundColor: ['#f87171', '#60a5fa', '#fbbf24'],
-                }],
-            });
-
-            setError(false);
         } catch (err) {
-            setError(true);
+            console.error(err);
+            setNoData(true);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     useEffect(() => {
-        fetchData();
+        if (filters.dateRange) fetchData();
     }, [filters]);
 
     return (
         <DashboardLayout>
             <div className="p-4">
-                <h1 className="text-2xl font-bold mb-4 flex justify-center">Sales Dashboard</h1>
-
-                <Filter filters={filters} setFilters={setFilters} />
-
-                {loading && <p className="mt-4 text-center">Loading...</p>}
-                {error && <p className="mt-4 text-center text-red-500">Failed to load data</p>}
-                {!loading && !error && (
-                    <>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 ">
-                            <SummaryBlock title="Total Revenue" value={`₹${summary.totalRevenue}`} />
-                            <SummaryBlock title="Total Transactions" value={summary.totalTransactions} />
-                        </div>
-
-                        <SaleCharts lineData={lineData} barData={barData} pieData={pieData} doughuntData={Doughnut} />
-                    </>
-                )}
+                <Filter onChange={setFilters} />
+                <SummaryBlocks data={summary} />
+                {loading && <p>Loading...</p>}
+                {noData && !loading && <p>No Data Found</p>}
+                {!loading && !noData && <Charts data={chartData} />}
             </div>
         </DashboardLayout>
     );
-}
+};
+
+export default Dashboard;

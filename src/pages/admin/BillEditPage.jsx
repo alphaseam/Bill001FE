@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { billingApi } from "../../services/api";
+import { toast } from "react-toastify";
 
 const emptyItem = () => ({
   itemName: "",
+  productId: "",
   quantity: 1,
   unitPrice: 0,
   discount: 0,
@@ -129,11 +131,11 @@ const BillEditPage = () => {
 
     try {
       await billingApi.updateBill(billId, payload);
-      alert("Bill updated successfully!");
+      toast.success("Bill updated successfully!");
       navigate("/admin/billinglist");
     } catch (err) {
       console.error("Failed to update bill:", err);
-      alert("Failed to update bill.");
+      toast.error("Failed to update bill.");
     }
   };
 
@@ -182,7 +184,7 @@ const BillEditPage = () => {
         <table className="min-w-full border text-sm">
           <thead>
             <tr className="bg-gray-100">
-              {["Item", "Qty", "Unit Price", "Discount", "Total", ""].map(
+              {["Item", "Product ID", "Qty", "Unit Price", "Discount", "Total", ""].map(
                 (h) => (
                   <th key={h} className="p-2 border">
                     {h}
@@ -206,6 +208,16 @@ const BillEditPage = () => {
                       }
                       className="border p-1 w-full"
                       placeholder="Item Name"
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      value={item.productId ?? ""}
+                      onChange={(e) =>
+                        handleItemChange(idx, "productId", e.target.value)
+                      }
+                      className="border p-1 w-full"
+                      placeholder="Product ID"
                     />
                   </td>
                   {["quantity", "unitPrice", "discount"].map((field) => (
@@ -256,6 +268,17 @@ const BillEditPage = () => {
                     handleItemChange(idx, "itemName", e.target.value)
                   }
                   placeholder="Item Name"
+                />
+              </label>
+              <label className="block">
+                <span className="text-sm font-medium">Product ID</span>
+                <input
+                  className="border p-1 w-full"
+                  value={item.productId ?? ""}
+                  onChange={(e) =>
+                    handleItemChange(idx, "productId", e.target.value)
+                  }
+                  placeholder="Product ID"
                 />
               </label>
 

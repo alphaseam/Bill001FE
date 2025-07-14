@@ -38,9 +38,6 @@ export const productApi = {
   getAllProducts: (hotelId) => api.get("products", { params: { hotelId } }),
 };
 
-export const dashboardApi = {
-  getsaleReport: (filters) => api.get("/reports/sales", { params: filters }),
-};
 
 export const hotelApi = {
   getHotelById: (id) => api.get(`/hotel/${id}`),
@@ -59,4 +56,13 @@ export const billingApi = {
   updateBill: (id, data) => api.patch(`/bill/${id}`, data),
   getBills: () => api.get("/bill/all"),
   createBillForWhatsapp: (billData) => api.post("/bill", billData),
+  getbillInvoice: (billId) => api.get(`/invoce/download-invoice/${billId}`)
+};
+
+export const dashboardApi = {
+  getDailySales: (from, to) => api.get(`/reports/sales/daily?fromDate=${from}&toDate=${to}`),
+  getMonthlySales: (year) => api.get(`/reports/sales/monthly?year=${year}`),
+  getProductWiseMonthly: (month, year) => api.get(`/reports/sales/monthly/product-wise?month=${month}&year=${year}`),
+  getYearlySales: (fromYear, toYear) => api.get(`/reports/sales/yearly?fromYear=${fromYear}&toYear=${toYear}`)
+
 };

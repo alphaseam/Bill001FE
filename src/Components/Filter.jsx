@@ -1,28 +1,54 @@
-export default function Filter({ filters, setFilters }) {
+import React, { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+const Filters = ({ onChange }) => {
+    const [dateRange, setDateRange] = useState([null, null]);
+    const [dealer, setDealer] = useState('');
+    const [category, setCategory] = useState('');
+    const [start, end] = dateRange;
+
+    const applyFilters = () => {
+        onChange({ dateRange, dealer, category });
+    };
+
     return (
-        <div className="flex flex-wrap gap-4 justify-center">
-            <select value={filters.date} onChange={e => setFilters({ ...filters, date: e.target.value })} className="border p-2 rounded-2xl bg-gradient-to-r from-blue-100 to-purple-100 ">
-                <option value="daily">Today</option>
-                <option value="week">This Week</option>
-                <option value="month">This Month</option>
-                <option value="yearly">This Year</option>
-            </select>
-
-            <select value={filters.dealer} onChange={e => setFilters({ ...filters, dealer: e.target.value })} className="border p-2 rounded-2xl bg-gradient-to-r from-blue-100 to-purple-100">
-                <option value="All Dealer">All Dealers</option>
-                <option value="Dealer A">Dealer A</option>
-                <option value="Dealer B">Dealer B</option>
-                <option value="Dealer C">Dealer C</option>
-            </select>
-
-            <select value={filters.category} onChange={e => setFilters({ ...filters, category: e.target.value })} className="border p-2 rounded-2xl bg-gradient-to-r from-blue-100 to-purple-100">
-                <option value="All Categories">All Categories</option>
-                <option value="Electronics">Electronics</option>
-                <option value="Fashion">Clothing</option>
-                <option value="Groceries">Groceries</option>
-                <option value="Furniture">Furniture</option>
-                <option value="Toys">Toys</option>
-            </select>
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
+            <div>
+                <label className="block font-medium mb-1">Date Range</label>
+                <DatePicker
+                    selectsRange
+                    startDate={start}
+                    endDate={end}
+                    onChange={(update) => setDateRange(update)}
+                    isClearable
+                    className="w-full border p-2 rounded"
+                />
+            </div>
+            <div>
+                <label className="block font-medium mb-1">Dealer</label>
+                <select onChange={(e) => setDealer(e.target.value)} className="w-full border p-2 rounded">
+                    <option value="">All</option>
+                    <option value="DealerA">Dealer A</option>
+                    <option value="DealerB">Dealer B</option>
+                </select>
+            </div>
+            <div>
+                <label className="block font-medium mb-1">Category</label>
+                <select onChange={(e) => setCategory(e.target.value)} className="w-full border p-2 rounded">
+                    <option value="">All</option>
+                    <option value="Beverages">Beverages</option>
+                    <option value="Snacks">Snacks</option>
+                </select>
+            </div>
+            <button
+                onClick={applyFilters}
+                className="col-span-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+            >
+                Apply Filters
+            </button>
         </div>
     );
-}
+};
+
+export default Filters;

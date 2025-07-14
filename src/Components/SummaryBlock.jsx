@@ -1,9 +1,16 @@
-function SummaryBlock({ title, value }) {
+const SummaryBlocks = ({ data }) => {
     return (
-        <div className="bg-white p-4 rounded shadow-md text-center ">
-            <h4 className="text-sm font-medium text-gray-600">{title}</h4>
-            <p className="text-2xl font-semibold">{value}</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-green-100 p-4 rounded shadow text-center">
+                <p className="text-lg font-bold">₹{data.totalSales.toLocaleString()}</p>
+                <p className="text-sm">Total Sales</p>
+            </div>
+            <div className="bg-yellow-100 p-4 rounded shadow text-center">
+                <p className="text-lg font-bold">{data.invoices}</p>
+                <p className="text-sm">Total Invoices</p>
+            </div>
         </div>
     );
-}
-export default SummaryBlock;
+};
+
+export default SummaryBlocks;

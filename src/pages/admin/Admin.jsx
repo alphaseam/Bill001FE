@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 const Admin = () => {
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 

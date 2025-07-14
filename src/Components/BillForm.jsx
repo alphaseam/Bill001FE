@@ -93,7 +93,7 @@ export default function BillForm({ billData = {} }) {
         <table className="w-full text-sm border mb-4">
           <thead>
             <tr className="bg-gray-100">
-              {['Item', 'Qty', 'Unit Price', 'Discount', 'Total', ''].map((h) => (
+              {['Item', "Product ID", 'Qty', 'Unit Price', 'Discount', 'Total', ''].map((h) => (
                 <th key={h} className="border p-2">{h}</th>
               ))}
             </tr>
@@ -105,6 +105,13 @@ export default function BillForm({ billData = {} }) {
                   <input
                     value={it.productName}
                     onChange={(e) => updateItem(i, "productName", e.target.value)}
+                    className="w-full border px-2 py-1"
+                  />
+                </td>
+                <td className="border p-1">
+                  <input
+                    value={it.productId}
+                    onChange={(e) => updateItem(i, "ProductId", e.target.value)}
                     className="w-full border px-2 py-1"
                   />
                 </td>
@@ -196,19 +203,9 @@ export default function BillForm({ billData = {} }) {
           {isSubmitting ? "Creating..." : "Create Bill"}
         </button>
 
-        <button
-          type="button"
-          onClick={() => window.history.back()}
-          className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
-        >Cancel</button>
 
-        {billId && (
-          <button
-            type="button"
-            onClick={generatePDF}
-            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
-          >Download PDF</button>
-        )}
+
+
       </div>
     </form>
   );

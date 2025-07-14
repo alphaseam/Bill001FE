@@ -232,6 +232,7 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
                                 id="image"
                                 name="image"
                                 type="file"
+                                disabled
                                 accept="image/*"
                                 error={errors.productimage}
                                 value={formData.productimage ? formData.productimage.name : ""}

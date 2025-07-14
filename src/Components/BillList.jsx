@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { billingApi } from "../services/api";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function BillList() {
     const [bills, setBills] = useState([]);
@@ -42,6 +43,16 @@ export default function BillList() {
         }
     };
 
+    const handleInvoiceDowanload = async (id) => {
+        try {
+            const res = await billingApi.getbillInvoice(id);
+            console.log(res)
+            Swal.fire("Dowanload!", "Bill has been Dowanload.", "success");
+        } catch (err) {
+            toast.error("bill Not dowanload")
+        }
+    }
+
     useEffect(() => {
         fetchBills();
     }, []);
@@ -63,6 +74,7 @@ export default function BillList() {
                             <th className="border px-3 py-2">Items</th>
                             <th className="border px-3 py-2">Total</th>
                             <th className="border px-3 py-2">Actions</th>
+                            <th className="border px-3 py-2">dowanload</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,6 +105,12 @@ export default function BillList() {
                                             Delete
                                         </button>
                                     </td>
+                                    <td className="border px-3 py-2 text-right"><button
+                                        onClick={() => handleInvoiceDowanload(bill.id)}
+                                        className="px-2 py-1 border-none bg-blue-500 text-white rounded hover:bg-blue-600"
+                                    >
+                                        Dowanload
+                                    </button></td>
                                 </tr>
                             );
                         })}

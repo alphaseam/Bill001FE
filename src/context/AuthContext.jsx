@@ -5,12 +5,13 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
     token: localStorage.getItem('token') || sessionStorage.getItem('token'),
-
+    user: localStorage.getItem('userData') || sessionStorage.getItem('userData'),
   });
 
   // Login handler
   const login = (token, userData) => {
     localStorage.setItem('token', JSON.stringify(token)) || sessionStorage.setItem('token', JSON.stringify(token));
+    localStorage.setItem('user', JSON.stringify(userData)) || sessionStorage.setItem('user', JSON.stringify(userData));
     setAuth({ token });
 
   };
@@ -18,8 +19,8 @@ const AuthProvider = ({ children }) => {
   // Logout handler
   const logout = () => {
     localStorage.removeItem('token') || sessionStorage.removeItem('token');
-
-    setAuth({ token: null });
+    localStorage.removeItem('user') || sessionStorage.removeItem('user');
+    setAuth({ token: null, user: null });
   };
 
   return (
