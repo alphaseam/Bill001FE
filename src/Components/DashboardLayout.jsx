@@ -33,7 +33,7 @@ const DashboardLayout = ({ children }) => {
         </button>
         <nav className="space-y-5 mt-10">
           <Link
-            to="/admin"
+            to="/admin/dashboard"
             className={`flex items-center space-x-1 hover:text-blue-300 `}
           >
             <CgProfile size={24} />

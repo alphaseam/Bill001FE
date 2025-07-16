@@ -11,8 +11,8 @@ import HotelList from "./Components/HotelList";
 import HotelForm from "./Components/HotelForm";
 import BillingPage from "./pages/admin/BillingPage";
 import BillList from "./Components/BillList";
-//import Hotel from "./pages/admin/Hotel";
-
+import AnalyticsDashboard from "./pages/admin/AnalyticsDashboard";
+import HotelProduct from "./pages/admin/HotelProduct";
 function App() {
   return (
     <>
@@ -64,6 +64,22 @@ function App() {
             }
           />
           <Route
+            path="hotel/product"
+            element={
+              <PrivateRoute>
+                <HotelProduct />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="dashboard"
+            element={
+              <PrivateRoute>
+                <AnalyticsDashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="billinglist"
             element={
               <PrivateRoute>
@@ -71,44 +87,47 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route path="billing/edit/:billId" element={<BillEditPage />} />
-
           <Route
-            path="hotels"
-            element={
-              <PrivateRoute>
-                <HotelList />
-              </PrivateRoute>
-            }
+            path="billing/edit/:billId"
+            element={<BillEditPage />}
           />
-
-          <Route
-            path="hotels/add"
-            element={
-              <PrivateRoute>
-                <HotelForm />
-              </PrivateRoute>
-            }
-          />
-
-          <Route
-            path="hotels/edit/:id"
-            element={
-              <PrivateRoute>
-                <HotelForm />
-              </PrivateRoute>
-            }
-          />
-          {/* 
-          <Route
-            path="/billling"
-            element={
-              <PrivateRoute>
-                <BillingPage />
-              </PrivateRoute>
-            }
-          /> */}
         </Route>
+
+
+        <Route
+          path="/hotels"
+          element={
+            <PrivateRoute>
+              <HotelList />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/hotels/add"
+          element={
+            <PrivateRoute>
+              <HotelForm />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/hotels/edit/:id"
+          element={
+            <PrivateRoute>
+              <HotelForm />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/billling"
+          element={
+            <PrivateRoute>
+              <BillingPage />
+            </PrivateRoute>
+          }
+        />
 
         {/* Fallback Route */}
         <Route path="*" element={<Navigate to="/dashboard" />} />

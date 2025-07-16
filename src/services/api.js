@@ -19,7 +19,14 @@ api.interceptors.request.use(cfg => {
 // ✅ Response Interceptor
 api.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(error)
+  error => {
+    if (error.response?.status === 401) {
+      // clear token and redirect
+      localStorage.removeItem("accessToken");
+      window.location.href = "/login"; // or use navigate()
+    }
+    return Promise.reject(error);
+  }
 );
 
 export const authApi = {
@@ -63,6 +70,15 @@ export const dashboardApi = {
   getDailySales: (from, to) => api.get(`/reports/sales/daily?fromDate=${from}&toDate=${to}`),
   getMonthlySales: (year) => api.get(`/reports/sales/monthly?year=${year}`),
   getProductWiseMonthly: (month, year) => api.get(`/reports/sales/monthly/product-wise?month=${month}&year=${year}`),
-  getYearlySales: (fromYear, toYear) => api.get(`/reports/sales/yearly?fromYear=${fromYear}&toYear=${toYear}`)
-
+  getYearlySales: (fromYear, toYear) => api.get(`/reports/sales/yearly?fromYear=${fromYear}&toYear=${toYear}`),
+  getBillStats: (type) => api.get(`/bill/admin/bills/stats`, { params: { type } }),
 };
+
+
+export const HotelProductApi = {
+  createHotelProduct: (product, hotelId) => api.post(`/hotel/products`, product, { params: { hotelId } }),
+  getHotelProduct: (userId) => api.get(`/hotel/product/${userId}`),
+  deleteHotelProduct: (hotelId, productId) => api.delete(`hotel/product/${productId}`, { params: { hotelId } }),
+  updateHotelProduct: (hotelId, productId) => api.put(`hotel/product/${productId}`, { params: { hotelId } }),
+  getHotelProductById: (hotelId, productId) => api.get(`hotel/product/${productId}`, { params: { hotelId } })
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { dashboardApi } from '../services/api';
 import Filter from '../Components/Filter'
 import SummaryBlocks from '../Components/SummaryBlock';
@@ -8,7 +8,7 @@ import DashboardLayout from '../Components/DashboardLayout';
 const Dashboard = () => {
     const [filters, setFilters] = useState({ dateRange: null, dealer: '', category: '' });
     const [loading, setLoading] = useState(false);
-    const [summary, setSummary] = useState({ totalSales: 0, invoices: 0 });
+    const [summary, setSummary] = useState({ totalRevenue: 0, totalBills: 0 });
     const [chartData, setChartData] = useState({ line: [], bar: [], pie: [] });
     const [noData, setNoData] = useState(false);
 
@@ -39,8 +39,8 @@ const Dashboard = () => {
             }
 
             setSummary({
-                totalSales: res.totalRevenue,
-                invoices: res.totalTransactions,
+                totalRevenue: res.data.totalRevenue,
+                totalBills: res.data.totalBills,
             });
 
             setChartData({
