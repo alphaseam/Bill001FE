@@ -11,6 +11,8 @@ import HotelList from "./Components/HotelList";
 import HotelForm from "./Components/HotelForm";
 import BillingPage from "./pages/admin/BillingPage";
 import BillList from "./Components/BillList";
+//import Hotel from "./pages/admin/Hotel";
+
 function App() {
   return (
     <>
@@ -69,46 +71,44 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route path="billing/edit/:billId" element={<BillEditPage />} />
+
           <Route
-            path="billing/edit/:billId"
-            element={<BillEditPage />}
+            path="hotels"
+            element={
+              <PrivateRoute>
+                <HotelList />
+              </PrivateRoute>
+            }
           />
+
+          <Route
+            path="hotels/add"
+            element={
+              <PrivateRoute>
+                <HotelForm />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="hotels/edit/:id"
+            element={
+              <PrivateRoute>
+                <HotelForm />
+              </PrivateRoute>
+            }
+          />
+          {/* 
+          <Route
+            path="/billling"
+            element={
+              <PrivateRoute>
+                <BillingPage />
+              </PrivateRoute>
+            }
+          /> */}
         </Route>
-
-        <Route
-          path="/hotels"
-          element={
-            <PrivateRoute>
-              <HotelList />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/hotels/add"
-          element={
-            <PrivateRoute>
-              <HotelForm />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/hotels/edit/:id"
-          element={
-            <PrivateRoute>
-              <HotelForm />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/billling"
-          element={
-            <PrivateRoute>
-              <BillingPage />
-            </PrivateRoute>
-          }
-        />
 
         {/* Fallback Route */}
         <Route path="*" element={<Navigate to="/dashboard" />} />
