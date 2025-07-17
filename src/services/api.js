@@ -19,14 +19,7 @@ api.interceptors.request.use(cfg => {
 // ✅ Response Interceptor
 api.interceptors.response.use(
   (response) => response,
-  error => {
-    if (error.response?.status === 401) {
-      // clear token and redirect
-      localStorage.removeItem("accessToken");
-      window.location.href = "/login"; // or use navigate()
-    }
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 export const authApi = {
@@ -56,29 +49,33 @@ export const hotelApi = {
   getAllHotels: () => api.get("/hotel/all"),
 };
 
+
+
 export const billingApi = {
   createBill: (billData) => api.post("/bill/mobile", billData),
+
   getBillById: (billId) => api.get(`/bill/${billId}`),
+
   deleteBill: (billId) => api.delete(`/bill/${billId}`),
+
   updateBill: (id, data) => api.patch(`/bill/${id}`, data),
+
   getBills: () => api.get("/bill/all"),
+
   createBillForWhatsapp: (billData) => api.post("/bill", billData),
-  getbillInvoice: (billId) => api.get(`/invoce/download-invoice/${billId}`)
+
+  getbillInvoice: (billId) =>
+    api.get(`/bill/download-invoice/${billId}`, {
+      responseType: "blob",
+    }),
 };
+
+
 
 export const dashboardApi = {
   getDailySales: (from, to) => api.get(`/reports/sales/daily?fromDate=${from}&toDate=${to}`),
   getMonthlySales: (year) => api.get(`/reports/sales/monthly?year=${year}`),
   getProductWiseMonthly: (month, year) => api.get(`/reports/sales/monthly/product-wise?month=${month}&year=${year}`),
-  getYearlySales: (fromYear, toYear) => api.get(`/reports/sales/yearly?fromYear=${fromYear}&toYear=${toYear}`),
-  getBillStats: (type) => api.get(`/bill/admin/bills/stats`, { params: { type } }),
+  getYearlySales: (fromYear, toYear) => api.get(`/reports/sales/yearly?fromYear=${fromYear}&toYear=${toYear}`)
+
 };
-
-
-export const HotelProductApi = {
-  createHotelProduct: (product, hotelId) => api.post(`/hotel/products`, product, { params: { hotelId } }),
-  getHotelProduct: (userId) => api.get(`/hotel/product/${userId}`),
-  deleteHotelProduct: (hotelId, productId) => api.delete(`hotel/product/${productId}`, { params: { hotelId } }),
-  updateHotelProduct: (hotelId, productId) => api.put(`hotel/product/${productId}`, { params: { hotelId } }),
-  getHotelProductById: (hotelId, productId) => api.get(`hotel/product/${productId}`, { params: { hotelId } })
-}
