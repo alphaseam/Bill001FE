@@ -80,17 +80,21 @@ export default function BillList() {
                     <tbody>
                         {bills.map((bill) => {
                             const total = bill.items?.reduce((sum, item) => {
-                                const itemTotal = (item.unitPrice || 0) * (item.quantity || 0) - (item.discount || 0);
+                                const itemTotal =
+                                    (item.unitPrice || 0) * (item.quantity || 0) - (item.discount || 0);
                                 return sum + itemTotal;
                             }, 0);
+
+                            const customerName = bill.customer?.name || "Not Available";
+                            const customerMobile = bill.customer?.mobile || "Not Available";
 
                             return (
                                 <tr key={bill.id}>
                                     <td className="border px-3 py-2 text-center">{bill.id}</td>
-                                    <td className="border px-3 py-2">{bill.customer.name}</td>
-                                    <td className="border px-3 py-2">{bill.customer.mobile}</td>
+                                    <td className="border px-3 py-2">{customerName}</td>
+                                    <td className="border px-3 py-2">{customerMobile}</td>
                                     <td className="border px-3 py-2 text-center">{bill.items?.length || 0}</td>
-                                    <td className="border px-3 py-2 text-right">₹{bill.total}</td>
+                                    <td className="border px-3 py-2 text-right">₹{bill.total?.toFixed(2) || total.toFixed(2)}</td>
                                     <td className="border px-3 py-2 flex gap-2 justify-center">
                                         <button
                                             onClick={() => navigate(`/admin/billing/edit/${bill.id}`)}
@@ -105,16 +109,19 @@ export default function BillList() {
                                             Delete
                                         </button>
                                     </td>
-                                    <td className="border px-3 py-2 text-right"><button
-                                        onClick={() => handleInvoiceDowanload(bill.id)}
-                                        className="px-2 py-1 border-none bg-blue-500 text-white rounded hover:bg-blue-600"
-                                    >
-                                        Dowanload
-                                    </button></td>
+                                    <td className="border px-3 py-2 text-right">
+                                        <button
+                                            onClick={() => handleInvoiceDowanload(bill.id)}
+                                            className="px-2 py-1 border-none bg-blue-500 text-white rounded hover:bg-blue-600"
+                                        >
+                                            Download
+                                        </button>
+                                    </td>
                                 </tr>
                             );
                         })}
                     </tbody>
+
                 </table>
             </div>
         </div>
