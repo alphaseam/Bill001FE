@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "./ConfirmationModal";
-//import DashboardLayout from "../Components/DashboardLayout";
 import { hotelApi } from "../services/api";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -77,10 +77,24 @@ const HotelList = () => {
       await hotelApi.deleteHotel(confirmId);
       toast.success("Hotel deleted");
       setConfirmId(null);
+
+      Swal.fire({
+        icon: "success",
+        title: "Hotel deleted successfully",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
       fetchHotels();
     } catch (err) {
       console.error("Failed to delete:", err);
       toast.error("Delete failed");
+
+      Swal.fire({
+        icon: "error",
+        title: "Delete failed",
+        text: "Something went wrong. Please try again.",
+      });
     }
   };
 
@@ -95,7 +109,6 @@ const HotelList = () => {
   };
 
   return (
-    //<DashboardLayout>
     <div className="w-full max-w-6xl mx-auto p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
         <h2 className="text-xl sm:text-2xl font-bold">Hotel List</h2>

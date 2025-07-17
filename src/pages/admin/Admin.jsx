@@ -71,17 +71,17 @@ const Admin = () => {
           >
             <FaHotel size={20} />
             <span className={`${showSidebar ? "block" : "hidden"} md:block`}>
-              Hotel List
+              Hotel Edit
             </span>
           </Link>
 
           <Link
-            to="/admin/hotels/add"
+            to="/admin/hotels/view"
             className="flex items-center gap-2 hover:text-blue-400"
           >
             <FaHotel size={20} />
             <span className={`${showSidebar ? "block" : "hidden"} md:block`}>
-              Add Hotel
+              View Hotels
             </span>
           </Link>
         </nav>

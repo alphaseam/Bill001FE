@@ -71,7 +71,7 @@ const DashboardLayout = ({ children }) => {
             </span>
           </Link>
 
-          <Link
+          {/* <Link
             to="/hotels"
             className={`flex items-center space-x-1 hover:text-blue-300 `}
           >
@@ -79,7 +79,7 @@ const DashboardLayout = ({ children }) => {
             <span className={`md:block ${show ? "block" : "hidden"}`}>
               hotel
             </span>
-          </Link>
+          </Link> */}
         </nav>
       </aside>
 
@@ -88,9 +88,7 @@ const DashboardLayout = ({ children }) => {
         {/* Header */}
         <header className="bg-white shadow px-6 py-4 flex justify-between items-center">
           <div>
-            <h1 className="text-xl font-semibold">
-              Welcome
-            </h1>
+            <h1 className="text-xl font-semibold">Welcome</h1>
           </div>
           <button
             onClick={handleLogout}

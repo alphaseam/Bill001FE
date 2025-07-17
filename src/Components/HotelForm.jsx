@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { hotelApi } from "../services/api";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const hotelTypes = ["1-Star", "2-Star", "3-Star", "4-Star", "5-Star"];
 
@@ -48,6 +49,12 @@ const HotelForm = () => {
       } catch (err) {
         console.error("Failed to fetch hotel:", err);
         toast.error("Failed to fetch hotel");
+
+        Swal.fire({
+          icon: "error",
+          title: "Failed to load hotel data",
+          text: "Please refresh or try again.",
+        });
       }
     };
 
@@ -84,9 +91,23 @@ const HotelForm = () => {
       if (isEditMode) {
         await hotelApi.updateHotel(id, formData);
         toast.success("Hotel updated successfully!");
+
+        Swal.fire({
+          icon: "success",
+          title: "Hotel updated successfully!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       } else {
         await hotelApi.createHotel(formData);
         toast.success("Hotel added successfully!");
+
+        Swal.fire({
+          icon: "success",
+          title: "Hotel added successfully!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
       navigate("/admin/hotels");
     } catch (err) {

@@ -11,7 +11,7 @@ import HotelList from "./Components/HotelList";
 import HotelForm from "./Components/HotelForm";
 import BillingPage from "./pages/admin/BillingPage";
 import BillList from "./Components/BillList";
-//import Hotel from "./pages/admin/Hotel";
+import HotelViewOnlyPage from "./pages/admin/HotelViewOnlyPage";
 
 function App() {
   return (
@@ -72,6 +72,8 @@ function App() {
             }
           />
           <Route path="billing/edit/:billId" element={<BillEditPage />} />
+
+          <Route path="hotels/view" element={<HotelViewOnlyPage />} />
 
           <Route
             path="hotels"
