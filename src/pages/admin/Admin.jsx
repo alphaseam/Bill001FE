@@ -3,7 +3,7 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { ImCross } from "react-icons/im";
 import { FiAlignJustify } from "react-icons/fi";
 import { MdDashboard } from "react-icons/md";
-import { FaFileInvoiceDollar } from "react-icons/fa";
+import { FaDashcube, FaFileInvoiceDollar } from "react-icons/fa";
 import { MdEditNote } from "react-icons/md";
 import { FaHotel } from "react-icons/fa6";
 import { AuthContext } from "../../context/AuthContext";
@@ -22,9 +22,8 @@ const Admin = () => {
     <div className="flex min-h-screen">
       {/* Sidebar */}
       <aside
-        className={`bg-gray-900 text-white transition-all duration-300 p-3 md:w-56 w-14 ${
-          showSidebar ? "w-56" : "w-14"
-        }`}
+        className={`bg-gray-900 text-white transition-all duration-300 p-3 md:w-56 w-14 ${showSidebar ? "w-56" : "w-14"
+          }`}
       >
         {/* Toggle Button */}
         <button
@@ -36,15 +35,26 @@ const Admin = () => {
 
         {/* Title */}
         <h2
-          className={`text-xl font-bold mb-6 ${
-            showSidebar ? "block" : "hidden"
-          } hidden md:block`}
+          className={`text-xl font-bold mb-6 ${showSidebar ? "block" : "hidden"
+            } hidden md:block`}
         >
           Admin Panel
         </h2>
 
         {/* Navigation */}
+
         <nav className="space-y-5 mt-10">
+
+          <Link
+            to="/admin/dashboard"
+            className="flex items-center gap-2 hover:text-blue-400"
+          >
+            <FaDashcube size={20} />
+            <span className={`${showSidebar ? "block" : "hidden"} md:block`}>
+              Dashboard
+            </span>
+          </Link>
+
           <Link
             to="/admin/billing"
             className="flex items-center gap-2 hover:text-blue-400"
@@ -82,6 +92,15 @@ const Admin = () => {
             <FaHotel size={20} />
             <span className={`${showSidebar ? "block" : "hidden"} md:block`}>
               Add Hotel
+            </span>
+          </Link>
+          <Link
+            to="/product"
+            className="flex items-center gap-2 hover:text-blue-400"
+          >
+            <FaHotel size={20} />
+            <span className={`${showSidebar ? "block" : "hidden"} md:block`}>
+              product
             </span>
           </Link>
         </nav>

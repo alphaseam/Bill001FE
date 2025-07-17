@@ -4,7 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import Product from "./pages/Product";
 import Admin from "./pages/admin/Admin";
 import BillEditPage from "./pages/admin/BillEditPage";
-import PrivateRoute from "./Components/PrivateRoute";
+import PrivateRoute from "./context/PrivateRoute"
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import HotelList from "./Components/HotelList";
@@ -12,7 +12,7 @@ import HotelForm from "./Components/HotelForm";
 import BillingPage from "./pages/admin/BillingPage";
 import BillList from "./Components/BillList";
 import AnalyticsDashboard from "./pages/admin/AnalyticsDashboard";
-import HotelProduct from "./pages/admin/HotelProduct";
+import DashboardLayout from "./Components/DashboardLayout";
 function App() {
   return (
     <>
@@ -22,31 +22,16 @@ function App() {
         <Route path="/login" element={<Login />} />
 
         {/* Protected Routes */}
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        />
 
-        <Route
-          path="/product/*"
-          element={
-            <PrivateRoute>
-              <Product />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/product/:hotelId"
-          element={
-            <PrivateRoute>
-              <Product />
-            </PrivateRoute>
-          }
-        />
+        <Route path="/" element={<PrivateRoute><DashboardLayout /></PrivateRoute>}>
+
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/product" element={<Product />} />
+          <Route path="/product/:hotelId" element={<Product />} />
+
+        </Route>
+
+
         <Route
           path="/admin"
           element={
@@ -64,10 +49,10 @@ function App() {
             }
           />
           <Route
-            path="hotel/product"
+            path="/product"
             element={
               <PrivateRoute>
-                <HotelProduct />
+                <Product />
               </PrivateRoute>
             }
           />

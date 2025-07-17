@@ -65,15 +65,14 @@ const Dashboard = () => {
     }, [filters]);
 
     return (
-        <DashboardLayout>
-            <div className="p-4">
-                <Filter onChange={setFilters} />
-                <SummaryBlocks data={summary} />
-                {loading && <p>Loading...</p>}
-                {noData && !loading && <p>No Data Found</p>}
-                {!loading && !noData && <Charts data={chartData} />}
-            </div>
-        </DashboardLayout>
+
+        <div className="p-4">
+            <Filter onChange={setFilters} />
+            <SummaryBlocks data={summary} />
+            {loading && <p>Loading...</p>}
+            {noData && !loading && <p>No Data Found</p>}
+            {!loading && !noData && <Charts data={chartData} />}
+        </div>
     );
 };
 

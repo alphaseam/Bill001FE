@@ -47,7 +47,6 @@ const AnalyticsDashboard = () => {
             <SummaryBlocks data={summary} />
 
             <h1 className="text-2xl font-bold">📊 Sales Analytics</h1>
-            <label className="block font-medium mb-1">Charts</label>
 
             <SalesChart type="line" data={salesData} title="Sales Trend" />
             <SalesChart type="bar" data={productwise} title="Product-wise Sales" />

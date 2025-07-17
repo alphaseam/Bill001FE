@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { ImCross } from "react-icons/im";
 import { FiAlignJustify, FiBook } from "react-icons/fi";
@@ -101,7 +101,9 @@ const DashboardLayout = ({ children }) => {
         </header>
 
         {/* Page Content */}
-        <main className=" bg-gray-50 md:flex-1">{children}</main>
+        <main className=" bg-gray-50 md:flex-1">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

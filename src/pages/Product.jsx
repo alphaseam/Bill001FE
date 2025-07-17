@@ -85,22 +85,20 @@ const Product = () => {
 
 
     return (
-        <DashboardLayout>
-            <div>
-                <ProductForm
-                    initialData={Edit}
-                    submitLabel={Edit ? "Update Product" : "Add Product"}
-                    onSubmit={handleSave}
+        <div>
+            <ProductForm
+                initialData={Edit}
+                submitLabel={Edit ? "Update Product" : "Add Product"}
+                onSubmit={handleSave}
+            />
+            <div className="mt-3">
+                <ProductList
+                    products={products}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
                 />
-                <div className="mt-3">
-                    <ProductList
-                        products={products}
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
-                    />
-                </div>
             </div>
-        </DashboardLayout>
+        </div>
     );
 };
 

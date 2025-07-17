@@ -35,14 +35,14 @@ export const authApi = {
 };
 
 export const productApi = {
-  getProducts: (hotelId) => api.get("/products", { params: { hotelId } }),
+  getProducts: (hotelId) => api.get(`/hotel/products`, { params: { hotelId } }),
   addProduct: (product, hotelId) =>
-    api.post("/products", product, { params: { hotelId } }),
+    api.post("/hotel/products", product, { params: { hotelId } }),
   updateProduct: (id, product, hotelId) =>
-    api.put(`/products/${id}`, product, { params: { hotelId } }),
+    api.put(`/hotel/products/${id}`, product, { params: { hotelId } }),
   deleteProduct: (id, hotelId) =>
-    api.delete(`/products/${id}`, { params: { hotelId } }),
-  getAllProducts: (hotelId) => api.get("products", { params: { hotelId } }),
+    api.delete(`/hotel/products/${id}`, { params: { hotelId } }),
+  getAllProducts: (hotelId) => api.get("/hotel/products", { params: { hotelId } }),
 };
 
 
@@ -73,12 +73,3 @@ export const dashboardApi = {
   getYearlySales: (fromYear, toYear) => api.get(`/reports/sales/yearly?fromYear=${fromYear}&toYear=${toYear}`),
   getBillStats: (type) => api.get(`/bill/admin/bills/stats`, { params: { type } }),
 };
-
-
-export const HotelProductApi = {
-  createHotelProduct: (product, hotelId) => api.post(`/hotel/products`, product, { params: { hotelId } }),
-  getHotelProduct: (userId) => api.get(`/hotel/product/${userId}`),
-  deleteHotelProduct: (hotelId, productId) => api.delete(`hotel/product/${productId}`, { params: { hotelId } }),
-  updateHotelProduct: (hotelId, productId) => api.put(`hotel/product/${productId}`, { params: { hotelId } }),
-  getHotelProductById: (hotelId, productId) => api.get(`hotel/product/${productId}`, { params: { hotelId } })
-}
