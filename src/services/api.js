@@ -49,15 +49,28 @@ export const hotelApi = {
   getAllHotels: () => api.get("/hotel/all"),
 };
 
+
+
 export const billingApi = {
   createBill: (billData) => api.post("/bill/mobile", billData),
+
   getBillById: (billId) => api.get(`/bill/${billId}`),
+
   deleteBill: (billId) => api.delete(`/bill/${billId}`),
+
   updateBill: (id, data) => api.patch(`/bill/${id}`, data),
+
   getBills: () => api.get("/bill/all"),
+
   createBillForWhatsapp: (billData) => api.post("/bill", billData),
-  getbillInvoice: (billId) => api.get(`/invoce/download-invoice/${billId}`)
+
+  getbillInvoice: (billId) =>
+    api.get(`/bill/download-invoice/${billId}`, {
+      responseType: "blob",
+    }),
 };
+
+
 
 export const dashboardApi = {
   getDailySales: (from, to) => api.get(`/reports/sales/daily?fromDate=${from}&toDate=${to}`),

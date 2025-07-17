@@ -12,6 +12,8 @@ import HotelForm from "./Components/HotelForm";
 import BillingPage from "./pages/admin/BillingPage";
 import BillList from "./Components/BillList";
 import HotelViewOnlyPage from "./pages/admin/HotelViewOnlyPage";
+import AnalyticsDashboard from "./pages/admin/AnalyticsDashboard";
+import HotelProduct from "./pages/admin/HotelProduct";
 
 function App() {
   return (
@@ -39,6 +41,7 @@ function App() {
             </PrivateRoute>
           }
         />
+
         <Route
           path="/product/:hotelId"
           element={
@@ -47,6 +50,8 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        {/* Admin Panel Routes */}
         <Route
           path="/admin"
           element={
@@ -64,6 +69,22 @@ function App() {
             }
           />
           <Route
+            path="hotel/product"
+            element={
+              <PrivateRoute>
+                <HotelProduct />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="dashboard"
+            element={
+              <PrivateRoute>
+                <AnalyticsDashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="billinglist"
             element={
               <PrivateRoute>
@@ -71,10 +92,14 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route path="billing/edit/:billId" element={<BillEditPage />} />
-
-          <Route path="hotels/view" element={<HotelViewOnlyPage />} />
-
+          <Route
+            path="billing/edit/:billId"
+            element={
+              <PrivateRoute>
+                <BillEditPage />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="hotels"
             element={
@@ -83,7 +108,6 @@ function App() {
               </PrivateRoute>
             }
           />
-
           <Route
             path="hotels/add"
             element={
@@ -92,7 +116,14 @@ function App() {
               </PrivateRoute>
             }
           />
-
+          <Route
+            path="hotels/view"
+            element={
+              <PrivateRoute>
+                <HotelViewOnlyPage />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="hotels/edit/:id"
             element={
@@ -101,15 +132,14 @@ function App() {
               </PrivateRoute>
             }
           />
-          {/* 
           <Route
-            path="/billling"
+            path="billling"
             element={
               <PrivateRoute>
                 <BillingPage />
               </PrivateRoute>
             }
-          /> */}
+          />
         </Route>
 
         {/* Fallback Route */}

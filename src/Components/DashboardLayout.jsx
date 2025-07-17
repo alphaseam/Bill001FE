@@ -33,7 +33,7 @@ const DashboardLayout = ({ children }) => {
         </button>
         <nav className="space-y-5 mt-10">
           <Link
-            to="/admin"
+            to="/admin/dashboard"
             className={`flex items-center space-x-1 hover:text-blue-300 `}
           >
             <CgProfile size={24} />
@@ -71,7 +71,7 @@ const DashboardLayout = ({ children }) => {
             </span>
           </Link>
 
-          {/* <Link
+          <Link
             to="/hotels"
             className={`flex items-center space-x-1 hover:text-blue-300 `}
           >
@@ -79,7 +79,7 @@ const DashboardLayout = ({ children }) => {
             <span className={`md:block ${show ? "block" : "hidden"}`}>
               hotel
             </span>
-          </Link> */}
+          </Link>
         </nav>
       </aside>
 
