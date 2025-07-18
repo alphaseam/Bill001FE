@@ -61,7 +61,7 @@ const DashboardLayout = ({ children }) => {
               Billing
             </span>
           </Link> */}
-          <Link
+          {/* <Link
             to="/product"
             className={`flex items-center space-x-1 hover:text-blue-300 `}
           >
@@ -69,10 +69,10 @@ const DashboardLayout = ({ children }) => {
             <span className={`md:block ${show ? "block" : "hidden"}`}>
               Product
             </span>
-          </Link>
+          </Link> */}
 
           <Link
-            to="/hotels"
+            to="/hotels/view"
             className={`flex items-center space-x-1 hover:text-blue-300 `}
           >
             <FaHotel size={24} />
