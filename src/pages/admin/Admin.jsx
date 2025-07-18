@@ -95,7 +95,7 @@ const Admin = () => {
             </span>
           </Link>
           <Link
-            to="/product"
+            to="/admin/product"
             className="flex items-center gap-2 hover:text-blue-400"
           >
             <FaHotel size={20} />
