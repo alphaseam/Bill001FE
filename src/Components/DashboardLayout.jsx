@@ -88,9 +88,7 @@ const DashboardLayout = ({ children }) => {
         {/* Header */}
         <header className="bg-white shadow px-6 py-4 flex justify-between items-center">
           <div>
-            <h1 className="text-xl font-semibold">
-              Welcome
-            </h1>
+            <h1 className="text-xl font-semibold">Welcome</h1>
           </div>
           <button
             onClick={handleLogout}

@@ -3,10 +3,11 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { ImCross } from "react-icons/im";
 import { FiAlignJustify } from "react-icons/fi";
 import { MdDashboard } from "react-icons/md";
-import { FaDashcube, FaFileInvoiceDollar } from "react-icons/fa";
+import { FaDashcube, FaFileInvoiceDollar, FaProductHunt } from "react-icons/fa";
 import { MdEditNote } from "react-icons/md";
 import { FaHotel } from "react-icons/fa6";
 import { AuthContext } from "../../context/AuthContext";
+import { CgAddR } from "react-icons/cg";
 
 const Admin = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -81,24 +82,24 @@ const Admin = () => {
           >
             <FaHotel size={20} />
             <span className={`${showSidebar ? "block" : "hidden"} md:block`}>
-              Hotel List
+              Hotel Edit
             </span>
           </Link>
 
           <Link
-            to="/admin/hotels/add"
+            to="/admin/hotels/view"
             className="flex items-center gap-2 hover:text-blue-400"
           >
             <FaHotel size={20} />
             <span className={`${showSidebar ? "block" : "hidden"} md:block`}>
-              Add Hotel
+              View Hotels
             </span>
           </Link>
           <Link
             to="/admin/product"
             className="flex items-center gap-2 hover:text-blue-400"
           >
-            <FaHotel size={20} />
+            <CgAddR size={20} />
             <span className={`${showSidebar ? "block" : "hidden"} md:block`}>
               product
             </span>

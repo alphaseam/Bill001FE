@@ -11,6 +11,7 @@ import HotelList from "./Components/HotelList";
 import HotelForm from "./Components/HotelForm";
 import BillingPage from "./pages/admin/BillingPage";
 import BillList from "./Components/BillList";
+import HotelViewOnlyPage from "./pages/admin/HotelViewOnlyPage";
 import AnalyticsDashboard from "./pages/admin/AnalyticsDashboard";
 import DashboardLayout from "./Components/DashboardLayout";
 function App() {
@@ -28,91 +29,28 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/product" element={<Product />} />
           <Route path="/product/:hotelId" element={<Product />} />
-
+          <Route path="billing" element={<BillingPage />} />
+          <Route path="billinglist" element={<BillList />} />
+          <Route path="billing/edit/:billId" element={<BillEditPage />} />
+          <Route path="hotels" element={<HotelList />} />
+          <Route path="hotels/add" element={<HotelForm />} />
+          <Route path="hotels/view" element={<HotelViewOnlyPage />} />
         </Route>
 
 
-        <Route
-          path="/admin"
-          element={
-            <PrivateRoute>
-              <Admin />
-            </PrivateRoute>
-          }
-        >
-          <Route
-            path="billing"
-            element={
-              <PrivateRoute>
-                <BillingPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="product"
-            element={
-              <PrivateRoute>
-                <Product />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="dashboard"
-            element={
-              <PrivateRoute>
-                <AnalyticsDashboard />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="billinglist"
-            element={
-              <PrivateRoute>
-                <BillList />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="billing/edit/:billId"
-            element={<BillEditPage />}
-          />
+        <Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>}>
+          <Route path="billing" element={<BillingPage />} />
+          <Route path="product/:hotelId" element={<Product />} />
+          <Route path="product" element={<Product />} />
+          <Route path="dashboard" element={<AnalyticsDashboard />} />
+          <Route path="billinglist" element={<BillList />} />
+          <Route path="billing/edit/:billId" element={<BillEditPage />} />
+          <Route path="hotels" element={<HotelList />} />
+          <Route path="hotels/add" element={<HotelForm />} />
+          <Route path="hotels/view" element={<HotelViewOnlyPage />} />
+          <Route path="hotels/edit/:id" element={<HotelForm />} />
+
         </Route>
-
-
-        <Route
-          path="/hotels"
-          element={
-            <PrivateRoute>
-              <HotelList />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/hotels/add"
-          element={
-            <PrivateRoute>
-              <HotelForm />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/hotels/edit/:id"
-          element={
-            <PrivateRoute>
-              <HotelForm />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/billling"
-          element={
-            <PrivateRoute>
-              <BillingPage />
-            </PrivateRoute>
-          }
-        />
 
         {/* Fallback Route */}
         <Route path="*" element={<Navigate to="/dashboard" />} />

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "./ConfirmationModal";
-//import DashboardLayout from "../Components/DashboardLayout";
 import { hotelApi } from "../services/api";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -77,10 +77,24 @@ const HotelList = () => {
       await hotelApi.deleteHotel(confirmId);
       toast.success("Hotel deleted");
       setConfirmId(null);
+
+      Swal.fire({
+        icon: "success",
+        title: "Hotel deleted successfully",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
       fetchHotels();
     } catch (err) {
       console.error("Failed to delete:", err);
       toast.error("Delete failed");
+
+      Swal.fire({
+        icon: "error",
+        title: "Delete failed",
+        text: "Something went wrong. Please try again.",
+      });
     }
   };
 
@@ -95,7 +109,6 @@ const HotelList = () => {
   };
 
   return (
-    //<DashboardLayout>
     <div className="w-full max-w-6xl mx-auto p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
         <h2 className="text-xl sm:text-2xl font-bold">Hotel List</h2>
@@ -165,11 +178,10 @@ const HotelList = () => {
                       <td className="p-2 border">{hotel.email}</td>
                       <td className="p-2 border">
                         <span
-                          className={`px-2 py-1 text-sm rounded ${
-                            hotel.isActive
+                          className={`px-2 py-1 text-sm rounded ${hotel.isActive
                               ? "bg-green-200 text-green-800"
                               : "bg-red-200 text-red-800"
-                          }`}
+                            }`}
                         >
                           {hotel.isActive ? "Active" : "Inactive"}
                         </span>
@@ -192,7 +204,7 @@ const HotelList = () => {
                           </button>
                           <button
                             onClick={() =>
-                              navigate(`/product/${hotel.hotelId}`)
+                              navigate(`/admin/product/${hotel.hotelId}`)
                             }
                             className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
                           >
@@ -232,11 +244,10 @@ const HotelList = () => {
                   <div className="mb-2">
                     <strong>Status:</strong>{" "}
                     <span
-                      className={`ml-1 px-2 py-1 text-xs rounded ${
-                        hotel.isActive
+                      className={`ml-1 px-2 py-1 text-xs rounded ${hotel.isActive
                           ? "bg-green-200 text-green-800"
                           : "bg-red-200 text-red-800"
-                      }`}
+                        }`}
                     >
                       {hotel.isActive ? "Active" : "Inactive"}
                     </span>
@@ -276,9 +287,8 @@ const HotelList = () => {
           <button
             key={i + 1}
             onClick={() => setPage(i + 1)}
-            className={`px-3 py-1 border rounded ${
-              page === i + 1 ? "bg-blue-600 text-white" : "bg-white"
-            }`}
+            className={`px-3 py-1 border rounded ${page === i + 1 ? "bg-blue-600 text-white" : "bg-white"
+              }`}
           >
             {i + 1}
           </button>
