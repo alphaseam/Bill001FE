@@ -68,6 +68,11 @@ export const billingApi = {
     api.get(`/bill/download-invoice/${billId}`, {
       responseType: "blob",
     }),
+
+  getBillsByProduct: (productName) => api.get(`/bill/bills/by-product`, { params: { productName } }),
+
+  getBillsByDateRange: ({ userId, from, to }) => api.get(`/bill/bills/by-date-range`, { params: { userId, from, to } }),
+
 };
 
 

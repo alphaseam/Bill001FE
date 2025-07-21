@@ -7,6 +7,12 @@ import { toast } from "react-toastify";
 export default function BillList() {
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState({
+    product: '',
+    from: '',
+    to: '',
+  });
+
   const navigate = useNavigate();
 
   const fetchBills = async () => {
@@ -16,6 +22,34 @@ export default function BillList() {
     } catch (error) {
       console.error("Error fetching bills:", error);
       Swal.fire("Error", "Could not fetch bills", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFilter = async () => {
+    try {
+      setLoading(true);
+
+      let res;
+
+      if (filters.product.trim()) {
+        res = await billingApi.getBillsByProduct(filters.product);
+      } else if (filters.from && filters.to) {
+        res = await billingApi.getBillsByDateRange({
+          userId: 2, // dynamically set if needed
+          from: filters.from,
+          to: filters.to,
+        });
+      } else {
+        toast.error("Please provide either a product name or date range");
+        return;
+      }
+
+      setBills(res.data);
+    } catch (error) {
+      console.error("Filter failed:", error);
+      toast.error("Failed to fetch filtered bills");
     } finally {
       setLoading(false);
     }
@@ -68,14 +102,63 @@ export default function BillList() {
     fetchBills();
   }, []);
 
-  if (loading) return <p className="text-center mt-10">Loading bills...</p>;
-
-  if (!bills.length) return <p className="text-center mt-10">No bills found.</p>;
 
   return (
     <div className="p-4 m-2 sm:p-6 grid gap-3 bg-white rounded-lg shadow-md max-w-5xl mx-auto">
+      <div className="bg-white shadow p-4 rounded mb-6 ">
+        <h3 className="text-lg font-semibold mb-2">Filter Bills</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 items-end">
+          <div>
+            <label className="block mb-1 text-sm">Product Name</label>
+            <input
+              type="text"
+              placeholder="e.g. coffee"
+              value={filters.product}
+              onChange={(e) => setFilters({ ...filters, product: e.target.value })}
+              className="border px-3 py-2 rounded w-full"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-sm">From Date</label>
+            <input
+              type="date"
+              value={filters.from}
+              onChange={(e) => setFilters({ ...filters, from: e.target.value })}
+              className="border px-3 py-2 rounded w-full"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-sm">To Date</label>
+            <input
+              type="date"
+              value={filters.to}
+              onChange={(e) => setFilters({ ...filters, to: e.target.value })}
+              className="border px-3 py-2 rounded w-full"
+            />
+          </div>
+          <button
+            onClick={handleFilter}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Apply Filters
+          </button>
+          <button
+            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+            onClick={() => {
+              setFilters({ product: '', from: '', to: '' });
+              fetchBills(); // reload default bills
+            }}
+
+          >
+            Reset
+          </button>
+
+        </div>
+      </div>
+
       <h2 className="text-2xl font-bold mb-4">All Bills</h2>
       <div className="overflow-x-auto">
+
         <table className="w-full border text-sm">
           <thead>
             <tr className="bg-gray-100">
@@ -89,51 +172,69 @@ export default function BillList() {
             </tr>
           </thead>
           <tbody>
-            {bills.map((bill) => {
-              const total =
-                bill.items?.reduce((sum, item) => {
-                  const itemTotal =
-                    (item.unitPrice || 0) * (item.quantity || 0) -
-                    (item.discount || 0);
-                  return sum + itemTotal;
-                }, 0) || 0;
-
-              const customerName = bill.customer?.name || "Not Available";
-              const customerMobile = bill.customer?.mobile || "Not Available";
-
-              return (
-                <tr key={bill.id}>
-                  <td className="border px-3 py-2 text-center">{bill.id}</td>
-                  <td className="border px-3 py-2">{customerName}</td>
-                  <td className="border px-3 py-2">{customerMobile}</td>
-                  <td className="border px-3 py-2 text-center">{bill.items?.length || 0}</td>
-                  <td className="border px-3 py-2 text-right">₹{bill.total?.toFixed(2) || total.toFixed(2)}</td>
-                  <td className="border px-3 py-2 flex gap-2 justify-center">
-                    <button
-                      onClick={() => navigate(`/admin/billing/edit/${bill.id}`)}
-                      className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(bill.id)}
-                      className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                  <td className="border px-3 py-2 text-center">
-                    <button
-                      onClick={() => handleInvoiceDownload(bill.id)}
-                      className="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                    >
-                      Download
-                    </button>
+            {loading ? (
+              <tr>
+                <td colSpan="7" className="text-center py-4 text-blue-500">
+                  Loading bills...
+                </td>
+              </tr>
+            ) :
+              bills.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="text-center py-4 text-gray-500">
+                    No bills found.
                   </td>
                 </tr>
-              );
-            })}
+              ) : (
+                bills.map((bill) => {
+                  const total =
+                    bill.items?.reduce((sum, item) => {
+                      const itemTotal =
+                        (item.unitPrice || 0) * (item.quantity || 0) -
+                        (item.discount || 0);
+                      return sum + itemTotal;
+                    }, 0) || 0;
+
+                  const customerName = bill.customer?.name || "Not Available";
+                  const customerMobile = bill.customer?.mobile || "Not Available";
+
+                  return (
+                    <tr key={bill.id}>
+                      <td className="border px-3 py-2 text-center">{bill.id}</td>
+                      <td className="border px-3 py-2">{customerName}</td>
+                      <td className="border px-3 py-2">{customerMobile}</td>
+                      <td className="border px-3 py-2 text-center">{bill.items?.length || 0}</td>
+                      <td className="border px-3 py-2 text-right">
+                        ₹{bill.total?.toFixed(2) || total.toFixed(2)}
+                      </td>
+                      <td className="border px-3 py-2 flex gap-2 justify-center">
+                        <button
+                          onClick={() => navigate(`/admin/billing/edit/${bill.id}`)}
+                          className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(bill.id)}
+                          className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                      <td className="border px-3 py-2 text-center">
+                        <button
+                          onClick={() => handleInvoiceDownload(bill.id)}
+                          className="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                        >
+                          Download
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
           </tbody>
+
         </table>
       </div>
     </div>
