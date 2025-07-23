@@ -95,15 +95,6 @@ const Admin = () => {
               View Hotels
             </span>
           </Link>
-          <Link
-            to="/admin/product"
-            className="flex items-center gap-2 hover:text-blue-400"
-          >
-            <CgAddR size={20} />
-            <span className={`${showSidebar ? "block" : "hidden"} md:block`}>
-              product
-            </span>
-          </Link>
         </nav>
       </aside>
 
@@ -112,7 +103,7 @@ const Admin = () => {
         {/* Header */}
         <header className="bg-white shadow px-4 py-3 flex flex-col md:flex-row md:justify-between md:items-center gap-3">
           <h1 className="text-lg font-semibold text-center md:text-left">
-            Admin Dashboard
+            Admin Panel
           </h1>
 
           <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto justify-center md:justify-end">

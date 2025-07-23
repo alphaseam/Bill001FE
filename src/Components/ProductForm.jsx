@@ -13,6 +13,7 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
         productimage: null,
     });
 
+    const isTextOnly = (str) => /^[A-Za-z\s]+$/.test(str);
 
     useEffect(() => {
         setFormData((prev) => ({ ...prev, ...initialData }));
@@ -21,11 +22,20 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
     const validate = (data) => {
         const err = {};
 
+        if (!isTextOnly(formData.productName)) err.productName = "Only letters and spaces allowed";
+        if (!isTextOnly(formData.category)) err.category = "Only letters and spaces allowed";
+
         // name
         if (data.productName.trim() === "")
             err.productName = "Product name is required.";
         else if (data.productName.trim().length < 3)
             err.productName = "Name should be at least 3 characters.";
+
+        //product code
+        if (data.productCode.trim() === "")
+            err.productName = "Product code is required.";
+        else if (data.productCode.trim().length < 3)
+            err.productName = "product code should be at least 3 characters.";
 
         // category
         if (data.category.trim() === "")
@@ -139,8 +149,8 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
                                 className="border p-2 rounded"
                                 placeholder="Product code"
                             />
-                            {errors.productName && (
-                                <p className="text-red-500 text-xs mt-1">{errors.productName}</p>
+                            {errors.productCode && (
+                                <p className="text-red-500 text-xs mt-1">{errors.productCode}</p>
                             )}
                         </div>
                         {/* Category */}

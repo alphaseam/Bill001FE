@@ -18,8 +18,8 @@ const BillEditPage = () => {
   const [formData, setFormData] = useState({
     customerName: "",
     mobileNumber: "",
-    customerId: "", // This can be used to fetch customer details if needed
-    billDate: "", // YYYY‑MM‑DD string
+    customerId: "",
+    billDate: "",
     items: [],
   });
   const [totals, setTotals] = useState({
@@ -28,19 +28,15 @@ const BillEditPage = () => {
     finalAmount: 0,
   });
 
-  /** ---------- DATA FETCH ---------- */
   useEffect(() => {
     (async () => {
       try {
         const { data: bill } = await billingApi.getBillById(billId);
-
         console.log("Fetched bill:", bill);
-
         const billDate =
           bill?.createdAt && !isNaN(new Date(bill.createdAt))
             ? new Date(bill.createdAt).toISOString().split("T")[0]
             : "";
-
         setFormData({
           customerName: bill.customer.name ?? "",
           mobileNumber: bill.customer.mobile ?? "",
@@ -48,11 +44,10 @@ const BillEditPage = () => {
           billDate,
           items: bill.items?.length ? bill.items : [],
         });
-
         calculateTotals(bill.items ?? []);
       } catch (err) {
         console.error("Error fetching bill:", err);
-        alert("Bill not found!");
+        toast.error("Bill not found or failed to fetch!");
       }
     })();
   }, [billId]);
@@ -60,16 +55,12 @@ const BillEditPage = () => {
   const calculateTotals = (items) => {
     const subtotal = items.reduce(
       (acc, itm) =>
-        acc +
-        ((+itm.quantity || 0) * (+itm.unitPrice || 0) - (+itm.discount || 0)),
+        acc + ((+itm.quantity || 0) * (+itm.unitPrice || 0) - (+itm.discount || 0)),
       0
     );
     const tax = subtotal * 0.12;
     setTotals({ subtotal, tax, finalAmount: subtotal + tax });
   };
-
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleItemChange = (idx, field, value) => {
     const items = [...formData.items];
@@ -98,11 +89,7 @@ const BillEditPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      !formData.customerName ||
-      !formData.mobileNumber ||
-      !formData.items.length
-    ) {
+    if (!formData.customerName || !formData.mobileNumber || !formData.items.length) {
       alert("Please fill all required fields.");
       return;
     }
@@ -117,7 +104,7 @@ const BillEditPage = () => {
     const payload = {
       customerId: formData.customerId,
       items: formData.items.map((item) => ({
-        productId: item.productId || 0, // You might need to add `productId` to your item inputs
+        productId: item.productId || 0,
         quantity: item.quantity,
         price: item.unitPrice,
       })),
@@ -146,88 +133,55 @@ const BillEditPage = () => {
     >
       <h2 className="text-2xl font-bold mb-4">Edit Bill #{billId}</h2>
 
-      {/* ---------- BILL INFO ---------- */}
-      <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <label className="block">
-          <span className="font-medium mb-1 block">Bill Date:</span>
-          <input
-            type="date"
-            name="billDate"
-            value={formData.billDate}
-            onChange={handleChange}
-            className="border p-2 w-full text-sm"
-          />
-        </label>
+      <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-gray-50 rounded p-4 shadow-sm">
+          <span className="text-gray-600 text-sm font-medium block mb-1">Bill Date</span>
+          <p className="text-base font-semibold text-gray-800">{formData.billDate}</p>
+        </div>
 
-        <label className="block">
-          <span className="font-medium mb-1 block">Customer Name:</span>
-          <input
-            name="customerName"
-            value={formData.customerName}
-            onChange={handleChange}
-            className="border p-2 w-full text-sm"
-          />
-        </label>
+        <div className="bg-gray-50 rounded p-4 shadow-sm">
+          <span className="text-gray-600 text-sm font-medium block mb-1">Customer Name</span>
+          <p className="text-base font-semibold text-gray-800">{formData.customerName}</p>
+        </div>
 
-        <label className="block">
-          <span className="font-medium mb-1 block">Mobile Number:</span>
-          <input
-            name="mobileNumber"
-            value={formData.mobileNumber}
-            onChange={handleChange}
-            className="border p-2 w-full text-sm"
-          />
-        </label>
+        <div className="bg-gray-50 rounded p-4 shadow-sm">
+          <span className="text-gray-600 text-sm font-medium block mb-1">Mobile Number</span>
+          <p className="text-base font-semibold text-gray-800">{formData.mobileNumber}</p>
+        </div>
       </div>
 
+      {/* Bill Items Table */}
       <div className="hidden sm:block overflow-x-auto">
         <table className="min-w-full border text-sm">
           <thead>
             <tr className="bg-gray-100">
-              {["Item", "Product ID", "Qty", "Unit Price", "Discount", "Total", ""].map(
-                (h) => (
-                  <th key={h} className="p-2 border">
-                    {h}
-                  </th>
-                )
-              )}
+              {["Item", "Qty", "Unit Price", "Discount", "Total", ""].map((h) => (
+                <th key={h} className="p-2 border">
+                  {h}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {formData.items.map((item, idx) => {
-              const total =
-                (+item.quantity || 0) * (+item.unitPrice || 0) -
-                (+item.discount || 0);
+              const total = (+item.quantity || 0) * (+item.unitPrice || 0) - (+item.discount || 0);
               return (
                 <tr key={idx}>
                   <td className="p-2 border">
                     <input
                       value={item.itemName ?? ""}
-                      onChange={(e) =>
-                        handleItemChange(idx, "itemName", e.target.value)
-                      }
+                      onChange={(e) => handleItemChange(idx, "itemName", e.target.value)}
                       className="border p-1 w-full"
                       placeholder="Item Name"
                     />
                   </td>
-                  <td className="p-2 border">
-                    <input
-                      value={item.productId ?? ""}
-                      onChange={(e) =>
-                        handleItemChange(idx, "productId", e.target.value)
-                      }
-                      className="border p-1 w-full"
-                      placeholder="Product ID"
-                    />
-                  </td>
+
                   {["quantity", "unitPrice", "discount"].map((field) => (
                     <td key={field} className="p-2 border">
                       <input
                         type="number"
                         value={item[field] ?? 0}
-                        onChange={(e) =>
-                          handleItemChange(idx, field, e.target.value)
-                        }
+                        onChange={(e) => handleItemChange(idx, field, e.target.value)}
                         className="border p-1 w-full"
                       />
                     </td>
@@ -249,38 +203,22 @@ const BillEditPage = () => {
         </table>
       </div>
 
+      {/* Mobile View Bill Items */}
       <div className="sm:hidden space-y-4">
         {formData.items.map((item, idx) => {
-          const total =
-            (+item.quantity || 0) * (+item.unitPrice || 0) -
-            (+item.discount || 0);
+          const total = (+item.quantity || 0) * (+item.unitPrice || 0) - (+item.discount || 0);
           return (
-            <div
-              key={idx}
-              className="border rounded p-3 bg-gray-50 shadow-sm space-y-2"
-            >
+            <div key={idx} className="border rounded p-3 bg-gray-50 shadow-sm space-y-2">
               <label className="block">
                 <span className="text-sm font-medium">Item Name</span>
                 <input
                   className="border p-1 w-full"
                   value={item.itemName ?? ""}
-                  onChange={(e) =>
-                    handleItemChange(idx, "itemName", e.target.value)
-                  }
+                  onChange={(e) => handleItemChange(idx, "itemName", e.target.value)}
                   placeholder="Item Name"
                 />
               </label>
-              <label className="block">
-                <span className="text-sm font-medium">Product ID</span>
-                <input
-                  className="border p-1 w-full"
-                  value={item.productId ?? ""}
-                  onChange={(e) =>
-                    handleItemChange(idx, "productId", e.target.value)
-                  }
-                  placeholder="Product ID"
-                />
-              </label>
+
 
               <div className="flex gap-2">
                 {["quantity", "unitPrice", "discount"].map((field) => (
@@ -292,18 +230,14 @@ const BillEditPage = () => {
                       type="number"
                       className="border p-1 w-full"
                       value={item[field] ?? 0}
-                      onChange={(e) =>
-                        handleItemChange(idx, field, e.target.value)
-                      }
+                      onChange={(e) => handleItemChange(idx, field, e.target.value)}
                     />
                   </label>
                 ))}
               </div>
 
               <div className="flex justify-between items-center">
-                <p className="text-sm font-semibold">
-                  Total: ₹{total.toFixed(2)}
-                </p>
+                <p className="text-sm font-semibold">Total: ₹{total.toFixed(2)}</p>
                 <button
                   type="button"
                   onClick={() => deleteItem(idx)}
@@ -328,9 +262,7 @@ const BillEditPage = () => {
       <div className="mt-6 text-right text-sm">
         <p>Subtotal: ₹{totals.subtotal.toFixed(2)}</p>
         <p>Tax (12%): ₹{totals.tax.toFixed(2)}</p>
-        <p className="font-bold">
-          Final Amount: ₹{totals.finalAmount.toFixed(2)}
-        </p>
+        <p className="font-bold">Final Amount: ₹{totals.finalAmount.toFixed(2)}</p>
       </div>
 
       <div className="mt-6 sticky bottom-0 bg-white p-4 shadow-inner flex flex-col sm:flex-row gap-4 justify-end">

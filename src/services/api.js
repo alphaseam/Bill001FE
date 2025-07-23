@@ -49,16 +49,14 @@ export const hotelApi = {
   getAllHotels: () => api.get("/hotel/all"),
 };
 
-
-
 export const billingApi = {
-  createBill: (billData) => api.post("/bill/mobile", billData),
+  createBill: (billData) => api.post("/hotel/bills", billData),
 
-  getBillById: (billId) => api.get(`/bill/${billId}`),
+  getBillById: (billId) => api.get(`/hotel/bills/${billId}`),
 
-  deleteBill: (billId) => api.delete(`/bill/${billId}`),
+  deleteBill: (billId) => api.delete(`/hotel/bills/${billId}`),
 
-  updateBill: (id, data) => api.patch(`/bill/${id}`, data),
+  updateBill: (billId, data) => api.put(`/hotel/bills/${billId}`, data),
 
   getBills: () => api.get("/bill/all"),
 
@@ -69,11 +67,35 @@ export const billingApi = {
       responseType: "blob",
     }),
 
-  getBillsByProduct: (productName) => api.get(`/bill/bills/by-product`, { params: { productName } }),
+  getBillsByProduct: (productName) => api.get(`/hotel/bills/by-product`, { params: { productName } }),
 
-  getBillsByDateRange: ({ userId, from, to }) => api.get(`/bill/bills/by-date-range`, { params: { userId, from, to } }),
+  getBillsByDateRange: ({ userId, from, to }) => api.get(`/hotel/bills/by-date-range`, { params: { userId, from, to } }),
 
 };
+
+// export const billingApi = {
+//   createBill: (billData) => api.post("/bill/mobile", billData),
+
+//   getBillById: (billId) => api.get(`/bill/${billId}`),
+
+//   deleteBill: (billId) => api.delete(`/bill/${billId}`),
+
+//   updateBill: (id, data) => api.patch(`/bill/${id}`, data),
+
+//   getBills: () => api.get("/bill/all"),
+
+//   createBillForWhatsapp: (billData) => api.post("/bill", billData),
+
+//   getbillInvoice: (billId) =>
+//     api.get(`/bill/download-invoice/${billId}`, {
+//       responseType: "blob",
+//     }),
+
+//   getBillsByProduct: (productName) => api.get(`/bill/bills/by-product`, { params: { productName } }),
+
+//   getBillsByDateRange: ({ userId, from, to }) => api.get(`/bill/bills/by-date-range`, { params: { userId, from, to } }),
+
+// };
 
 
 
