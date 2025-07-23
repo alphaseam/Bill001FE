@@ -14,6 +14,7 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
     });
 
     const isTextOnly = (str) => /^[A-Za-z\s]+$/.test(str);
+    const isnumberOnly = (num) => /^\d*$/.test(num);
 
     useEffect(() => {
         setFormData((prev) => ({ ...prev, ...initialData }));
@@ -22,48 +23,54 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
     const validate = (data) => {
         const err = {};
 
-        if (!isTextOnly(formData.productName)) err.productName = "Only letters and spaces allowed";
-        if (!isTextOnly(formData.category)) err.category = "Only letters and spaces allowed";
-
-        // name
+        // Product Name
         if (data.productName.trim() === "")
             err.productName = "Product name is required.";
         else if (data.productName.trim().length < 3)
             err.productName = "Name should be at least 3 characters.";
+        else if (!isTextOnly(data.productName))
+            err.productName = "Only letters and spaces allowed";
 
-        //product code
+        // Product Code
         if (data.productCode.trim() === "")
-            err.productName = "Product code is required.";
+            err.productCode = "Product code is required.";
         else if (data.productCode.trim().length < 3)
-            err.productName = "product code should be at least 3 characters.";
+            err.productCode = "Product code should be at least 3 characters.";
 
-        // category
+        // Category
         if (data.category.trim() === "")
             err.category = "Category is required.";
+        else if (!isTextOnly(data.category))
+            err.category = "Only letters and spaces allowed";
 
-        // price
-        if (data.price === "")
+        // Price
+        if (String(data.price).trim() === "")
             err.price = "Price is required.";
+        else if (!isnumberOnly(String(data.price)))
+            err.price = "Only numbers are allowed in Price.";
         else if (Number(data.price) <= 0)
-            err.price = "Price must be positive.";
+            err.price = "Price must be a positive number.";
 
-        // quantity
-        if (data.quantity === "")
+        if (String(data.quantity).trim() === "")
             err.quantity = "Quantity is required.";
+        else if (!isnumberOnly(String(data.quantity)))
+            err.quantity = "Only numbers are allowed in Quantity.";
         else if (!Number.isInteger(+data.quantity) || +data.quantity <= 0)
             err.quantity = "Quantity must be a positive integer.";
 
-        // product image 
+
+        // Product Image
         if (data.productimage) {
             const allowed = ["image/png", "image/jpeg", "image/webp"];
-            if (!allowed.includes(data.image.type))
-                err.image = "Only PNG, JPEG or WEBP images are allowed.";
-            if (data.image.size > 2 * 1024 * 1024)
-                err.image = "Image must be ≤ 2 MB.";
+            if (!allowed.includes(data.productimage.type))
+                err.productimage = "Only PNG, JPEG or WEBP images are allowed.";
+            if (data.productimage.size > 2 * 1024 * 1024)
+                err.productimage = "Image must be ≤ 2 MB.";
         }
 
         return err;
     };
+
 
 
     const handleChange = (e) => {
@@ -74,24 +81,34 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        try {
-            const validationErrors = validate(formData);
-            if (Object.keys(validationErrors).length) {
-                setErrors(validationErrors);
-                return; // abort submit
-            }
-            const data = new FormData();
-            Object.entries(formData).forEach(([key, val]) => {
-                if (val) data.append(key, val);
-            });
-            onSubmit(data);
-            resetData();
-            setErrors({});
-        } catch (error) {
-            console.error("Error submitting form:", error);
-            setErrors({ submit: "Failed to submit form. Please try again." });
+
+        const validationErrors = validate(formData);
+        setErrors(validationErrors);
+
+        if (Object.keys(validationErrors).length > 0) {
+            toast.error("Please fix validation errors.");
+            return;
         }
+
+        const payload = {
+            ...formData,
+            price: parseFloat(formData.price),
+            quantity: parseInt(formData.quantity, 10),
+        };
+
+        onSubmit(payload);
+        setFormData({
+            productName: "",
+            productCode: "",
+            category: "",
+            price: "",
+            quantity: "",
+            productimage: null,
+        });
+        setErrors({});
     };
+
+
     const resetData = () => {
         setFormData({
             productName: "",
@@ -122,7 +139,7 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
                                 type="text"
                                 id="productName"
                                 name="productName"
-                                required
+
                                 value={formData.productName}
                                 onChange={handleChange}
                                 error={errors.productName}
@@ -142,7 +159,7 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
                                 type="text"
                                 id="productCode"
                                 name="productCode"
-                                required
+
                                 value={formData.productCode}
                                 onChange={handleChange}
                                 error={errors.productCode}
@@ -159,9 +176,10 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
                                 Category <span className="text-red-500">*</span>
                             </label>
                             <input
+                                type="text"
                                 id="category"
                                 name="category"
-                                required
+
                                 error={errors.category}
                                 value={formData.category}
                                 onChange={handleChange}
@@ -181,10 +199,10 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
                             <input
                                 id="price"
                                 name="price"
-                                type="number"
+                                type="text"
                                 value={formData.price}
                                 onChange={handleChange}
-                                required
+
                                 error={errors.price}
                                 className="border p-2 rounded"
                                 placeholder="Price"
@@ -202,10 +220,10 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
                             <input
                                 id="quantity"
                                 name="quantity"
-                                type="number"
+                                type="text"
                                 value={formData.quantity}
                                 onChange={handleChange}
-                                required
+
                                 error={errors.quantity}
                                 className="border p-2 rounded"
                                 placeholder="Quantity"
@@ -216,7 +234,7 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
                         </div>
 
                         {/* Size / Item Number */}
-                        <div className="flex flex-col">
+                        {/* <div className="flex flex-col">
                             <label htmlFor="size" className="mb-1 font-medium text-sm">
                                 Size
                             </label>
@@ -231,7 +249,7 @@ const ProductForm = ({ initialData = {}, onSubmit, submitLabel }) => {
                             {errors.size && (
                                 <p className="text-red-500 text-xs mt-1">{errors.size}</p>
                             )}
-                        </div>
+                        </div> */}
 
                         {/* Image upload */}
                         <div className="flex flex-col">

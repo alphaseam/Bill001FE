@@ -23,7 +23,7 @@ const ProductList = ({ products, onEdit, onDelete }) => {
                             <th className="border p-2  ">Category</th>
                             <th className="border p-2  ">Price</th>
                             <th className="border p-2  ">Qty</th>
-                            <th className="border p-2  ">Size</th>
+
                             <th className="border p-2  ">Action</th>
                             <th className="border p-2  ">QR Code</th>
                         </tr>
@@ -36,7 +36,7 @@ const ProductList = ({ products, onEdit, onDelete }) => {
                                 <td className="border p-2  ">{p.category}</td>
                                 <td className="border p-2  ">₹{p.price}</td>
                                 <td className="border p-2  ">{p.quantity}</td>
-                                <td className="border p-2  ">{p.size}</td>
+
 
                                 <td className="border p-2">
                                     <div className="flex gap-2 justify-center">
