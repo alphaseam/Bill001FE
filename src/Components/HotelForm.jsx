@@ -8,8 +8,6 @@ const hotelTypes = ["1-Star", "2-Star", "3-Star", "4-Star", "5-Star"];
 
 const HotelForm = () => {
   const { id } = useParams();
-  console.log("hotelId from URL params:", id);
-
   const isEditMode = Boolean(id);
   const navigate = useNavigate();
 
@@ -24,8 +22,9 @@ const HotelForm = () => {
     isActive: true,
   });
 
-  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [valid, setValid] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!isEditMode) return;
@@ -61,23 +60,119 @@ const HotelForm = () => {
     fetchHotel();
   }, [id]);
 
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.hotelName) newErrors.hotelName = "Hotel name is required";
-    if (!formData.ownerName) newErrors.ownerName = "Owner name is required";
-    if (
-      !formData.mobile ||
-      !/^\d{10}$/.test(formData.mobile) ||
-      /^0{10}$/.test(formData.mobile)
-    ) {
-      newErrors.mobile = "Enter a valid 10-digit mobile number.";
+  const validateField = (name, value) => {
+    const newErrors = { ...errors };
+    const newValid = { ...valid };
+    const textOnly = /^[A-Za-z\s]+$/;
+
+    switch (name) {
+      case "hotelName":
+      case "ownerName":
+        if (!value) {
+          newErrors[name] = "This field is required";
+          newValid[name] = false;
+        } else if (!textOnly.test(value)) {
+          newErrors[name] = "Only letters and spaces allowed";
+          newValid[name] = false;
+        } else {
+          delete newErrors[name];
+          newValid[name] = true;
+        }
+        break;
+
+      case "mobile":
+        if (!/^\d{10}$/.test(value)) {
+          newErrors[name] = "Mobile number must be exactly 10 digits.";
+          newValid[name] = false;
+        } else if (/^0{10}$/.test(value)) {
+          newErrors[name] = "Mobile number cannot be all zeros.";
+          newValid[name] = false;
+        } else {
+          delete newErrors[name];
+          newValid[name] = true;
+        }
+        break;
+
+      case "email":
+        if (!/\S+@\S+\.\S+/.test(value)) {
+          newErrors[name] = "Valid email required";
+          newValid[name] = false;
+        } else {
+          delete newErrors[name];
+          newValid[name] = true;
+        }
+        break;
+
+      case "address":
+        if (!value.trim()) {
+          newErrors[name] = "Address is required";
+          newValid[name] = false;
+        } else if (value.length < 10) {
+          newErrors[name] = "Address must be at least 10 characters";
+          newValid[name] = false;
+        } else if (value.length > 200) {
+          newErrors[name] = "Address must not exceed 200 characters";
+          newValid[name] = false;
+        } else {
+          delete newErrors[name];
+          newValid[name] = true;
+        }
+        break;
+
+      case "hotelType":
+        if (!value) {
+          newErrors[name] = "This field is required";
+          newValid[name] = false;
+        } else {
+          delete newErrors[name];
+          newValid[name] = true;
+        }
+        break;
+
+      default:
+        break;
     }
-    if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email))
-      newErrors.email = "Valid email required";
-    if (!formData.address) newErrors.address = "Address is required";
-    if (!formData.hotelType) newErrors.hotelType = "Hotel type is required";
+
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setValid(newValid);
+  };
+
+  const validate = () => {
+    const requiredFields = [
+      "hotelName",
+      "ownerName",
+      "mobile",
+      "email",
+      "address",
+      "hotelType",
+    ];
+    const newErrors = {};
+    const newValid = {};
+
+    requiredFields.forEach((key) => {
+      const value = formData[key];
+      validateField(key, value); // already updates errors and valid
+
+      if (!value || (errors[key] && errors[key] !== "")) {
+        newErrors[key] = errors[key] || "This field is required";
+        newValid[key] = false;
+      } else {
+        newValid[key] = true;
+      }
+    });
+
+    setErrors((prev) => ({ ...prev, ...newErrors }));
+    setValid((prev) => ({ ...prev, ...newValid }));
+
+    return requiredFields.every((field) => newValid[field]);
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const fieldValue = type === "checkbox" ? checked : value;
+
+    setFormData((prev) => ({ ...prev, [name]: fieldValue }));
+    validateField(name, fieldValue);
   };
 
   const handleSubmit = async (e) => {
@@ -85,13 +180,11 @@ const HotelForm = () => {
     if (!validate()) return;
 
     setLoading(true);
-    console.log("Submitting form data:", formData);
 
     try {
       if (isEditMode) {
         await hotelApi.updateHotel(id, formData);
         toast.success("Hotel updated successfully!");
-
         Swal.fire({
           icon: "success",
           title: "Hotel updated successfully!",
@@ -101,7 +194,6 @@ const HotelForm = () => {
       } else {
         await hotelApi.createHotel(formData);
         toast.success("Hotel added successfully!");
-
         Swal.fire({
           icon: "success",
           title: "Hotel added successfully!",
@@ -118,13 +210,10 @@ const HotelForm = () => {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
+  const isFormValid =
+    Object.values(valid).length === 0
+      ? false
+      : Object.values(valid).every(Boolean);
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 bg-white rounded-lg shadow-md">
@@ -136,7 +225,15 @@ const HotelForm = () => {
         {[
           { label: "Hotel Name", name: "hotelName" },
           { label: "Owner Name", name: "ownerName" },
-          { label: "Mobile Number", name: "mobile", type: "text" },
+          {
+            label: "Mobile Number",
+            name: "mobile",
+            type: "tel",
+            inputMode: "numeric",
+            maxLength: 10,
+            pattern: "\\d{10}",
+          },
+          ,
           { label: "Email", name: "email", type: "email" },
         ].map(({ label, name, type = "text" }) => (
           <div key={name}>
@@ -148,11 +245,16 @@ const HotelForm = () => {
               name={name}
               value={formData[name]}
               onChange={handleChange}
-              className="w-full border px-3 py-2 rounded"
-              placeholder={name === "mobile" ? "Enter 10-digit mobile" : ""}
-              pattern={name === "mobile" ? "\\d{10}" : undefined}
+              className={`w-full border px-3 py-2 rounded ${
+                errors[name]
+                  ? "border-red-500"
+                  : valid[name]
+                    ? "border-green-500"
+                    : "border-gray-300"
+              }`}
               maxLength={name === "mobile" ? 10 : undefined}
               inputMode={name === "mobile" ? "numeric" : undefined}
+              pattern={name === "mobile" ? "\\d{10}" : undefined}
             />
 
             {errors[name] && (
@@ -165,13 +267,18 @@ const HotelForm = () => {
           <label className="block font-medium mb-1">
             Address <span className="text-red-500">*</span>
           </label>
-
           <textarea
             name="address"
             value={formData.address}
             onChange={handleChange}
             rows="3"
-            className="w-full border px-3 py-2 rounded resize-none"
+            className={`w-full border px-3 py-2 rounded resize-none ${
+              errors.address
+                ? "border-red-500"
+                : valid.address
+                  ? "border-green-500"
+                  : "border-gray-300"
+            }`}
           />
           {errors.address && (
             <p className="text-sm text-red-500 mt-1">{errors.address}</p>
@@ -197,7 +304,13 @@ const HotelForm = () => {
             name="hotelType"
             value={formData.hotelType}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
+            className={`w-full border px-3 py-2 rounded ${
+              errors.hotelType
+                ? "border-red-500"
+                : valid.hotelType
+                  ? "border-green-500"
+                  : "border-gray-300"
+            }`}
           >
             <option value="">Select Type</option>
             {hotelTypes.map((type) => (
@@ -227,8 +340,12 @@ const HotelForm = () => {
         <div className="flex flex-col sm:flex-row gap-4 mt-4">
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto"
-            disabled={loading}
+            disabled={!isFormValid || loading}
+            className={`px-4 py-2 rounded text-white font-medium w-full sm:w-auto ${
+              !isFormValid || loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
           >
             {loading ? "Saving..." : isEditMode ? "Update Hotel" : "Add Hotel"}
           </button>
