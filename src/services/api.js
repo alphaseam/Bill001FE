@@ -9,12 +9,11 @@ export const api = axios.create({
 });
 
 // ✅ Request Interceptor
-api.interceptors.request.use(cfg => {
+api.interceptors.request.use((cfg) => {
   const token = localStorage.getItem("accessToken");
   if (token) cfg.headers.Authorization = `Bearer ${token}`;
   return cfg;
 });
-
 
 // ✅ Response Interceptor
 api.interceptors.response.use(
@@ -35,9 +34,9 @@ export const productApi = {
     api.put(`/hotel/products/${id}`, product, { params: { hotelId } }),
   deleteProduct: (id, hotelId) =>
     api.delete(`/hotel/products/${id}`, { params: { hotelId } }),
-  getAllProducts: (hotelId) => api.get("/hotel/products", { params: { hotelId } }),
+  getAllProducts: (hotelId) =>
+    api.get("/hotel/products", { params: { hotelId } }),
 };
-
 
 export const hotelApi = {
   getHotelById: (id) => api.get(`/hotel/${id}`),
@@ -50,7 +49,7 @@ export const hotelApi = {
 };
 
 export const billingApi = {
-  createBill: (billData) => api.post("/hotel/bills", billData),
+  createBill: (billData) => api.post("/bill/mobile", billData),
 
   getBillById: (billId) => api.get(`/hotel/bills/${billId}`),
 
@@ -67,42 +66,21 @@ export const billingApi = {
       responseType: "blob",
     }),
 
-  getBillsByProduct: (productName) => api.get(`/hotel/bills/by-product`, { params: { productName } }),
+  getBillsByProduct: (productName) =>
+    api.get(`/hotel/bills/by-product`, { params: { productName } }),
 
-  getBillsByDateRange: ({ userId, from, to }) => api.get(`/hotel/bills/by-date-range`, { params: { userId, from, to } }),
-
+  getBillsByDateRange: ({ userId, from, to }) =>
+    api.get(`/hotel/bills/by-date-range`, { params: { userId, from, to } }),
 };
 
-// export const billingApi = {
-//   createBill: (billData) => api.post("/bill/mobile", billData),
-
-//   getBillById: (billId) => api.get(`/bill/${billId}`),
-
-//   deleteBill: (billId) => api.delete(`/bill/${billId}`),
-
-//   updateBill: (id, data) => api.patch(`/bill/${id}`, data),
-
-//   getBills: () => api.get("/bill/all"),
-
-//   createBillForWhatsapp: (billData) => api.post("/bill", billData),
-
-//   getbillInvoice: (billId) =>
-//     api.get(`/bill/download-invoice/${billId}`, {
-//       responseType: "blob",
-//     }),
-
-//   getBillsByProduct: (productName) => api.get(`/bill/bills/by-product`, { params: { productName } }),
-
-//   getBillsByDateRange: ({ userId, from, to }) => api.get(`/bill/bills/by-date-range`, { params: { userId, from, to } }),
-
-// };
-
-
-
 export const dashboardApi = {
-  getDailySales: (from, to) => api.get(`/reports/sales/daily?fromDate=${from}&toDate=${to}`),
+  getDailySales: (from, to) =>
+    api.get(`/reports/sales/daily?fromDate=${from}&toDate=${to}`),
   getMonthlySales: (year) => api.get(`/reports/sales/monthly?year=${year}`),
-  getProductWiseMonthly: (month, year) => api.get(`/reports/sales/monthly/product-wise?month=${month}&year=${year}`),
-  getYearlySales: (fromYear, toYear) => api.get(`/reports/sales/yearly?fromYear=${fromYear}&toYear=${toYear}`),
-  getBillStats: (type) => api.get(`bill/admin/bills/stats`, { params: { type } })
+  getProductWiseMonthly: (month, year) =>
+    api.get(`/reports/sales/monthly/product-wise?month=${month}&year=${year}`),
+  getYearlySales: (fromYear, toYear) =>
+    api.get(`/reports/sales/yearly?fromYear=${fromYear}&toYear=${toYear}`),
+  getBillStats: (type) =>
+    api.get(`bill/admin/bills/stats`, { params: { type } }),
 };
