@@ -8,7 +8,7 @@ export default function BillList() {
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
-    product: "",
+    customerName: "",
     from: "",
     to: "",
   });
@@ -30,37 +30,36 @@ export default function BillList() {
   const handleFilter = async () => {
     try {
       const { data } = await billingApi.getBills();
-      let billsData = [...data]; // ✅ Make sure this is defined
+      let billsData = [...data];
 
-      const hasProduct = filters.product?.trim();
-      const hasFromDate = filters.fromDate;
-      const hasToDate = filters.toDate;
+      const hasCustomer = filters.customerName?.trim();
+      const hasFromDate = filters.from;
+      const hasToDate = filters.to;
 
-      // ✅ Filter by Product Name
-      if (hasProduct) {
-        const keyword = filters.product.trim().toLowerCase();
+      // ✅ Filter by Customer Name
+      if (hasCustomer) {
+        const keyword = filters.customerName.trim().toLowerCase();
         billsData = billsData.filter((bill) =>
-          bill.items?.some((item) =>
-            item.itemName?.toLowerCase().includes(keyword)
-          )
+          bill.customer?.name?.toLowerCase().includes(keyword)
         );
       }
 
       // ✅ Filter by Date Range
       if (hasFromDate && hasToDate) {
-        const from = new Date(filters.fromDate);
-        const to = new Date(filters.toDate);
+        const from = new Date(filters.from);
+        const to = new Date(filters.to);
+        const nextDay = new Date(to);
+        nextDay.setDate(to.getDate() + 1);
+
         billsData = billsData.filter((bill) => {
           const createdAt = new Date(bill.createdAt);
-          return createdAt >= from && createdAt <= to;
+          return createdAt >= from && createdAt < nextDay;
         });
       }
 
-      console.log("Final filtered bills:", billsData); // ✅ Debug log
-
-      setBills(billsData); // ✅ Update state with filtered data
+      setBills(billsData);
     } catch (error) {
-      console.error("Error fetching and filtering bills:", error);
+      console.error("Error filtering bills:", error);
       toast.error("Failed to apply filters!");
     }
   };
@@ -118,13 +117,13 @@ export default function BillList() {
         <h3 className="text-lg font-semibold mb-2">Filter Bills</h3>
         <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 items-end">
           <div>
-            <label className="block mb-1 text-sm">Product Name</label>
+            <label className="block mb-1 text-sm">Customer Name</label>
             <input
               type="text"
-              placeholder="e.g. coffee"
-              value={filters.product}
+              placeholder="e.g. Rahul"
+              value={filters.customerName}
               onChange={(e) =>
-                setFilters({ ...filters, product: e.target.value })
+                setFilters({ ...filters, customerName: e.target.value })
               }
               className="border px-3 py-2 rounded w-full"
             />
@@ -156,8 +155,8 @@ export default function BillList() {
           <button
             className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
             onClick={() => {
-              setFilters({ product: "", from: "", to: "" });
-              fetchBills(); // reload default bills
+              setFilters({ customerName: "", from: "", to: "" });
+              fetchBills();
             }}
           >
             Reset
