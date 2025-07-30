@@ -102,23 +102,18 @@ const Admin = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="bg-white shadow px-4 py-3 flex flex-col md:flex-row md:justify-between md:items-center gap-3">
-          <h1 className="text-lg font-semibold text-center md:text-left">
-            Admin Panel
-          </h1>
-
-          {/* Only show on dashboard */}
+        <header className="bg-white shadow px-4 py-3 flex justify-end items-center">
           {isDashboard && (
-            <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto justify-center md:justify-end">
+            <div className="flex gap-2">
               <button
                 onClick={() => navigate("/dashboard")}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full sm:w-auto"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
               >
                 User Panel
               </button>
               <button
                 onClick={handleLogout}
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full sm:w-auto"
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
               >
                 Logout
               </button>
