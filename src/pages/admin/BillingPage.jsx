@@ -3,7 +3,6 @@ import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { billingApi, hotelApi, productApi } from "../../services/api";
-import { all } from "axios";
 
 const BillingPage = () => {
   const [customer, setCustomer] = useState({ customerName: "", mobileNumber: "", hotelId: "" });
@@ -35,7 +34,6 @@ const BillingPage = () => {
     (async () => {
       try {
         const res = await productApi.getAllProducts(customer.hotelId);
-        console.log(res)
         setAllProducts(res.data || []);
       } catch (err) {
         console.error("Error fetching products:", err);
@@ -43,7 +41,6 @@ const BillingPage = () => {
       }
     })();
   }, [customer.hotelId]);
-
 
   const handleProductChange = (index, field, value) => {
     setProducts((prev) =>
@@ -59,11 +56,11 @@ const BillingPage = () => {
       prev.map((item, i) =>
         i === index
           ? {
-            ...item,
-            productName: name,
-            productId: match?.id || "",
-            unitPrice: match?.price || 0,
-          }
+              ...item,
+              productName: name,
+              productId: match?.id || "",
+              unitPrice: match?.price || 0,
+            }
           : item
       )
     );
@@ -103,13 +100,12 @@ const BillingPage = () => {
           unitPrice: p.unitPrice,
         })),
         totalDiscount: totalDiscount,
-
       };
 
       const res = await billingApi.createBill(payload);
       if (res.status === 200) {
         setCustomer({ customerName: "", mobileNumber: "", hotelId: "" });
-        setProducts([{ productId: "", productName: "", quantity: 0, unitPrice: 0, discount: 0 }]);
+        setProducts([{ productId: "", productName: "", quantity: 0, unitPrice: 0 }]);
         setAllProducts([]);
         toast.success("Bill created successfully");
       }
@@ -123,33 +119,33 @@ const BillingPage = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />
-      <div ref={billRef} className="max-w-4xl mx-auto p-4 bg-white shadow rounded">
-        <h1 className="text-2xl font-bold mb-4 text-center">Billing UI</h1>
+      <div ref={billRef} className="max-w-5xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
+        <h1 className="text-3xl font-bold text-center mb-6 text-blue-700">Hotel Billing System</h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div>
-            <label className="block mb-1">Customer Name</label>
+            <label className="block mb-1 font-medium">Customer Name</label>
             <input
               type="text"
-              className="w-full border px-3 py-2 rounded"
+              className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
               value={customer.customerName}
               onChange={(e) => setCustomer({ ...customer, customerName: e.target.value })}
             />
           </div>
           <div>
-            <label className="block mb-1">Mobile Number</label>
+            <label className="block mb-1 font-medium">Mobile Number</label>
             <input
               type="tel"
               maxLength={10}
-              className="w-full border px-3 py-2 rounded"
+              className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
               value={customer.mobileNumber}
               onChange={(e) => setCustomer({ ...customer, mobileNumber: e.target.value })}
             />
           </div>
-          <div className="sm:col-span-2">
-            <label className="block mb-1">Select Hotel</label>
+          <div>
+            <label className="block mb-1 font-medium">Select Hotel</label>
             <select
-              className="w-full border px-3 py-2 rounded"
+              className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
               value={customer.hotelId}
               onChange={(e) => setCustomer({ ...customer, hotelId: e.target.value })}
             >
@@ -163,13 +159,13 @@ const BillingPage = () => {
           </div>
         </div>
 
-        <div className="space-y-4 mb-6">
+        <div className="space-y-6 mb-6">
           {products.map((item, index) => (
-            <div key={index} className="border p-4 bg-gray-50 rounded">
+            <div key={index} className="border rounded-xl p-4 bg-gray-50 shadow-sm transition-all hover:shadow-md">
               <input
                 list={`product-options-${index}`}
                 type="text"
-                className="w-full border px-3 py-2 rounded"
+                className="w-full mb-3 border px-3 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
                 placeholder="Product Name"
                 value={item.productName}
                 onChange={(e) => handleProductNameSelect(index, e.target.value)}
@@ -181,70 +177,70 @@ const BillingPage = () => {
                 ))}
               </datalist>
 
-              <div className="grid grid-cols-2 gap-2 mt-2">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block mb-1">Quantity</label>
+                  <label className="block mb-1 font-medium">Quantity</label>
                   <input
                     type="number"
-                    className="w-full border px-3 py-2 rounded"
+                    className="w-full border px-3 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
                     value={item.quantity || ""}
                     onChange={(e) => handleProductChange(index, "quantity", e.target.value)}
-                    disabled={!customer.hotelId}
                   />
                 </div>
                 <div>
-                  <label className="block mb-1">Unit Price</label>
+                  <label className="block mb-1 font-medium">Unit Price</label>
                   <input
                     type="number"
-                    className="w-full border px-3 py-2 rounded"
+                    className="w-full border px-3 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
                     value={item.unitPrice || ""}
                     onChange={(e) => handleProductChange(index, "unitPrice", e.target.value)}
-                    disabled={!customer.hotelId}
                   />
                 </div>
               </div>
 
               {products.length > 1 && (
                 <button
-                  className="text-red-600 mt-2"
+                  className="text-sm text-red-500 mt-2 hover:underline"
                   onClick={() => removeProduct(index)}
-                  disabled={!customer.hotelId}
                 >
-                  ❌ Remove
+                  ❌ Remove Product
                 </button>
               )}
             </div>
-
           ))}
-          <button onClick={addProduct} className="bg-green-600 text-white px-4 py-2 rounded">
+          <button
+            onClick={addProduct}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition"
+          >
             + Add More
           </button>
         </div>
-        <div className="mb-4">
-          <label className="block mb-1">Total Discount</label>
+
+        <div className="mb-6">
+          <label className="block mb-1 font-medium">Total Discount</label>
           <input
             type="number"
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border px-3 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
             value={totalDiscount}
             onChange={(e) => setTotalDiscount(Number(e.target.value))}
             min={0}
           />
         </div>
 
-        <div className="border-t pt-4 space-y-1 text-sm">
+        <div className="border-t pt-4 text-sm space-y-2">
           <div className="flex justify-between"><span>Subtotal:</span><span>₹ {subtotal.toFixed(2)}</span></div>
           <div className="flex justify-between"><span>Total Discount:</span><span>₹ {totalDiscount.toFixed(2)}</span></div>
           <div className="flex justify-between"><span>Tax (12%):</span><span>₹ {tax.toFixed(2)}</span></div>
-          <div className="flex justify-between font-bold border-t pt-2"><span>Grand Total:</span><span>₹ {grandTotal.toFixed(2)}</span></div>
+          <div className="flex justify-between font-bold text-lg border-t pt-3"><span>Grand Total:</span><span>₹ {grandTotal.toFixed(2)}</span></div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-8 text-center">
           <button
             onClick={handleSubmit}
-            className="bg-blue-600 text-white px-6 py-2 rounded"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition"
             disabled={loading}
           >
-            {loading ? "Generating Bill..." : "Submit"}
+            {loading ? "Generating Bill..." : "Submit Bill"}
           </button>
         </div>
       </div>
