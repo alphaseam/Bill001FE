@@ -7,11 +7,7 @@ import { toast } from "react-toastify";
 export default function BillList() {
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({
-    customerName: "",
-    from: "",
-    to: "",
-  });
+  const [filters, setFilters] = useState({ customerName: "", from: "", to: "" });
 
   const navigate = useNavigate();
 
@@ -36,7 +32,6 @@ export default function BillList() {
       const hasFromDate = filters.from;
       const hasToDate = filters.to;
 
-      // ✅ Filter by Customer Name
       if (hasCustomer) {
         const keyword = filters.customerName.trim().toLowerCase();
         billsData = billsData.filter((bill) =>
@@ -44,7 +39,6 @@ export default function BillList() {
         );
       }
 
-      // ✅ Filter by Date Range
       if (hasFromDate && hasToDate) {
         const from = new Date(filters.from);
         const to = new Date(filters.to);
@@ -112,139 +106,137 @@ export default function BillList() {
   }, []);
 
   return (
-    <div className="p-4 m-2 sm:p-6 grid gap-3 bg-white rounded-lg shadow-md max-w-5xl mx-auto">
-      <div className="bg-white shadow p-4 rounded mb-6 ">
-        <h3 className="text-lg font-semibold mb-2">Filter Bills</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 items-end">
-          <div>
-            <label className="block mb-1 text-sm">Customer Name</label>
-            <input
-              type="text"
-              placeholder="e.g. Rahul"
-              value={filters.customerName}
-              onChange={(e) =>
-                setFilters({ ...filters, customerName: e.target.value })
-              }
-              className="border px-3 py-2 rounded w-full"
-            />
+    <div className="min-h-screen bg-gray-100 py-10 px-4 font-inter">
+      <div className="max-w-6xl mx-auto bg-white shadow-2xl rounded-3xl p-8">
+        {/* Filter Section */}
+        <div className="bg-white border border-gray-200 p-6 rounded-xl shadow mb-10">
+          <h3 className="text-2xl font-bold mb-4 text-blue-700">🔍 Filter Bills</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 items-end">
+            <div>
+              <label className="block mb-1 text-sm font-medium text-gray-700">Customer Name</label>
+              <input
+                type="text"
+                placeholder="e.g. Rahul"
+                value={filters.customerName}
+                onChange={(e) => setFilters({ ...filters, customerName: e.target.value })}
+                className="border px-3 py-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+            <div>
+              <label className="block mb-1 text-sm font-medium text-gray-700">From Date</label>
+              <input
+                type="date"
+                value={filters.from}
+                onChange={(e) => setFilters({ ...filters, from: e.target.value })}
+                className="border px-3 py-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+            <div>
+              <label className="block mb-1 text-sm font-medium text-gray-700">To Date</label>
+              <input
+                type="date"
+                value={filters.to}
+                onChange={(e) => setFilters({ ...filters, to: e.target.value })}
+                className="border px-3 py-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+            <button
+              onClick={handleFilter}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              Apply Filters
+            </button>
+            <button
+              className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
+              onClick={() => {
+                setFilters({ customerName: "", from: "", to: "" });
+                fetchBills();
+              }}
+            >
+              Reset
+            </button>
           </div>
-          <div>
-            <label className="block mb-1 text-sm">From Date</label>
-            <input
-              type="date"
-              value={filters.from}
-              onChange={(e) => setFilters({ ...filters, from: e.target.value })}
-              className="border px-3 py-2 rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 text-sm">To Date</label>
-            <input
-              type="date"
-              value={filters.to}
-              onChange={(e) => setFilters({ ...filters, to: e.target.value })}
-              className="border px-3 py-2 rounded w-full"
-            />
-          </div>
-          <button
-            onClick={handleFilter}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Apply Filters
-          </button>
-          <button
-            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
-            onClick={() => {
-              setFilters({ customerName: "", from: "", to: "" });
-              fetchBills();
-            }}
-          >
-            Reset
-          </button>
         </div>
-      </div>
 
-      <h2 className="text-2xl font-bold mb-4">All Bills</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full border text-sm">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="border px-3 py-2">Bill ID</th>
-              <th className="border px-3 py-2">Customer Name</th>
-              <th className="border px-3 py-2">Mobile</th>
-              <th className="border px-3 py-2">Items</th>
-              <th className="border px-3 py-2">Total</th>
-              <th className="border px-3 py-2">Actions</th>
-              <th className="border px-3 py-2">Download</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan="7" className="text-center py-4 text-blue-500">
-                  Loading bills...
-                </td>
+        {/* Bill Table */}
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">🧾 All Bills</h2>
+        <div className="overflow-x-auto rounded-lg shadow">
+          <table className="min-w-full bg-white text-sm border">
+            <thead>
+              <tr className="bg-blue-100 text-left">
+                <th className="px-4 py-2 border">Bill ID</th>
+                <th className="px-4 py-2 border">Customer Name</th>
+                <th className="px-4 py-2 border">Mobile</th>
+                <th className="px-4 py-2 border">Items</th>
+                <th className="px-4 py-2 border text-right">Total</th>
+                <th className="px-4 py-2 border text-center">Actions</th>
+                <th className="px-4 py-2 border text-center">Download</th>
               </tr>
-            ) : bills.length === 0 ? (
-              <tr>
-                <td colSpan="7" className="text-center py-4 text-gray-500">
-                  No bills found.
-                </td>
-              </tr>
-            ) : (
-              bills.map((bill) => {
-                const total =
-                  bill.items?.reduce((sum, item) => {
-                    const itemTotal =
-                      (item.unitPrice || 0) * (item.quantity || 0) -
-                      (item.discount || 0);
-                    return sum + itemTotal;
-                  }, 0) || 0;
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="7" className="text-center py-6 text-blue-600 font-medium">
+                    Loading bills...
+                  </td>
+                </tr>
+              ) : bills.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="text-center py-6 text-gray-500">
+                    No bills found.
+                  </td>
+                </tr>
+              ) : (
+                bills.map((bill) => {
+                  const total =
+                    bill.items?.reduce((sum, item) => {
+                      const itemTotal =
+                        (item.unitPrice || 0) * (item.quantity || 0) -
+                        (item.discount || 0);
+                      return sum + itemTotal;
+                    }, 0) || 0;
 
-                const customerName = bill.customer?.name || "Not Available";
-                const customerMobile = bill.customer?.mobile || "Not Available";
+                  const customerName = bill.customer?.name || "Not Available";
+                  const customerMobile = bill.customer?.mobile || "Not Available";
 
-                return (
-                  <tr key={bill.id}>
-                    <td className="border px-3 py-2 text-center">{bill.id}</td>
-                    <td className="border px-3 py-2">{customerName}</td>
-                    <td className="border px-3 py-2">{customerMobile}</td>
-                    <td className="border px-3 py-2 text-center">
-                      {bill.items?.length || 0}
-                    </td>
-                    <td className="border px-3 py-2 text-right">
-                      ₹{bill.total?.toFixed(2) || total.toFixed(2)}
-                    </td>
-                    <td className="border px-3 py-2 flex gap-2 justify-center">
-                      <button
-                        onClick={() =>
-                          navigate(`/admin/billing/edit/${bill.id}`)
-                        }
-                        className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(bill.id)}
-                        className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                    <td className="border px-3 py-2 text-center">
-                      <button
-                        onClick={() => handleInvoiceDownload(bill.id)}
-                        className="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                      >
-                        Download
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
+                  return (
+                    <tr key={bill.id} className="hover:bg-gray-50 transition">
+                      <td className="px-4 py-2 border">{bill.id}</td>
+                      <td className="px-4 py-2 border">{customerName}</td>
+                      <td className="px-4 py-2 border">{customerMobile}</td>
+                      <td className="px-4 py-2 border text-center">{bill.items?.length || 0}</td>
+                      <td className="px-4 py-2 border text-right">₹{bill.total?.toFixed(2) || total.toFixed(2)}</td>
+                      <td className="px-4 py-2 border text-center">
+                        <div className="flex justify-center gap-2">
+                          <button
+                            onClick={() => navigate(`/admin/billing/edit/${bill.id}`)}
+                            className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(bill.id)}
+                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                      <td className="px-4 py-2 border text-center">
+                        <button
+                          onClick={() => handleInvoiceDownload(bill.id)}
+                          className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                        >
+                          Download
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
