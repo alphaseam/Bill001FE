@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { billingApi } from "../../services/api";
+import { billingApi, productApi } from "../../services/api";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const emptyItem = () => ({
   itemName: "",
   productId: "",
   quantity: 1,
   unitPrice: 0,
-  discount: 0,
 });
 
 const BillEditPage = () => {
@@ -19,32 +19,54 @@ const BillEditPage = () => {
     customerName: "",
     mobileNumber: "",
     customerId: "",
+    hotelId: "",
     billDate: "",
+    totalDiscount: 0, // ✅ Flat discount
     items: [],
   });
+
+  const [allProducts, setAllProducts] = useState([]);
   const [totals, setTotals] = useState({
     subtotal: 0,
     tax: 0.12,
+    discount: 0,
     finalAmount: 0,
   });
 
+  // Fetch bill by ID
   useEffect(() => {
     (async () => {
       try {
         const { data: bill } = await billingApi.getBillById(billId);
-        console.log("Fetched bill:", bill);
+        console.log("Fetched bill data:", bill);
         const billDate =
           bill?.createdAt && !isNaN(new Date(bill.createdAt))
             ? new Date(bill.createdAt).toISOString().split("T")[0]
             : "";
+
+        const mappedItems =
+          bill.items?.map((item) => ({
+            itemName: item.itemName || item.productName || "",
+            productId: item.productId || item.product?.id || "",
+            quantity: item.quantity || 1,
+            unitPrice: item.unitPrice || item.price || 0,
+          })) || [];
+
+        const discount = bill.discount || 0;
+
+        // Set form data
         setFormData({
-          customerName: bill.customer.name ?? "",
-          mobileNumber: bill.customer.mobile ?? "",
-          customerId: bill.customer.id ?? "",
+          customerName: bill.customer?.name ?? "",
+          mobileNumber: bill.customer?.mobile ?? "",
+          customerId: bill.customer?.id ?? "",
+          hotelId: bill.hotel?.hotelId ?? "",
           billDate,
-          items: bill.items?.length ? bill.items : [],
+          totalDiscount: discount,
+          items: mappedItems,
         });
-        calculateTotals(bill.items ?? []);
+
+        // 👇 Calculate totals immediately after load
+        calculateTotals(mappedItems, discount);
       } catch (err) {
         console.error("Error fetching bill:", err);
         toast.error("Bill not found or failed to fetch!");
@@ -52,27 +74,65 @@ const BillEditPage = () => {
     })();
   }, [billId]);
 
-  const calculateTotals = (items) => {
+  // Fetch all products by hotel ID
+  useEffect(() => {
+    if (!formData.hotelId) return;
+    (async () => {
+      try {
+        const res = await productApi.getAllProducts(formData.hotelId);
+        setAllProducts(res.data || []);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+      }
+    })();
+  }, [formData.hotelId]);
+
+  const calculateTotals = (items, totalDiscount = formData.totalDiscount) => {
     const subtotal = items.reduce(
-      (acc, itm) =>
-        acc +
-        ((+itm.quantity || 0) * (+itm.unitPrice || 0) - (+itm.discount || 0)),
+      (acc, itm) => acc + (+itm.quantity || 0) * (+itm.unitPrice || 0),
       0
     );
     const tax = subtotal * 0.12;
-    setTotals({ subtotal, tax, finalAmount: subtotal + tax });
+    const discount = +totalDiscount || 0;
+    const finalAmount = subtotal + tax - discount;
+
+    setTotals({ subtotal, tax, discount, finalAmount });
   };
 
   const handleItemChange = (idx, field, value) => {
     const items = [...formData.items];
     items[idx] = {
       ...items[idx],
-      [field]: ["quantity", "unitPrice", "discount"].includes(field)
+      [field]: ["quantity", "unitPrice"].includes(field)
         ? Number(value)
         : value,
     };
     setFormData({ ...formData, items });
     calculateTotals(items);
+  };
+
+  const handleDiscountChange = (value) => {
+    const discount = Number(value);
+    setFormData({ ...formData, totalDiscount: discount });
+    calculateTotals(formData.items, discount);
+  };
+
+  const handleProductNameSelect = (index, name) => {
+    const match = allProducts.find(
+      (p) => p.productName.toLowerCase() === name.toLowerCase()
+    );
+    const updatedItems = formData.items.map((item, i) =>
+      i === index
+        ? {
+            ...item,
+            itemName: name,
+            productId: match?.id || "",
+            unitPrice: match?.price || 0,
+          }
+        : item
+    );
+    setFormData({ ...formData, items: updatedItems });
+    calculateTotals(updatedItems);
   };
 
   const addItem = () => {
@@ -89,23 +149,30 @@ const BillEditPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Submitting formData:", formData);
 
     if (
       !formData.customerName ||
       !formData.mobileNumber ||
       !formData.items.length ||
-      formData.items.some((item) => !item.productId)
+      formData.items.some(
+        (item) =>
+          !item.productId ||
+          !item.itemName.trim() ||
+          item.quantity <= 0 ||
+          item.unitPrice <= 0
+      )
     ) {
-      alert("Please fill all required fields including product ID.");
+      toast.error("Please fill all required fields with valid values.");
       return;
     }
 
     const subtotal = formData.items.reduce(
-      (sum, item) => sum + item.quantity * item.unitPrice - item.discount,
+      (sum, item) => sum + item.quantity * item.unitPrice,
       0
     );
     const tax = subtotal * 0.12;
-    const total = subtotal + tax;
+    const total = subtotal + tax - formData.totalDiscount;
 
     const payload = {
       customerId: formData.customerId,
@@ -114,10 +181,7 @@ const BillEditPage = () => {
         quantity: item.quantity,
         price: item.unitPrice,
       })),
-      discount: formData.items.reduce(
-        (sum, item) => sum + (item.discount || 0),
-        0
-      ),
+      discount: formData.totalDiscount,
       subtotal,
       tax,
       total,
@@ -131,8 +195,6 @@ const BillEditPage = () => {
       navigate("/admin/billinglist");
     } catch (err) {
       console.error("Failed to update bill:", err);
-      console.log("\ud83d\udd0d Error response data:", err?.response?.data);
-
       toast.error("Failed to update bill.");
     }
   };
@@ -173,164 +235,98 @@ const BillEditPage = () => {
         </div>
       </div>
 
-      {/* Bill Items Table */}
-      <div className="hidden sm:block overflow-x-auto">
-        <table className="min-w-full border text-sm">
-          <thead>
-            <tr className="bg-gray-100">
-              {["Product ID", "Item", "Qty", "Unit Price", "Discount", "Total", ""].map(
-                (h) => (
-                  <th key={h} className="p-2 border">
-                    {h}
-                  </th>
-                )
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {formData.items.map((item, idx) => {
-              const total =
-                (+item.quantity || 0) * (+item.unitPrice || 0) -
-                (+item.discount || 0);
-              return (
-                <tr key={idx}>
-                  <td className="p-2 border">
-                    <input
-                      value={item.productId ?? ""}
-                      onChange={(e) =>
-                        handleItemChange(idx, "productId", e.target.value)
-                      }
-                      className="border p-1 w-full"
-                      placeholder="Product ID"
-                    />
-                  </td>
-                  <td className="p-2 border">
-                    <input
-                      value={item.itemName ?? ""}
-                      onChange={(e) =>
-                        handleItemChange(idx, "itemName", e.target.value)
-                      }
-                      className="border p-1 w-full"
-                      placeholder="Item Name"
-                    />
-                  </td>
+      {/* Item List */}
+      <div className="space-y-4 mb-4">
+        {formData.items.map((item, idx) => (
+          <div key={idx} className="border p-3 bg-gray-50 rounded shadow-sm">
+            <input
+              list={`product-options-${idx}`}
+              type="text"
+              className="w-full border px-3 py-2 rounded mb-2"
+              placeholder="Item Name"
+              value={item.itemName}
+              onChange={(e) =>
+                handleItemChange(idx, "itemName", e.target.value)
+              }
+              onBlur={(e) => handleProductNameSelect(idx, e.target.value)}
+            />
+            <datalist id={`product-options-${idx}`}>
+              {allProducts.map((p) => (
+                <option key={p.id} value={p.productName} />
+              ))}
+            </datalist>
 
-                  {["quantity", "unitPrice", "discount"].map((field) => (
-                    <td key={field} className="p-2 border">
-                      <input
-                        type="number"
-                        value={item[field] ?? 0}
-                        onChange={(e) =>
-                          handleItemChange(idx, field, e.target.value)
-                        }
-                        className="border p-1 w-full"
-                      />
-                    </td>
-                  ))}
-                  <td className="p-2 border text-right">₹{total.toFixed(2)}</td>
-                  <td className="p-2 border text-center">
-                    <button
-                      type="button"
-                      onClick={() => deleteItem(idx)}
-                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Mobile View Bill Items */}
-      <div className="sm:hidden space-y-4">
-        {formData.items.map((item, idx) => {
-          const total =
-            (+item.quantity || 0) * (+item.unitPrice || 0) -
-            (+item.discount || 0);
-          return (
-            <div
-              key={idx}
-              className="border rounded p-3 bg-gray-50 shadow-sm space-y-2"
-            >
-              <label className="block">
-                <span className="text-sm font-medium">Product ID</span>
-                <input
-                  className="border p-1 w-full"
-                  value={item.productId ?? ""}
-                  onChange={(e) =>
-                    handleItemChange(idx, "productId", e.target.value)
-                  }
-                  placeholder="Product ID"
-                />
-              </label>
-
-              <label className="block">
-                <span className="text-sm font-medium">Item Name</span>
-                <input
-                  className="border p-1 w-full"
-                  value={item.itemName ?? ""}
-                  onChange={(e) =>
-                    handleItemChange(idx, "itemName", e.target.value)
-                  }
-                  placeholder="Item Name"
-                />
-              </label>
-
-              <div className="flex gap-2">
-                {["quantity", "unitPrice", "discount"].map((field) => (
-                  <label key={field} className="w-1/3 block">
-                    <span className="text-sm capitalize">
-                      {field === "unitPrice" ? "Price" : field}
-                    </span>
-                    <input
-                      type="number"
-                      className="border p-1 w-full"
-                      value={item[field] ?? 0}
-                      onChange={(e) =>
-                        handleItemChange(idx, field, e.target.value)
-                      }
-                    />
-                  </label>
-                ))}
-              </div>
-
-              <div className="flex justify-between items-center">
-                <p className="text-sm font-semibold">
-                  Total: ₹{total.toFixed(2)}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => deleteItem(idx)}
-                  className="text-red-500 text-sm"
-                >
-                  Delete
-                </button>
-              </div>
+            <div className="grid grid-cols-3 gap-2">
+              <input
+                type="number"
+                className="border px-2 py-1 rounded"
+                placeholder="Qty"
+                value={item.quantity}
+                onChange={(e) =>
+                  handleItemChange(idx, "quantity", e.target.value)
+                }
+              />
+              <input
+                type="text"
+                className="border px-2 py-1 rounded"
+                placeholder="Unit Price"
+                value={item.unitPrice}
+                onChange={(e) =>
+                  handleItemChange(idx, "unitPrice", e.target.value)
+                }
+              />
+              <button
+                type="button"
+                onClick={() => handleDeleteItem(idx)}
+                className="bg-red-600 text-white text-sm px-3 py-1 rounded hover:bg-red-700 transition duration-150"
+              >
+                Delete
+              </button>
             </div>
-          );
-        })}
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={addItem}
+          className="mt-2 bg-green-600 text-white px-4 py-2 rounded"
+        >
+          + Add Item
+        </button>
       </div>
 
-      <button
-        type="button"
-        onClick={addItem}
-        className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-      >
-        Add Item
-      </button>
-
-      <div className="mt-6 text-right text-sm">
-        <p>Subtotal: ₹{totals.subtotal.toFixed(2)}</p>
-        <p>Tax (12%): ₹{totals.tax.toFixed(2)}</p>
-        <p className="font-bold">
-          Final Amount: ₹{totals.finalAmount.toFixed(2)}
-        </p>
+      {/* Total Discount */}
+      <div className="mb-4">
+        <label className="block font-medium mb-1">Total Discount (₹)</label>
+        <input
+          type="text"
+          className="w-full border px-3 py-2 rounded"
+          value={formData.totalDiscount}
+          onChange={(e) => handleDiscountChange(e.target.value)}
+        />
       </div>
 
-      <div className="mt-6 sticky bottom-0 bg-white p-4 shadow-inner flex flex-col sm:flex-row gap-4 justify-end">
+      {/* Totals */}
+      <div className="mt-4 border-t pt-4 space-y-1 text-sm">
+        <div className="flex justify-between">
+          <span>Subtotal:</span>
+          <span>₹ {totals.subtotal.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Tax (12%):</span>
+          <span>₹ {totals.tax.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Total Discount:</span>
+          <span>₹ {totals.discount.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between font-bold border-t pt-2">
+          <span>Final Amount:</span>
+          <span>₹ {totals.finalAmount.toFixed(2)}</span>
+        </div>
+      </div>
+
+      {/* Buttons */}
+      <div className="mt-6 flex flex-col sm:flex-row justify-end gap-4">
         <button
           type="submit"
           className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"

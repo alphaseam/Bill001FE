@@ -25,7 +25,7 @@ export const authApi = {
   login: (credentials) => api.post("/auth/login", credentials),
   register: (userData) => api.post("/auth/register", userData),
 
-  // 🔐 Forgot password OTP flow
+  // Forgot password OTP flow
   sendOtp: (email) => api.post("/auth/forgot-password", { email }),
   verifyOtp: (data) => api.post("/auth/verify-otp", data),
   resetPassword: (data) => api.post("/auth/reset-password", data),
@@ -54,7 +54,7 @@ export const hotelApi = {
 };
 
 export const billingApi = {
-  createBill: (billData) => api.post("/bill/mobile", billData),
+  createBill: (billData) => api.post("/hotel/bills", billData),
 
   getBillById: (billId) => api.get(`/hotel/bills/${billId}`),
 
