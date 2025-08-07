@@ -67,6 +67,18 @@ const HotelForm = () => {
 
     switch (name) {
       case "hotelName":
+        if (!value) {
+          newErrors[name] = "This field is required";
+          newValid[name] = false;
+        } else if (!/^[a-zA-Z0-9\s]+$/.test(value)) {
+          newErrors[name] = "Only letters, numbers and spaces allowed";
+          newValid[name] = false;
+        } else {
+          delete newErrors[name];
+          newValid[name] = true;
+        }
+        break;
+
       case "ownerName":
         if (!value) {
           newErrors[name] = "This field is required";

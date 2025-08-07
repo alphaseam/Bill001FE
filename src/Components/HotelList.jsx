@@ -41,18 +41,11 @@ const HotelList = () => {
         );
       }
 
-      // Sort logic
-      if (sortField === "name") {
-        hotelList.sort((a, b) => {
-          const result = a.hotelName.localeCompare(b.hotelName);
-          return sortOrder === "asc" ? result : -result;
-        });
-      } else if (sortField === "createdAt") {
-        hotelList.sort((a, b) => {
-          const result = new Date(a.createdAt) - new Date(b.createdAt);
-          return sortOrder === "asc" ? result : -result;
-        });
-      }
+      // Sort by name only
+      hotelList.sort((a, b) => {
+        const result = a.hotelName.localeCompare(b.hotelName);
+        return sortOrder === "asc" ? result : -result;
+      });
 
       setTotalPages(Math.ceil(hotelList.length / ITEMS_PER_PAGE));
       const paginated = hotelList.slice(
@@ -129,14 +122,13 @@ const HotelList = () => {
           className="border px-3 py-2 w-full rounded"
         />
 
-        <select
+        {/* <select
           value={sortField}
           onChange={(e) => toggleSort(e.target.value)}
           className="border px-3 py-2 rounded"
         >
-          <option value="name">Sort by Name</option>
-          <option value="createdAt">Sort by Date</option>
-        </select>
+          <option value="name">Sort by Name</option> 
+        </select> */}
       </div>
 
       {loading ? (
@@ -178,10 +170,11 @@ const HotelList = () => {
                       <td className="p-2 border">{hotel.email}</td>
                       <td className="p-2 border">
                         <span
-                          className={`px-2 py-1 text-sm rounded ${hotel.isActive
+                          className={`px-2 py-1 text-sm rounded ${
+                            hotel.isActive
                               ? "bg-green-200 text-green-800"
                               : "bg-red-200 text-red-800"
-                            }`}
+                          }`}
                         >
                           {hotel.isActive ? "Active" : "Inactive"}
                         </span>
@@ -244,10 +237,11 @@ const HotelList = () => {
                   <div className="mb-2">
                     <strong>Status:</strong>{" "}
                     <span
-                      className={`ml-1 px-2 py-1 text-xs rounded ${hotel.isActive
+                      className={`ml-1 px-2 py-1 text-xs rounded ${
+                        hotel.isActive
                           ? "bg-green-200 text-green-800"
                           : "bg-red-200 text-red-800"
-                        }`}
+                      }`}
                     >
                       {hotel.isActive ? "Active" : "Inactive"}
                     </span>
@@ -268,7 +262,9 @@ const HotelList = () => {
                       Delete
                     </button>
                     <button
-                      onClick={() => navigate(`/product/${hotel.hotelId}`)}
+                      onClick={() =>
+                        navigate(`/admin/product/${hotel.hotelId}`)
+                      }
                       className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
                     >
                       Product
@@ -287,8 +283,9 @@ const HotelList = () => {
           <button
             key={i + 1}
             onClick={() => setPage(i + 1)}
-            className={`px-3 py-1 border rounded ${page === i + 1 ? "bg-blue-600 text-white" : "bg-white"
-              }`}
+            className={`px-3 py-1 border rounded ${
+              page === i + 1 ? "bg-blue-600 text-white" : "bg-white"
+            }`}
           >
             {i + 1}
           </button>
@@ -305,7 +302,6 @@ const HotelList = () => {
         />
       )}
     </div>
-    //</DashboardLayout>
   );
 };
 

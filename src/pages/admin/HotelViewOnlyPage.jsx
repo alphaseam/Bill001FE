@@ -83,14 +83,14 @@ const HotelViewOnlyPage = () => {
           onChange={(e) => setSearch(e.target.value)}
           className="border px-3 py-2 w-full rounded"
         />
-        <select
+        {/* <select
           value={sortField}
           onChange={(e) => toggleSort(e.target.value)}
           className="border px-3 py-2 rounded"
         >
           <option value="name">Sort by Name</option>
           <option value="createdAt">Sort by Date</option>
-        </select>
+        </select> */}
       </div>
 
       {loading ? (
