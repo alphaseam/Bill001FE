@@ -179,8 +179,8 @@ const HotelList = () => {
                       <td className="p-2 border">
                         <span
                           className={`px-2 py-1 text-sm rounded ${hotel.isActive
-                              ? "bg-green-200 text-green-800"
-                              : "bg-red-200 text-red-800"
+                            ? "bg-green-200 text-green-800"
+                            : "bg-red-200 text-red-800"
                             }`}
                         >
                           {hotel.isActive ? "Active" : "Inactive"}
@@ -245,8 +245,8 @@ const HotelList = () => {
                     <strong>Status:</strong>{" "}
                     <span
                       className={`ml-1 px-2 py-1 text-xs rounded ${hotel.isActive
-                          ? "bg-green-200 text-green-800"
-                          : "bg-red-200 text-red-800"
+                        ? "bg-green-200 text-green-800"
+                        : "bg-red-200 text-red-800"
                         }`}
                     >
                       {hotel.isActive ? "Active" : "Inactive"}
@@ -268,7 +268,7 @@ const HotelList = () => {
                       Delete
                     </button>
                     <button
-                      onClick={() => navigate(`/product/${hotel.hotelId}`)}
+                      onClick={() => navigate(`/admin/product/${hotel.hotelId}`)}
                       className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
                     >
                       Product

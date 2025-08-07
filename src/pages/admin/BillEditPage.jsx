@@ -124,11 +124,11 @@ const BillEditPage = () => {
     const updatedItems = formData.items.map((item, i) =>
       i === index
         ? {
-            ...item,
-            itemName: name,
-            productId: match?.id || "",
-            unitPrice: match?.price || 0,
-          }
+          ...item,
+          itemName: name,
+          productId: match?.id || "",
+          unitPrice: match?.price || 0,
+        }
         : item
     );
     setFormData({ ...formData, items: updatedItems });
@@ -277,7 +277,7 @@ const BillEditPage = () => {
               />
               <button
                 type="button"
-                onClick={() => handleDeleteItem(idx)}
+                onClick={() => deleteItem(idx)}
                 className="bg-red-600 text-white text-sm px-3 py-1 rounded hover:bg-red-700 transition duration-150"
               >
                 Delete
