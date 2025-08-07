@@ -99,8 +99,13 @@ const BillingPage = () => {
   const validateForm = () => {
     if (!customer.customerName.trim())
       return (toast.error("Customer name is required"), false);
+
+    if (!/^[a-zA-Z\s]+$/.test(customer.customerName.trim()))
+      return (toast.error("Customer name must contain only letters"), false);
+
     if (!/^\d{10}$/.test(customer.mobileNumber))
       return (toast.error("Mobile number must be 10 digits"), false);
+
     if (!customer.hotelId.trim())
       return (toast.error("Hotel ID is required"), false);
 
@@ -130,8 +135,6 @@ const BillingPage = () => {
         })),
         discount: totalDiscount,
       };
-      console.log("Sending payload:", payload);
-
       const res = await billingApi.createBill(payload);
       if (res.status === 200) {
         setCustomer({ customerName: "", mobileNumber: "", hotelId: "" });
@@ -153,40 +156,51 @@ const BillingPage = () => {
       <ToastContainer position="top-right" autoClose={3000} />
       <div
         ref={billRef}
-        className="max-w-5xl mx-auto p-6 bg-white rounded-2xl shadow-lg"
+        className="max-w-6xl mx-auto p-8 bg-white rounded-2xl shadow-2xl border border-blue-100"
       >
-        <h1 className="text-3xl font-bold text-center mb-6 text-blue-700">
+        <h1 className="text-4xl font-extrabold text-center mb-8 text-blue-800 uppercase tracking-wide">
           Hotel Billing System
         </h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
           <div>
-            <label className="block mb-1 font-medium">Customer Name</label>
+            <label className="block mb-2 font-semibold text-gray-700">
+              Customer Name
+            </label>
             <input
               type="text"
-              className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
+              className="w-full border border-gray-300 px-4 py-3 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={customer.customerName}
-              onChange={(e) =>
-                setCustomer({ ...customer, customerName: e.target.value })
-              }
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^[a-zA-Z\s]*$/.test(value)) {
+                  setCustomer({ ...customer, customerName: value });
+                }
+              }}
+              placeholder="Enter full name"
             />
           </div>
           <div>
-            <label className="block mb-1 font-medium">Mobile Number</label>
+            <label className="block mb-2 font-semibold text-gray-700">
+              Mobile Number
+            </label>
             <input
               type="tel"
               maxLength={10}
-              className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
+              className="w-full border border-gray-300 px-4 py-3 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={customer.mobileNumber}
               onChange={(e) =>
                 setCustomer({ ...customer, mobileNumber: e.target.value })
               }
+              placeholder="10-digit mobile number"
             />
           </div>
           <div>
-            <label className="block mb-1 font-medium">Select Hotel</label>
+            <label className="block mb-2 font-semibold text-gray-700">
+              Select Hotel
+            </label>
             <select
-              className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
+              className="w-full border border-gray-300 px-4 py-3 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={customer.hotelId}
               onChange={(e) =>
                 setCustomer({ ...customer, hotelId: e.target.value })
@@ -202,16 +216,16 @@ const BillingPage = () => {
           </div>
         </div>
 
-        <div className="space-y-6 mb-6">
+        <div className="space-y-6 mb-8">
           {products.map((item, index) => (
             <div
               key={index}
-              className="border rounded-xl p-4 bg-gray-50 shadow-sm transition-all hover:shadow-md"
+              className="border rounded-xl p-5 bg-gray-50 shadow-md"
             >
               <input
                 list={`product-options-${index}`}
                 type="text"
-                className="w-full mb-3 border px-3 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
+                className="w-full mb-4 border px-4 py-3 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                 placeholder="Product Name"
                 value={item.productName}
                 onChange={(e) => handleProductNameSelect(index, e.target.value)}
@@ -225,10 +239,12 @@ const BillingPage = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block mb-1 font-medium">Quantity</label>
+                  <label className="block mb-1 font-medium text-gray-700">
+                    Quantity
+                  </label>
                   <input
                     type="number"
-                    className="w-full border px-3 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
+                    className="w-full border px-4 py-3 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     value={item.quantity || ""}
                     onChange={(e) =>
                       handleProductChange(index, "quantity", e.target.value)
@@ -236,10 +252,12 @@ const BillingPage = () => {
                   />
                 </div>
                 <div>
-                  <label className="block mb-1 font-medium">Unit Price</label>
+                  <label className="block mb-1 font-medium text-gray-700">
+                    Unit Price
+                  </label>
                   <input
                     type="number"
-                    className="w-full border px-3 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
+                    className="w-full border px-4 py-3 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     value={item.unitPrice || ""}
                     onChange={(e) =>
                       handleProductChange(index, "unitPrice", e.target.value)
@@ -250,7 +268,7 @@ const BillingPage = () => {
 
               {products.length > 1 && (
                 <button
-                  className="text-sm text-red-500 mt-2 hover:underline"
+                  className="text-sm text-red-600 mt-4 hover:underline"
                   onClick={() => removeProduct(index)}
                 >
                   ❌ Remove Product
@@ -258,26 +276,29 @@ const BillingPage = () => {
               )}
             </div>
           ))}
+
           <button
             onClick={addProduct}
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition"
+            className="bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl shadow-lg"
           >
             + Add More
           </button>
         </div>
 
         <div className="mb-6">
-          <label className="block mb-1 font-medium">Total Discount</label>
+          <label className="block mb-2 font-semibold text-gray-700">
+            Total Discount
+          </label>
           <input
-            type="text"
-            className="w-full border px-3 py-2 rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
+            type="number"
+            className="w-full border px-4 py-3 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
             value={totalDiscount}
             onChange={(e) => setTotalDiscount(Number(e.target.value))}
             min={0}
           />
         </div>
 
-        <div className="border-t pt-4 text-sm space-y-2">
+        <div className="border-t pt-6 text-base space-y-2 font-medium text-gray-800">
           <div className="flex justify-between">
             <span>Subtotal:</span>
             <span>₹ {subtotal.toFixed(2)}</span>
@@ -290,16 +311,16 @@ const BillingPage = () => {
             <span>Tax (12%):</span>
             <span>₹ {tax.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between font-bold text-lg border-t pt-3">
+          <div className="flex justify-between font-bold text-xl border-t pt-4">
             <span>Grand Total:</span>
             <span>₹ {grandTotal.toFixed(2)}</span>
           </div>
         </div>
 
-        <div className="mt-8 text-center">
+        <div className="mt-10 text-center">
           <button
             onClick={handleSubmit}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl shadow-xl text-lg font-semibold"
             disabled={loading}
           >
             {loading ? "Generating Bill..." : "Submit Bill"}

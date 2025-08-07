@@ -24,6 +24,17 @@ export default function BillList() {
   };
 
   const handleFilter = async () => {
+
+    if (filters.from && filters.to) {
+      const fromDate = new Date(filters.from);
+      const toDate = new Date(filters.to);
+
+      if (fromDate > toDate) {
+        toast.error("'From Date' cannot be after 'To Date'");
+        return;
+      }
+    }
+
     try {
       const { data } = await billingApi.getBills();
       let billsData = [...data];
@@ -106,11 +117,11 @@ export default function BillList() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-4 font-inter">
-      <div className="max-w-6xl mx-auto bg-white shadow-2xl rounded-3xl p-8">
+    <div className="min-h-screen bg-gray-100 py-6 px-3 font-inter">
+      <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-xl p-5 sm:p-8">
         {/* Filter Section */}
-        <div className="bg-white border border-gray-200 p-6 rounded-xl shadow mb-10">
-          <h3 className="text-2xl font-bold mb-4 text-blue-700">🔍 Filter Bills</h3>
+        <div className="bg-white border border-gray-200 p-4 sm:p-6 rounded-xl shadow mb-6 sm:mb-10">
+          <h3 className="text-xl sm:text-2xl font-semibold mb-4 text-blue-700">🔍 Filter Bills</h3>
           <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 items-end">
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-700">Customer Name</label>
@@ -127,31 +138,46 @@ export default function BillList() {
               <input
                 type="date"
                 value={filters.from}
-                onChange={(e) => setFilters({ ...filters, from: e.target.value })}
+                max={new Date().toISOString().split("T")[0]}
+                onChange={(e) => {
+                  const from = e.target.value;
+                  const to = filters.to;
+
+                  // Auto-clear To Date if it's before new From Date
+                  if (to && new Date(from) > new Date(to)) {
+                    setFilters({ ...filters, from, to: "" });
+                  } else {
+                    setFilters({ ...filters, from });
+                  }
+                }}
                 className="border px-3 py-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
+
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-700">To Date</label>
               <input
                 type="date"
                 value={filters.to}
+                min={filters.from}
+                max={new Date().toISOString().split("T")[0]}
                 onChange={(e) => setFilters({ ...filters, to: e.target.value })}
                 className="border px-3 py-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
+
             <button
               onClick={handleFilter}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              Apply Filters
+              Apply
             </button>
             <button
-              className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
               onClick={() => {
                 setFilters({ customerName: "", from: "", to: "" });
                 fetchBills();
               }}
+              className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
             >
               Reset
             </button>
@@ -160,8 +186,9 @@ export default function BillList() {
 
         {/* Bill Table */}
         <h2 className="text-3xl font-bold text-gray-800 mb-6">🧾 All Bills</h2>
-        <div className="overflow-x-auto rounded-lg shadow">
-          <table className="min-w-full bg-white text-sm border">
+        <div className="grid grid-cols-1 overflow-x-auto my-3 p-4  max-w-4xl mx-auto ">
+          <table className="w-full text-sm border-collapse">
+
             <thead>
               <tr className="bg-blue-100 text-left">
                 <th className="px-4 py-2 border">Bill ID</th>
@@ -191,8 +218,7 @@ export default function BillList() {
                   const total =
                     bill.items?.reduce((sum, item) => {
                       const itemTotal =
-                        (item.unitPrice || 0) * (item.quantity || 0) -
-                        (item.discount || 0);
+                        (item.unitPrice || 0) * (item.quantity || 0) - (item.discount || 0);
                       return sum + itemTotal;
                     }, 0) || 0;
 
@@ -207,7 +233,7 @@ export default function BillList() {
                       <td className="px-4 py-2 border text-center">{bill.items?.length || 0}</td>
                       <td className="px-4 py-2 border text-right">₹{bill.total?.toFixed(2) || total.toFixed(2)}</td>
                       <td className="px-4 py-2 border text-center">
-                        <div className="flex justify-center gap-2">
+                        <div className="flex flex-wrap justify-center gap-2">
                           <button
                             onClick={() => navigate(`/admin/billing/edit/${bill.id}`)}
                             className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
